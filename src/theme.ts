@@ -45,6 +45,24 @@ export const theme = extendTheme({
             },
         },
     },
+    fontConfig: {
+        Inter: {
+            300: {
+                normal: 'Inter_300Light',
+            },
+            400: {
+                normal: 'Inter_400Regular',
+            },
+            700: {
+                normal: 'Inter_700Bold',
+            },
+        },
+    },
+    fonts: {
+        heading: 'Inter',
+        body: 'Inter',
+        mono: 'Inter',
+    },
     config: {
         // Changing initialColorMode to 'dark'
         //initialColorMode: 'dark',

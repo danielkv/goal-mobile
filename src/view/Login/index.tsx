@@ -1,11 +1,12 @@
-import { Box, Heading, Icon, Input, Pressable, Stack, Text, View } from 'native-base'
-import React, { useState } from 'react'
+import { Box, Button, Heading, Icon, Pressable, Stack, Text, View } from 'native-base'
+import { useState } from 'react'
 import { Image, ImageBackground } from 'react-native'
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 import LoginBg from '../../assets/images/login-bg.png'
 import LogoGoal from '../../assets/images/logo-goal.png'
+import { TextField } from '../../common/components/TextField'
 
 const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -24,23 +25,15 @@ const Login: React.FC = () => {
                     <Text textAlign="center">Faça seu login</Text>
                 </Box>
 
-                <Stack space={4} w="100%" alignItems="center">
-                    <Input
-                        w={{
-                            base: '75%',
-                            md: '25%',
-                        }}
-                        variant="unstyled"
+                <Stack paddingX={5} space={4} w="100%" alignItems="center">
+                    <TextField
                         InputLeftElement={
                             <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
                         }
-                        placeholder="Email"
+                        variant="unstyled"
+                        label="Email"
                     />
-                    <Input
-                        w={{
-                            base: '75%',
-                            md: '25%',
-                        }}
+                    <TextField
                         type={showPassword ? 'text' : 'password'}
                         variant="unstyled"
                         InputRightElement={
@@ -53,8 +46,10 @@ const Login: React.FC = () => {
                                 />
                             </Pressable>
                         }
-                        placeholder="Password"
+                        label="Password"
                     />
+
+                    <Button width="full">Login</Button>
                 </Stack>
             </ImageBackground>
         </View>
