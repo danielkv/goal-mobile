@@ -1,9 +1,8 @@
 import { useTheme } from 'native-base'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-
-import Home from '../view/Home'
-import Login from '../view/Login'
+import Home from '@view/Home'
+import Login from '@view/Login'
 
 const Stack = createNativeStackNavigator()
 

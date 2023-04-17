@@ -1,11 +1,13 @@
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
-import { NativeBaseProvider } from 'native-base'
+
 import { useEffect, useState } from 'react'
 
-import { NavigationContainer } from '@react-navigation/native'
+import { NativeBaseProvider } from 'native-base'
 
-import { initialLoadUseCase } from './src/domain/useCases/init/initialLoad'
+import { NavigationContainer } from '@react-navigation/native'
+import { initialLoadUseCase } from '@useCases/init/initialLoad'
+
 import Router from './src/router'
 import { theme } from './src/theme'
 

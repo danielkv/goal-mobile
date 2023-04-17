@@ -1,12 +1,13 @@
-import { Box, Button, Heading, Icon, Pressable, Stack, Text, View } from 'native-base'
 import { useState } from 'react'
 import { Image, ImageBackground } from 'react-native'
 
+import { Box, Button, Heading, Icon, Pressable, Stack, Text, View } from 'native-base'
+
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
-import LoginBg from '../../assets/images/login-bg.png'
-import LogoGoal from '../../assets/images/logo-goal.png'
-import { TextField } from '../../common/components/TextField'
+import LoginBg from '@assets/images/login-bg.png'
+import LogoGoal from '@assets/images/logo-goal.png'
+import { TextField } from '@components/TextField'
 
 const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
