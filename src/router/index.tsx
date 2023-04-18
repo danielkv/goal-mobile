@@ -1,8 +1,10 @@
 import { useTheme } from 'native-base'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { ERouteName } from '@routes/index'
 import Home from '@view/Home'
 import Login from '@view/Login'
+import { TimersScreen } from '@view/Timers'
 
 const Stack = createNativeStackNavigator()
 
@@ -18,8 +20,9 @@ function Router() {
             }}
             initialRouteName="login"
         >
-            <Stack.Screen name="home" component={Home} />
-            <Stack.Screen name="login" component={Login} />
+            <Stack.Screen name={ERouteName.Home} component={Home} />
+            <Stack.Screen name={ERouteName.Login} component={Login} />
+            <Stack.Screen name={ERouteName.TimersScreen} component={TimersScreen} />
         </Stack.Navigator>
     )
 }

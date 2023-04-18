@@ -9,6 +9,7 @@ module.exports = function (api) {
                 {
                     alias: {
                         '@components': './src/common/components',
+                        '@routes': './src/infra/config/routes',
                         '@types': './src/common/types',
                         '@models': './src/common/models',
                         '@utils': './src/common/utils',
