@@ -17,6 +17,8 @@ function Router() {
                 contentStyle: { backgroundColor: colors.gray[700] },
                 headerStyle: { backgroundColor: colors.gray[900] },
                 headerTitleStyle: { color: colors.white },
+                headerBackTitleVisible: false,
+                headerTintColor: colors.green[300],
             }}
             initialRouteName="login"
         >
