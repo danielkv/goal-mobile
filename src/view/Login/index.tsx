@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Image, ImageBackground } from 'react-native'
+import { Alert, Image, ImageBackground } from 'react-native'
 
 import { Box, Button, Heading, Icon, Pressable, Stack, Text, View } from 'native-base'
 
@@ -9,14 +9,23 @@ import { TLoginForm, initialValues, validationSchema } from './config'
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import { TextField } from '@components/TextField'
+import { useNavigation } from '@react-navigation/native'
 import { logUserInUseCase } from '@useCases/auth/logUserIn'
+import { getErrorMessage } from '@utils/getErrorMessage'
 import { FormikConfig, useFormik } from 'formik'
 
 const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
+    const navigation = useNavigation()
 
     const onSubmit: FormikConfig<TLoginForm>['onSubmit'] = async (result) => {
-        return logUserInUseCase({ provider: 'email', ...result })
+        try {
+            await logUserInUseCase({ provider: 'email', ...result })
+
+            navigation.navigate('home')
+        } catch (err) {
+            Alert.alert('Ocorreu um erro', getErrorMessage(err))
+        }
     }
 
     const { handleSubmit, handleChange, values, errors, isSubmitting } = useFormik({

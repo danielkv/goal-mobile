@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 
-interface UserContext {
+export interface UserContext {
     token: string
     userId: string
     name: string
