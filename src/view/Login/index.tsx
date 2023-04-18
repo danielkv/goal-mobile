@@ -5,12 +5,25 @@ import { Box, Button, Heading, Icon, Pressable, Stack, Text, View } from 'native
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
+import { TLoginForm, initialValues, validationSchema } from './config'
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import { TextField } from '@components/TextField'
+import { logUserInUseCase } from '@useCases/auth/logUserIn'
+import { FormikConfig, useFormik } from 'formik'
 
 const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
+
+    const onSubmit: FormikConfig<TLoginForm>['onSubmit'] = async (result) => {
+        return logUserInUseCase({ provider: 'email', ...result })
+    }
+
+    const { handleSubmit, handleChange, values, errors, isSubmitting } = useFormik({
+        onSubmit,
+        validationSchema,
+        initialValues: initialValues(),
+    })
 
     return (
         <View flex={1}>
@@ -28,15 +41,20 @@ const Login: React.FC = () => {
 
                 <Stack paddingX={5} space={4} w="100%" alignItems="center">
                     <TextField
+                        label="Email"
                         InputLeftElement={
                             <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
                         }
-                        variant="unstyled"
-                        label="Email"
+                        onChangeText={handleChange('email')}
+                        value={values.email}
+                        error={errors.email}
                     />
                     <TextField
+                        label="Password"
+                        onChangeText={handleChange('password')}
+                        value={values.password}
+                        error={errors.password}
                         type={showPassword ? 'text' : 'password'}
-                        variant="unstyled"
                         InputRightElement={
                             <Pressable onPress={() => setShowPassword(!showPassword)}>
                                 <Icon
@@ -47,10 +65,11 @@ const Login: React.FC = () => {
                                 />
                             </Pressable>
                         }
-                        label="Password"
                     />
 
-                    <Button width="full">Login</Button>
+                    <Button isLoading={isSubmitting} width="full" onPress={() => handleSubmit()}>
+                        Login
+                    </Button>
                 </Stack>
             </ImageBackground>
         </View>
