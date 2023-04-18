@@ -1,3 +1,6 @@
+import { PixelRatio } from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize'
+
 import { extendTheme } from 'native-base'
 
 export const theme = extendTheme({
@@ -22,6 +25,22 @@ export const theme = extendTheme({
             700: '#202020',
             900: '#101010',
         },
+    },
+    fontSizes: {
+        '2xs': RFValue(PixelRatio.getFontScale() * 10),
+        xs: RFValue(PixelRatio.getFontScale() * 12),
+        sm: RFValue(PixelRatio.getFontScale() * 14),
+        md: RFValue(PixelRatio.getFontScale() * 16),
+        lg: RFValue(PixelRatio.getFontScale() * 18),
+        xl: RFValue(PixelRatio.getFontScale() * 20),
+        '2xl': RFValue(PixelRatio.getFontScale() * 24),
+        '3xl': RFValue(PixelRatio.getFontScale() * 30),
+        '4xl': RFValue(PixelRatio.getFontScale() * 36),
+        '5xl': RFValue(PixelRatio.getFontScale() * 48),
+        '6xl': RFValue(PixelRatio.getFontScale() * 60),
+        '7xl': RFValue(PixelRatio.getFontScale() * 72),
+        '8xl': RFValue(PixelRatio.getFontScale() * 96),
+        '9xl': RFValue(PixelRatio.getFontScale() * 128),
     },
     components: {
         Text: {
