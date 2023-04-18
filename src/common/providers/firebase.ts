@@ -1,10 +1,10 @@
 import { getEnv } from '@utils/getEnv'
 import { initializeApp } from 'firebase/app'
-import { ProviderId, getAuth } from 'firebase/auth'
+import { ProviderId, browserSessionPersistence, getAuth } from 'firebase/auth'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export const FIREBASE_APP = initializeApp({
-    apiKey: getEnv('VITE_APP_APIKEY'),
+    apiKey: getEnv('APIKEY'),
     authDomain: getEnv('AUTHDOMAIN'),
     projectId: getEnv('PROJECTID'),
     storageBucket: getEnv('STORAGEBUCKET'),

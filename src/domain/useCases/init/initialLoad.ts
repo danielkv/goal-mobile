@@ -1,8 +1,8 @@
-import * as Fonts from 'expo-font'
-
 import { Inter_300Light, Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter'
 
-import { getLocalUserContext, setUserContext } from '@contexts/user/userContext'
+import { getLocalUserContext } from '@contexts/user/userContext'
+import { contextLoginUseCase } from '@useCases/auth/logUserIn'
+import * as Fonts from 'expo-font'
 
 export async function initialLoadUseCase() {
     await Fonts.loadAsync({
@@ -13,6 +13,6 @@ export async function initialLoadUseCase() {
 
     const localUser = await getLocalUserContext()
     if (localUser) {
-        setUserContext(localUser)
+        contextLoginUseCase(localUser)
     }
 }

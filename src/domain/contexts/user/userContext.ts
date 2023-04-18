@@ -1,8 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-interface UserContext {
+export interface UserContext {
     token: string
     userId: string
     name: string
@@ -12,7 +11,7 @@ const USER_CONTEXT_STORAGE_KEY = '@goal/UserContext'
 
 export const useUserContext = create<UserContext | null>(() => null)
 
-export const setUserContext = (context: UserContext): void => {
+export const setUserContext = (context: UserContext | null): void => {
     useUserContext.setState(context)
 }
 
@@ -26,4 +25,8 @@ export async function getLocalUserContext(): Promise<UserContext | null> {
     if (!data) return null
 
     return JSON.parse(data) as UserContext
+}
+
+export async function removeLocalUserContext(): Promise<void> {
+    await AsyncStorage.removeItem(USER_CONTEXT_STORAGE_KEY)
 }
