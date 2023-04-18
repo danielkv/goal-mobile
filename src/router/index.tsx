@@ -1,7 +1,7 @@
 import { useTheme } from 'native-base'
 
+import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { ERouteName } from '@routes/index'
 import Home from '@view/Home'
 import Login from '@view/Login'
 import { TimersScreen } from '@view/Timers'

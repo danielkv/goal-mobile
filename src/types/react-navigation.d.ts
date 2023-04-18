@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TReactNavigationStackParamList } from '@routes/index'
+import { TReactNavigationStackParamList } from '@router/types'
 
 declare global {
     namespace ReactNavigation {
