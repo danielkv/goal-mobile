@@ -3,7 +3,7 @@ import * as yup from 'yup'
 export type TLoginForm = { email: string; password: string }
 
 export const initialValues = (): TLoginForm => {
-    if (!__DEV__)
+    if (__DEV__)
         return {
             email: 'danielkv@gmail.com',
             password: '123456',

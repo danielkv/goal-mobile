@@ -10,6 +10,7 @@ import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import { TextField } from '@components/TextField'
 import { useNavigation } from '@react-navigation/native'
+import { ERouteName } from '@router/types'
 import { logUserInUseCase } from '@useCases/auth/logUserIn'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import { FormikConfig, useFormik } from 'formik'
@@ -22,7 +23,7 @@ const Login: React.FC = () => {
         try {
             await logUserInUseCase({ provider: 'email', ...result })
 
-            navigation.navigate('home')
+            navigation.navigate(ERouteName.Home)
         } catch (err) {
             Alert.alert('Ocorreu um erro', getErrorMessage(err))
         }
