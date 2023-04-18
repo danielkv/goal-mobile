@@ -17,7 +17,7 @@ module.exports = (async () => {
         },
         resolver: {
             assetsExts: [...assetsExts, 'cjs', 'svg'],
-            sourceExts: [...sourceExts, 'svg', 'cjs'],
+            sourceExts: [...sourceExts, 'svg'],
         },
     }
 })()
