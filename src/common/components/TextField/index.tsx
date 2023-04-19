@@ -4,7 +4,7 @@ export interface TextFieldProps extends IInputProps {
     label?: string
     error?: string
 }
-export const TextField: React.FC<TextFieldProps> = ({ label, error, ...props }) => {
+const TextField: React.FC<TextFieldProps> = ({ label, error, ...props }) => {
     return (
         <FormControl>
             <VStack space={2}>
@@ -23,3 +23,5 @@ export const TextField: React.FC<TextFieldProps> = ({ label, error, ...props }) 
         </FormControl>
     )
 }
+
+export default TextField

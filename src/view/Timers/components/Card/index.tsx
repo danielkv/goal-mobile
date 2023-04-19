@@ -8,7 +8,7 @@ interface TimerCardProps extends IButtonProps {
     Icon: React.FC<SvgProps>
 }
 
-export const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
+const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
     const { colors } = useTheme()
     return (
         <Pressable
@@ -38,3 +38,5 @@ export const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, 
         </Pressable>
     )
 }
+
+export default TimerCard

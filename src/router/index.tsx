@@ -4,7 +4,7 @@ import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from '@view/Home'
 import Login from '@view/Login'
-import { TimersScreen } from '@view/Timers'
+import TimersScreen from '@view/Timers'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetList from '@view/WorksheetList'
 

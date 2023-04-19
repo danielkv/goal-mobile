@@ -1,12 +1,12 @@
 import { Box, HStack, Heading } from 'native-base'
 
-import { TimerCard } from './components/Card'
+import TimerCard from './components/Card'
 import EmomSvg from '@assets/svg/emom.svg'
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TabataIcon from '@assets/svg/tabata.svg'
 
-export const TimersScreen: React.FC = () => {
+const TimersScreen: React.FC = () => {
     return (
         <Box p={7}>
             <Heading mb={'7'} textAlign="center" fontFamily="heading" fontSize="2xl" color="white" lineHeight="2xl">
@@ -23,3 +23,5 @@ export const TimersScreen: React.FC = () => {
         </Box>
     )
 }
+
+export default TimersScreen
