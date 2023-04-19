@@ -9,6 +9,7 @@ const Home: React.FC = () => {
         <View>
             <Text>Home page</Text>
             <Button onPress={() => navigate(ERouteName.Login)}>Login Page</Button>
+            <Button onPress={() => navigate(ERouteName.WorksheetList)}>WorksheetList Page</Button>
         </View>
     )
 }
