@@ -3,12 +3,12 @@ import { SvgProps } from 'react-native-svg'
 
 import { Center, IButtonProps, Pressable, Text, useTheme } from 'native-base'
 
-type Props = IButtonProps & {
-    description?: string
+interface TimerCardProps extends IButtonProps {
+    title?: string
     Icon: React.FC<SvgProps>
 }
 
-export const CardComponent: React.FC<Props> = ({ description, Icon, ...rest }) => {
+export const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
     const { colors } = useTheme()
     return (
         <Pressable
@@ -35,7 +35,6 @@ export const CardComponent: React.FC<Props> = ({ description, Icon, ...rest }) =
                     {description}
                 </Text>
             </Center>
-            {/* </Pressable> */}
         </Pressable>
     )
 }
