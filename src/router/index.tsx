@@ -1,3 +1,5 @@
+import { Platform } from 'react-native'
+
 import { Text, useTheme } from 'native-base'
 
 import { ERouteName } from './types'
@@ -19,12 +21,19 @@ function Router() {
                 headerTitleStyle: { color: colors.white },
                 headerBackTitleVisible: false,
                 headerTintColor: colors.green[300],
+                headerTitleAlign: 'left',
             }}
             initialRouteName="login"
         >
             <Stack.Screen name={ERouteName.Home} component={Home} />
             <Stack.Screen name={ERouteName.Login} component={Login} />
-            <Stack.Screen name={ERouteName.TimersScreen} component={TimersScreen} options={{ title: 'Timers' }} />
+            <Stack.Screen
+                name={ERouteName.TimersScreen}
+                component={TimersScreen}
+                options={{
+                    title: 'Timers',
+                }}
+            />
         </Stack.Navigator>
     )
 }
