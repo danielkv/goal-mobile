@@ -9,7 +9,7 @@ import TabataIcon from '@assets/svg/tabata.svg'
 export const TimersScreen: React.FC = () => {
     return (
         <Center>
-            <Heading mt={100} mb={82} fontFamily={'heading'} fontSize={'2xl'} color={'white'} lineHeight={'2xl'}>
+            <Heading mt={'7'} mb={'7'} fontFamily={'heading'} fontSize={'2xl'} color={'white'} lineHeight={'2xl'}>
                 Selecione o Timer
             </Heading>
             <HStack space={4} mb={4}>
