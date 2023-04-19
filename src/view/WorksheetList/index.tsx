@@ -41,7 +41,7 @@ const WorksheetList: React.FC = () => {
             renderItem={({ item, index }) => (
                 <Box mb={4}>
                     <WorksheetListItem
-                        onClick={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
+                        onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
                         item={item}
                         current={index === 0}
                     />

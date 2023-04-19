@@ -4,6 +4,7 @@ import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from '@view/Home'
 import Login from '@view/Login'
+import WorksheetDays from '@view/WorksheetDays'
 import WorksheetList from '@view/WorksheetList'
 
 const Stack = createNativeStackNavigator()
@@ -23,6 +24,7 @@ function Router() {
             <Stack.Screen name={ERouteName.Home} component={Home} />
             <Stack.Screen name={ERouteName.Login} component={Login} />
             <Stack.Screen name={ERouteName.WorksheetList} options={{ title: 'Planilhas' }} component={WorksheetList} />
+            <Stack.Screen name={ERouteName.WorksheetDays} options={{ title: 'Dias' }} component={WorksheetDays} />
         </Stack.Navigator>
     )
 }
