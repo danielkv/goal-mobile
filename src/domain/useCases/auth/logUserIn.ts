@@ -3,7 +3,6 @@ import { UserContext, saveLocalUserContext, setUserContext } from '@contexts/use
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth'
 
 type EmailCredentials = { provider: 'email'; email: string; password: string }
-type ContextCredentials = { provider: 'context'; context: UserContext }
 
 type Credentials = EmailCredentials
 
