@@ -1,6 +1,7 @@
+import { Platform } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 
-import { Button, Center, IButtonProps, Text } from 'native-base'
+import { Center, IButtonProps, Pressable, Text, useTheme } from 'native-base'
 
 type Props = IButtonProps & {
     description?: string
@@ -8,14 +9,23 @@ type Props = IButtonProps & {
 }
 
 export const CardComponent: React.FC<Props> = ({ description, Icon, ...rest }) => {
+    const { colors } = useTheme()
     return (
-        <Button
+        <Pressable
+            flex={1}
             minH={192}
-            minW={153}
-            bg={'gray.600'}
-            _pressed={{
-                bg: 'red.500',
-            }}
+            bg="gray.600"
+            _pressed={
+                Platform.OS === 'ios'
+                    ? {
+                          bg: 'gray.700',
+                      }
+                    : undefined
+            }
+            android_ripple={{ color: colors.gray[700] }}
+            alignItems="center"
+            justifyContent="center"
+            rounded="md"
             {...rest}
         >
             <Center>
@@ -25,6 +35,7 @@ export const CardComponent: React.FC<Props> = ({ description, Icon, ...rest }) =
                     {description}
                 </Text>
             </Center>
-        </Button>
+            {/* </Pressable> */}
+        </Pressable>
     )
 }
