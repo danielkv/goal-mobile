@@ -1,4 +1,4 @@
-import { useTheme } from 'native-base'
+import { Text, useTheme } from 'native-base'
 
 import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -24,7 +24,7 @@ function Router() {
         >
             <Stack.Screen name={ERouteName.Home} component={Home} />
             <Stack.Screen name={ERouteName.Login} component={Login} />
-            <Stack.Screen name={ERouteName.TimersScreen} component={TimersScreen} />
+            <Stack.Screen name={ERouteName.TimersScreen} component={TimersScreen} options={{ title: 'Timers' }} />
         </Stack.Navigator>
     )
 }
