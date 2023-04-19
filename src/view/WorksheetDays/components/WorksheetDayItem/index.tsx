@@ -1,3 +1,5 @@
+import { Platform } from 'react-native'
+
 import { Avatar, Box, Heading, Pressable, Text, VStack, useTheme } from 'native-base'
 
 import { FontAwesome5 } from '@expo/vector-icons'
@@ -21,6 +23,13 @@ const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) =>
 
     return (
         <Pressable
+            _pressed={
+                Platform.OS === 'ios'
+                    ? {
+                          bg: 'gray.700',
+                      }
+                    : undefined
+            }
             px={5}
             py={4}
             flex={1}

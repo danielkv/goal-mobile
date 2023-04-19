@@ -1,4 +1,5 @@
 import React from 'react'
+import { Platform } from 'react-native'
 
 import { Avatar, HStack, Heading, Pressable, Text, VStack, useTheme } from 'native-base'
 
@@ -18,6 +19,13 @@ const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, current, on
 
     return (
         <Pressable
+            _pressed={
+                Platform.OS === 'ios'
+                    ? {
+                          bg: 'gray.700',
+                      }
+                    : undefined
+            }
             px={5}
             py={4}
             android_ripple={{ color: colors.gray[700] }}
