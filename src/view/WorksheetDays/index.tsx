@@ -3,20 +3,17 @@ import { RefreshControl } from 'react-native'
 
 import { Box, Flex, useTheme } from 'native-base'
 
-import WorksheetListItem from './components/WorksheetListItem'
+import WorksheetDayItem from './components/WorksheetListItem'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
-import { useNavigation } from '@react-navigation/native'
-import { ERouteName } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
 import { getWorksheetListUseCase } from '@useCases/worksheet/getWorksheetList'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import useSWR from 'swr'
 
-const WorksheetList: React.FC = () => {
+const WorksheetDays: React.FC = () => {
     const { sizes, colors } = useTheme()
     const [refreshing, setRefreshing] = useState(false)
-    const { navigate } = useNavigation()
 
     const { data, isLoading, error, mutate } = useSWR('worksheetList', getWorksheetListUseCase, {})
 
@@ -38,13 +35,11 @@ const WorksheetList: React.FC = () => {
     return (
         <FlashList
             data={data}
+            numColumns={2}
+            horizontal={false}
             renderItem={({ item, index }) => (
                 <Box mb={4}>
-                    <WorksheetListItem
-                        onClick={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
-                        item={item}
-                        current={index === 0}
-                    />
+                    <WorksheetDayItem item={item} current={index === 0} />
                 </Box>
             )}
             estimatedItemSize={93}
@@ -63,4 +58,4 @@ const WorksheetList: React.FC = () => {
     )
 }
 
-export default WorksheetList
+export default WorksheetDays
