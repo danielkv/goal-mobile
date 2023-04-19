@@ -1,6 +1,4 @@
-import { Platform } from 'react-native'
-
-import { Text, useTheme } from 'native-base'
+import { useTheme } from 'native-base'
 
 import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -21,7 +19,7 @@ function Router() {
                 headerStyle: { backgroundColor: colors.gray[900] },
                 headerTitleStyle: { color: colors.white },
                 headerBackTitleVisible: false,
-                headerTintColor: colors.green[300],
+                headerTintColor: colors.gray[300],
                 headerTitleAlign: 'left',
             }}
             initialRouteName={ERouteName.Home}
