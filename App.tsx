@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Alert } from 'react-native'
 
 import { NativeBaseProvider } from 'native-base'
 
@@ -20,6 +21,9 @@ export default function App() {
                 setLoaded(true)
             })
             .then(() => SplashScreen.hideAsync())
+            .catch((err) => {
+                Alert.alert('Error', err.message)
+            })
     }, [])
 
     if (!loaded) return null

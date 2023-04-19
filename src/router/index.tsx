@@ -6,7 +6,6 @@ import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from '@view/Home'
 import Login from '@view/Login'
-import { TimersScreen } from '@view/Timers'
 
 const Stack = createNativeStackNavigator()
 
@@ -23,7 +22,7 @@ function Router() {
                 headerTintColor: colors.green[300],
                 headerTitleAlign: 'left',
             }}
-            initialRouteName="login"
+            initialRouteName={ERouteName.Home}
         >
             <Stack.Screen name={ERouteName.Home} component={Home} />
             <Stack.Screen name={ERouteName.Login} component={Login} />
