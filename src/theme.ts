@@ -7,7 +7,6 @@ const standardScreenHeight = 740
 
 export const theme = extendTheme({
     colors: {
-        // Add new color
         primary: {
             50: '#FDB9C4',
             100: '#FB9AAA',
