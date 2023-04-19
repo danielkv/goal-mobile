@@ -1,15 +1,13 @@
-import * as SplashScreen from 'expo-splash-screen'
-import { StatusBar } from 'expo-status-bar'
-
 import { useEffect, useState } from 'react'
 
 import { NativeBaseProvider } from 'native-base'
 
-import { NavigationContainer } from '@react-navigation/native'
-import { initialLoadUseCase } from '@useCases/init/initialLoad'
-
 import Router from './src/router'
 import { theme } from './src/theme'
+import { NavigationContainer } from '@react-navigation/native'
+import { initialLoadUseCase } from '@useCases/init/initialLoad'
+import * as SplashScreen from 'expo-splash-screen'
+import { StatusBar } from 'expo-status-bar'
 
 SplashScreen.preventAutoHideAsync()
 
