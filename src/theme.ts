@@ -3,9 +3,10 @@ import { RFValue } from 'react-native-responsive-fontsize'
 
 import { extendTheme } from 'native-base'
 
+const standardScreenHeight = 740
+
 export const theme = extendTheme({
     colors: {
-        // Add new color
         primary: {
             50: '#FDB9C4',
             100: '#FB9AAA',
@@ -31,20 +32,20 @@ export const theme = extendTheme({
         },
     },
     fontSizes: {
-        '2xs': RFValue(PixelRatio.getFontScale() * 10),
-        xs: RFValue(PixelRatio.getFontScale() * 12),
-        sm: RFValue(PixelRatio.getFontScale() * 14),
-        md: RFValue(PixelRatio.getFontScale() * 16),
-        lg: RFValue(PixelRatio.getFontScale() * 18),
-        xl: RFValue(PixelRatio.getFontScale() * 20),
-        '2xl': RFValue(PixelRatio.getFontScale() * 24),
-        '3xl': RFValue(PixelRatio.getFontScale() * 30),
-        '4xl': RFValue(PixelRatio.getFontScale() * 36),
-        '5xl': RFValue(PixelRatio.getFontScale() * 48),
-        '6xl': RFValue(PixelRatio.getFontScale() * 60),
-        '7xl': RFValue(PixelRatio.getFontScale() * 72),
-        '8xl': RFValue(PixelRatio.getFontScale() * 96),
-        '9xl': RFValue(PixelRatio.getFontScale() * 128),
+        '2xs': RFValue(PixelRatio.getFontScale() * 10, standardScreenHeight),
+        xs: RFValue(PixelRatio.getFontScale() * 12, standardScreenHeight),
+        sm: RFValue(PixelRatio.getFontScale() * 14, standardScreenHeight),
+        md: RFValue(PixelRatio.getFontScale() * 16, standardScreenHeight),
+        lg: RFValue(PixelRatio.getFontScale() * 18, standardScreenHeight),
+        xl: RFValue(PixelRatio.getFontScale() * 20, standardScreenHeight),
+        '2xl': RFValue(PixelRatio.getFontScale() * 24, standardScreenHeight),
+        '3xl': RFValue(PixelRatio.getFontScale() * 30, standardScreenHeight),
+        '4xl': RFValue(PixelRatio.getFontScale() * 36, standardScreenHeight),
+        '5xl': RFValue(PixelRatio.getFontScale() * 48, standardScreenHeight),
+        '6xl': RFValue(PixelRatio.getFontScale() * 60, standardScreenHeight),
+        '7xl': RFValue(PixelRatio.getFontScale() * 72, standardScreenHeight),
+        '8xl': RFValue(PixelRatio.getFontScale() * 96, standardScreenHeight),
+        '9xl': RFValue(PixelRatio.getFontScale() * 128, standardScreenHeight),
     },
     lineHeights: {
         '2xs': RFValue(PixelRatio.getFontScale() * 10),
