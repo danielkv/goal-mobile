@@ -43,7 +43,6 @@ const WorksheetList: React.FC = () => {
             estimatedItemSize={93}
             contentContainerStyle={{ padding: sizes[7] }}
             showsHorizontalScrollIndicator={false}
-            onRefresh={handleRefresh}
             refreshControl={
                 <RefreshControl
                     tintColor={colors.red[500]}
