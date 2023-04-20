@@ -1,8 +1,8 @@
-import { Block, EventRound } from './block'
+import { EventRound, IBlock } from './block'
 
 export type Group = {
     name: string
-    blocks: Block[]
+    blocks: IBlock[]
 }
 
 export type Period = {
@@ -24,7 +24,7 @@ export type Worksheet = {
     days: Day[]
 }
 
-export type TPeaces = Day | Period | Group | Block | EventRound
+export type TPeaces = Day | Period | Group | IBlock | EventRound
 
 export type DayModel = Day & { id: string }
 export type WorksheetModel = Omit<Worksheet, 'id' | 'days'> & { id: string; days: DayModel[] }

@@ -59,4 +59,4 @@ export type EmptyBlock = {
     type: ''
 }
 
-export type Block = { info?: string; type: BlockType } & (IEventBlock | IRestBlock | ITextBlock | EmptyBlock)
+export type IBlock = { info?: string; type: BlockType } & (IEventBlock | IRestBlock | ITextBlock | EmptyBlock)

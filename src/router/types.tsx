@@ -9,7 +9,9 @@ export type TReactNavigationStackParamList = {
 
     WorksheetDays: { id: string }
 
-    WorksheetDay: { worksheetId: string; dayId: string; date: string }
+    WorksheetDay: { worksheetId: string; dayId: string }
+
+    SectionCarousel: { worksheetId: string; dayId: string }
 }
 
 export enum ERouteName {
@@ -24,4 +26,6 @@ export enum ERouteName {
     WorksheetDays = 'WorksheetDays',
 
     WorksheetDay = 'WorksheetDay',
+
+    SectionCarousel = 'SectionCarousel',
 }

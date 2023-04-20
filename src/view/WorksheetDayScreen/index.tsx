@@ -7,7 +7,7 @@ import PeriodItem from './components/PeriodItem'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import { TReactNavigationStackParamList } from '@router/types'
+import { ERouteName, TReactNavigationStackParamList } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
 import { getWorksheetDayByIdFnUseCase } from '@useCases/worksheet/getWorksheetDayById'
 import { getErrorMessage } from '@utils/getErrorMessage'
@@ -19,7 +19,7 @@ const WorksheetDayScreen: React.FC = () => {
     const { sizes, colors } = useTheme()
     const [refreshing, setRefreshing] = useState(false)
     const {
-        params: { worksheetId, dayId, date },
+        params: { worksheetId, dayId },
     } = useRoute<RouteProp<TReactNavigationStackParamList, 'WorksheetDay'>>()
     const navigation = useNavigation()
 
@@ -48,9 +48,11 @@ const WorksheetDayScreen: React.FC = () => {
             </Flex>
         )
 
+    if (!data) return <AlertBox type="info" text="Nenhum resultado encontrato" />
+
     return (
         <FlashList
-            data={data?.periods}
+            data={data.periods}
             horizontal={false}
             renderItem={({ item, index }) => (
                 <Box m={2} flex={1}>
@@ -59,7 +61,8 @@ const WorksheetDayScreen: React.FC = () => {
                         dayId={dayId}
                         periodNumber={index + 1}
                         item={item}
-                        date={date}
+                        date={data.date}
+                        onGroupPress={() => navigation.navigate(ERouteName.SectionCarousel, { dayId, worksheetId })}
                     />
                 </Box>
             )}
