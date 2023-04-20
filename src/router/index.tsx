@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from '@view/Home'
 import Login from '@view/Login'
 import TimersScreen from '@view/Timers'
+import WorksheetDayScreen from '@view/WorksheetDayScreen'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetList from '@view/WorksheetList'
 
@@ -36,6 +37,7 @@ function Router() {
             />
             <Stack.Screen name={ERouteName.WorksheetList} options={{ title: 'Planilhas' }} component={WorksheetList} />
             <Stack.Screen name={ERouteName.WorksheetDays} options={{ title: 'Dias' }} component={WorksheetDays} />
+            <Stack.Screen name={ERouteName.WorksheetDay} options={{ title: 'Dia' }} component={WorksheetDayScreen} />
         </Stack.Navigator>
     )
 }

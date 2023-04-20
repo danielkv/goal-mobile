@@ -4,14 +4,14 @@ import { Avatar, Box, Heading, Pressable, Text, VStack, useTheme } from 'native-
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
-import { Day } from '@models/day'
+import { DayModel } from '@models/day'
 import { pluralize } from '@utils/strings'
 import dayjs from 'dayjs'
 
 export interface WorksheetDayItemProps {
-    item: Day
+    item: DayModel
 
-    onPress?: (item: Day) => void
+    onPress?: (item: DayModel) => void
 }
 
 const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) => {
