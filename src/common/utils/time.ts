@@ -23,7 +23,5 @@ export function stringTimeToSeconds(string: string): number {
 export function secondsToStringTime(time: number): string {
     const duration = dayjs.duration(time, 'seconds')
 
-    console.log(time, duration.format('mm:ss'))
-
     return duration.format('mm:ss')
 }

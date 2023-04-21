@@ -11,7 +11,7 @@ export type TReactNavigationStackParamList = {
 
     WorksheetDay: { worksheetId: string; dayId: string }
 
-    SectionCarousel: { worksheetId: string; dayId: string }
+    SectionCarousel: { worksheetId: string; dayId: string; sectionIndex: number }
 }
 
 export enum ERouteName {

@@ -50,22 +50,28 @@ const WorksheetDayScreen: React.FC = () => {
 
     if (!data) return <AlertBox type="info" text="Nenhum resultado encontrato" />
 
+    let indexSum = 0
+
     return (
         <FlashList
             data={data.periods}
             horizontal={false}
-            renderItem={({ item, index }) => (
-                <Box m={2} flex={1}>
-                    <PeriodItem
-                        worksheetId={worksheetId}
-                        dayId={dayId}
-                        periodNumber={index + 1}
-                        item={item}
-                        date={data.date}
-                        onGroupPress={() => navigation.navigate(ERouteName.SectionCarousel, { dayId, worksheetId })}
-                    />
-                </Box>
-            )}
+            renderItem={({ item, index }) => {
+                indexSum += item.groups.length
+                return (
+                    <Box m={2} flex={1}>
+                        <PeriodItem
+                            periodNumber={index + 1}
+                            item={item}
+                            date={data.date}
+                            indexSum={indexSum - item.groups.length}
+                            onSectionPress={(sectionIndex) =>
+                                navigation.navigate(ERouteName.SectionCarousel, { dayId, worksheetId, sectionIndex })
+                            }
+                        />
+                    </Box>
+                )
+            }}
             contentContainerStyle={{ paddingVertical: sizes[7], paddingHorizontal: sizes[5] }}
             showsHorizontalScrollIndicator={false}
             estimatedItemSize={640}

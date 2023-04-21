@@ -9,20 +9,12 @@ import dayjs from 'dayjs'
 export interface WorksheetDayItemProps {
     item: Period
     date: string
-    worksheetId: string
-    dayId: string
     periodNumber: number
-    onGroupPress?: (worksheetId: string, dayId: string, groupIndex: number) => void
+    indexSum: number
+    onSectionPress?: (sectionIndex: number) => void
 }
 
-const PeriodItem: React.FC<WorksheetDayItemProps> = ({
-    item,
-    onGroupPress,
-    date,
-    periodNumber,
-    dayId,
-    worksheetId,
-}) => {
+const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, onSectionPress, date, periodNumber, indexSum }) => {
     const { colors } = useTheme()
     const dateJs = dayjs(date)
 
@@ -43,15 +35,13 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({
                 {item.groups.map((group, index) => (
                     <Pressable
                         key={`${group.name}.${index}`}
-                        _pressed={
-                            Platform.OS === 'ios'
-                                ? {
-                                      bg: 'gray.700',
-                                  }
-                                : undefined
-                        }
+                        _pressed={Platform.select({
+                            ios: {
+                                bg: 'gray.700',
+                            },
+                        })}
                         android_ripple={{ color: colors.gray[700] }}
-                        onPress={() => onGroupPress?.(worksheetId, dayId, index)}
+                        onPress={() => onSectionPress?.(indexSum + index)}
                     >
                         <VStack p={3} alignItems="center" key={group.name} maxW="80%">
                             <Box bg="amber.100">

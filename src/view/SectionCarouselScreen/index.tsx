@@ -23,7 +23,7 @@ const SectionCarouselScreen: React.FC = () => {
     const { sizes } = useTheme()
 
     const {
-        params: { worksheetId, dayId },
+        params: { worksheetId, dayId, sectionIndex },
     } = useRoute<RouteProp<TReactNavigationStackParamList, 'SectionCarousel'>>()
     const navigation = useNavigation()
 
@@ -59,6 +59,7 @@ const SectionCarouselScreen: React.FC = () => {
         <FlashList
             data={sections}
             horizontal
+            initialScrollIndex={sectionIndex}
             renderItem={({ item, index }) => (
                 <Box m={`${SECTION_CARD_MARGIN}px`}>
                     <SectionItem width={SECTION_CARD_WIDTH} item={item} />
