@@ -23,13 +23,11 @@ const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) =>
 
     return (
         <Pressable
-            _pressed={
-                Platform.OS === 'ios'
-                    ? {
-                          bg: 'gray.700',
-                      }
-                    : undefined
-            }
+            _pressed={Platform.select({
+                ios: {
+                    bg: 'gray.700',
+                },
+            })}
             px={5}
             py={4}
             flex={1}

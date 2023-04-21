@@ -15,13 +15,11 @@ const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest
             flex={1}
             minH={192}
             bg="gray.600"
-            _pressed={
-                Platform.OS === 'ios'
-                    ? {
-                          bg: 'gray.700',
-                      }
-                    : undefined
-            }
+            _pressed={Platform.select({
+                ios: {
+                    bg: 'gray.700',
+                },
+            })}
             android_ripple={{ color: colors.gray[700] }}
             alignItems="center"
             justifyContent="center"

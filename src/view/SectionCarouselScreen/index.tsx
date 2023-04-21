@@ -47,9 +47,10 @@ const SectionCarouselScreen: React.FC = () => {
         )
 
     const sections =
-        data?.periods.flatMap<IFlatSection>((periods, index) =>
-            periods.groups.map((section) => ({
-                period: index + 1,
+        data?.periods.flatMap<IFlatSection>((periods, periodIndex) =>
+            periods.groups.map((section, sectionIndex) => ({
+                period: periodIndex + 1,
+                sectionNumber: sectionIndex + 1,
                 ...section,
             }))
         ) || []
@@ -58,7 +59,7 @@ const SectionCarouselScreen: React.FC = () => {
         <FlashList
             data={sections}
             horizontal
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
                 <Box m={`${SECTION_CARD_MARGIN}px`}>
                     <SectionItem width={SECTION_CARD_WIDTH} item={item} />
                 </Box>

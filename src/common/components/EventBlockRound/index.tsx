@@ -1,0 +1,34 @@
+import { Text, VStack } from 'native-base'
+
+import EventBlockMovement from '@components/EventBlockMovement'
+import { EventRound } from '@models/block'
+import { getRoundsDisplay } from '@utils/worksheet'
+
+export interface EventBlockRoundProps {
+    round: EventRound
+    textAlign?: 'center' | 'left'
+}
+
+const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'center' }) => {
+    return (
+        <>
+            {!!round.name && (
+                <Text textAlign={textAlign} color="gray.100" fontSize="sm">
+                    {round.name}
+                </Text>
+            )}
+            {!!round.repeat && (
+                <Text textAlign={textAlign} fontWeight="bold" fontSize="sm">
+                    {getRoundsDisplay(round.repeat)}
+                </Text>
+            )}
+            <VStack>
+                {round.movements.map((movement, index) => (
+                    <EventBlockMovement key={`${movement.name}.${index}`} movement={movement} textAlign={textAlign} />
+                ))}
+            </VStack>
+        </>
+    )
+}
+
+export default EventBlockRound

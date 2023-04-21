@@ -1,7 +1,7 @@
 import { Box, HStack, Text, VStack } from 'native-base'
 
-import BlockItem from '../BlockItem'
 import { IFlatSection } from '@common/interfaces/worksheet'
+import BlockItem from '@components/BlockItem'
 
 export interface SectionItemProps {
     item: IFlatSection
@@ -9,12 +9,13 @@ export interface SectionItemProps {
 }
 
 const SectionItem: React.FC<SectionItemProps> = ({ item, width }) => {
+    const sectionNumber = `${item.period}.${item.sectionNumber}`
     return (
         <VStack width={width} bg="gray.800" rounded="sm">
             <HStack alignItems="center">
                 <Box roundedTopLeft={4} bg="red.500" w="55px" h="55px" alignItems="center" justifyContent="center">
                     <Text color="white" fontWeight="bold" fontSize="lg">
-                        {item.period}
+                        {sectionNumber}
                     </Text>
                 </Box>
 
@@ -26,7 +27,12 @@ const SectionItem: React.FC<SectionItemProps> = ({ item, width }) => {
             <VStack my={5} space={4} alignItems="center">
                 {item.blocks.map((block, index) => (
                     <Box key={`${block.type}.${index}`} bg="gray.900" w="80%" rounded="md" p={3}>
-                        <BlockItem block={block} />
+                        <Box mb={4}>
+                            <BlockItem block={block} textAlign="left" />
+                        </Box>
+                        <Box px={2} roundedTop="sm" bg="gray.500" position="absolute" bottom={0} right={3}>
+                            <Text fontSize="2xs">{`${sectionNumber}.${index + 1}`}</Text>
+                        </Box>
                     </Box>
                 ))}
             </VStack>

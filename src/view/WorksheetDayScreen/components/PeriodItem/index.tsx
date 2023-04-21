@@ -2,9 +2,7 @@ import { Platform } from 'react-native'
 
 import { Box, HStack, Pressable, Text, VStack, useTheme } from 'native-base'
 
-import EventBlock from '../EventBlock'
-import RestBlock from '../RestBlock'
-import TextBlock from '../TextBlock'
+import BlockItem from '@components/BlockItem'
 import { Period } from '@models/day'
 import dayjs from 'dayjs'
 
@@ -44,6 +42,7 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({
             <VStack alignItems="center" space={4}>
                 {item.groups.map((group, index) => (
                     <Pressable
+                        key={`${group.name}.${index}`}
                         _pressed={
                             Platform.OS === 'ios'
                                 ? {
@@ -61,16 +60,9 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({
                                 </Text>
                             </Box>
                             <VStack mt={5} space={5}>
-                                {group.blocks.map((block) => {
-                                    switch (block.type) {
-                                        case 'event':
-                                            return <EventBlock block={block} />
-                                        case 'rest':
-                                            return <RestBlock block={block} />
-                                        case 'text':
-                                            return <TextBlock block={block} />
-                                    }
-                                })}
+                                {group.blocks.map((block, index) => (
+                                    <BlockItem key={`${block.type}.${index}`} block={block} textAlign="center" />
+                                ))}
                             </VStack>
                         </VStack>
                     </Pressable>
