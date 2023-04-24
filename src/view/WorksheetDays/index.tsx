@@ -52,7 +52,7 @@ const WorksheetDays: React.FC = () => {
                     <WorksheetDayItem
                         item={item}
                         onPress={(item) =>
-                            navigate(ERouteName.WorksheetDay, {
+                            navigate(ERouteName.DayView, {
                                 dayId: item.id,
                                 worksheetId: data?.id || '',
                             })
