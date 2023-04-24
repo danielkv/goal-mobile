@@ -4,12 +4,12 @@ import { HStack, Pressable, Text, useTheme } from 'native-base'
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
-import { EventMovement } from '@models/block'
+import { IEventMovement } from '@models/block'
 import { displayWeight, getRoundsDisplay } from '@utils/worksheet'
 import * as Linking from 'expo-linking'
 
 export interface EventBlockMovementProps {
-    movement: EventMovement
+    movement: IEventMovement
     textAlign?: 'center' | 'left'
 }
 

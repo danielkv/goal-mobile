@@ -5,13 +5,13 @@ import { Avatar, HStack, Heading, Pressable, Text, VStack, useTheme } from 'nati
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
-import { Worksheet } from '@models/day'
+import { IWorksheetModel } from '@models/day'
 import dayjs from 'dayjs'
 
 export interface WorksheetListItemProps {
-    item: Worksheet
+    item: IWorksheetModel
     current?: boolean
-    onPress?: (item: Worksheet) => void
+    onPress?: (item: IWorksheetModel) => void
 }
 
 const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, current, onPress }) => {

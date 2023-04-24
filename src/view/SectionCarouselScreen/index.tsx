@@ -48,7 +48,7 @@ const SectionCarouselScreen: React.FC = () => {
 
     const sections =
         data?.periods.flatMap<IFlatSection>((periods, periodIndex) =>
-            periods.groups.map((section, sectionIndex) => ({
+            periods.sections.map((section, sectionIndex) => ({
                 period: periodIndex + 1,
                 sectionNumber: sectionIndex + 1,
                 ...section,

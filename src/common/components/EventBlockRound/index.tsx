@@ -1,11 +1,11 @@
 import { Text, VStack } from 'native-base'
 
 import EventBlockMovement from '@components/EventBlockMovement'
-import { EventRound } from '@models/block'
+import { IEventRound } from '@models/block'
 import { getRoundsDisplay } from '@utils/worksheet'
 
 export interface EventBlockRoundProps {
-    round: EventRound
+    round: IEventRound
     textAlign?: 'center' | 'left'
 }
 

@@ -57,14 +57,14 @@ const WorksheetDayScreen: React.FC = () => {
             data={data.periods}
             horizontal={false}
             renderItem={({ item, index }) => {
-                indexSum += item.groups.length
+                indexSum += item.sections.length
                 return (
                     <Box m={2} flex={1}>
                         <PeriodItem
                             periodNumber={index + 1}
                             item={item}
                             date={data.date}
-                            indexSum={indexSum - item.groups.length}
+                            indexSum={indexSum - item.sections.length}
                             onSectionPress={(sectionIndex) =>
                                 navigation.navigate(ERouteName.SectionCarousel, { dayId, worksheetId, sectionIndex })
                             }

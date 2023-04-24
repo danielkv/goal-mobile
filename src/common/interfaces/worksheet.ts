@@ -1,6 +1,6 @@
-import { Group } from '@models/day'
+import { ISection } from '@models/day'
 
-export interface IFlatSection extends Group {
+export interface IFlatSection extends ISection {
     period: number
     sectionNumber: number
 }

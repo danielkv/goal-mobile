@@ -3,11 +3,11 @@ import { Platform } from 'react-native'
 import { Box, HStack, Pressable, Text, VStack, useTheme } from 'native-base'
 
 import BlockItem from '@components/BlockItem'
-import { Period } from '@models/day'
+import { IPeriod } from '@models/day'
 import dayjs from 'dayjs'
 
 export interface WorksheetDayItemProps {
-    item: Period
+    item: IPeriod
     date: string
     periodNumber: number
     indexSum: number
@@ -32,7 +32,7 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, onSectionPress, dat
                 </Text>
             </HStack>
             <VStack alignItems="center" space={4}>
-                {item.groups.map((group, index) => (
+                {item.sections.map((group, index) => (
                     <Pressable
                         key={`${group.name}.${index}`}
                         _pressed={Platform.select({
