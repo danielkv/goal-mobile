@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
-import Carousel, { Pagination } from 'react-native-new-snap-carousel'
+import PagerView from 'react-native-pager-view'
+import Animated, { Easing, useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 
-import { Box, ScrollView, useTheme } from 'native-base'
+import { Box, HStack, ScrollView } from 'native-base'
 
 import SectionItem from './components/SectionItem'
 import { IFlatSection } from '@common/interfaces/worksheet'
@@ -17,10 +18,7 @@ export interface SectionCarouselView {
 }
 
 const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
-    const { sizes } = useTheme()
-
     const initialSection = 0
-
     const [activeSlide, setActiveSlide] = useState(initialSection)
 
     const sections = useMemo(
@@ -36,33 +34,42 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
     )
 
     return (
-        <Box flexGrow={1}>
-            <Pagination
-                dotsLength={sections.length}
-                activeDotIndex={activeSlide}
-                containerStyle={{ paddingVertical: sizes[3] }}
-                dotStyle={{
-                    width: 8,
-                    height: 8,
-                    backgroundColor: 'white',
-                }}
-                inactiveDotOpacity={0.4}
-                inactiveDotScale={0.5}
-            />
-            <Carousel
-                data={sections}
-                renderItem={({ item }) => (
-                    <Box mx={`${SECTION_CARD_MARGIN}px`}>
-                        <ScrollView>
+        <Box flexGrow={1} py={6}>
+            <HStack justifyContent="center" mb={6}>
+                {sections.map((item, index) => {
+                    const selected = index === activeSlide
+
+                    const animatedValue = useDerivedValue(() => {
+                        return withTiming(selected ? 1 : 0.4, { duration: 100, easing: Easing.ease })
+                    }, [selected])
+
+                    const handlerStyle = useAnimatedStyle(() => {
+                        return {
+                            transform: [{ scale: animatedValue.value }],
+                            opacity: animatedValue.value,
+                        }
+                    })
+
+                    return (
+                        <Animated.View
+                            key={`dot.${item.name}.${index}`}
+                            style={[
+                                { width: 8, height: 8, marginHorizontal: 4, borderRadius: 4, backgroundColor: 'white' },
+                                handlerStyle,
+                            ]}
+                        />
+                    )
+                })}
+            </HStack>
+            <PagerView style={{ flex: 1 }} onPageSelected={({ nativeEvent: { position } }) => setActiveSlide(position)}>
+                {sections.map((item, index) => (
+                    <Box key={`${item.name}.${index}`} mx={`${SECTION_CARD_MARGIN}px`}>
+                        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
                             <SectionItem width={SECTION_CARD_WIDTH} item={item} />
                         </ScrollView>
                     </Box>
-                )}
-                layout="default"
-                onSnapToItem={(index) => setActiveSlide(index)}
-                sliderWidth={SCREEN_WIDTH}
-                itemWidth={SECTION_CARD_WIDTH + SECTION_CARD_MARGIN * 2}
-            />
+                ))}
+            </PagerView>
         </Box>
     )
 }

@@ -10,11 +10,3 @@ declare module '*.svg' {
     const content: React.FC<SvgProps>
     export default content
 }
-
-declare module 'react-native-new-snap-carousel' {
-    import Carousel from 'react-native-snap-carousel'
-
-    export * from 'react-native-snap-carousel'
-
-    export default Carousel
-}
