@@ -1,19 +1,23 @@
 export type TReactNavigationStackParamList = {
-    Login: undefined
+    LoginScreen: undefined
 
-    Home: undefined
+    HomeScreen: undefined
+
+    WorksheetListScreen: undefined
 
     TimersScreen: undefined
 
-    WorksheetList: undefined
+    RegressiveTimerScreen: undefined
 }
 
 export enum ERouteName {
-    Login = 'Login',
+    LoginScreen = 'LoginScreen',
 
-    Home = 'Home',
+    HomeScreen = 'HomeScreen',
+
+    WorksheetListScreen = 'WorksheetListScreen',
 
     TimersScreen = 'TimersScreen',
 
-    WorksheetList = 'WorksheetList',
+    RegressiveTimerScreen = 'RegressiveTimerScreen',
 }
