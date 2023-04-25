@@ -5,8 +5,11 @@ import EmomSvg from '@assets/svg/emom.svg'
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TabataIcon from '@assets/svg/tabata.svg'
+import { useNavigation } from '@react-navigation/native'
+import { ERouteName } from '@router/types'
 
-export const TimersScreen: React.FC = () => {
+const TimersScreen: React.FC = () => {
+    const { navigate } = useNavigation()
     return (
         <Box p={7}>
             <Heading mb={'7'} textAlign="center" fontFamily="heading" fontSize="2xl" color="white" lineHeight="2xl">
@@ -14,7 +17,11 @@ export const TimersScreen: React.FC = () => {
             </Heading>
             <HStack space={4} mb={4}>
                 <TimerCard title="Stopwatch" Icon={StopwatchSvg} />
-                <TimerCard title="Regressivo" Icon={RegressiveSvg} />
+                <TimerCard
+                    title="Regressivo"
+                    Icon={RegressiveSvg}
+                    onPress={() => navigate(ERouteName.RegressiveTimerScreen)}
+                />
             </HStack>
             <HStack space={4}>
                 <TimerCard title="Tabata" Icon={TabataIcon} />
@@ -23,3 +30,5 @@ export const TimersScreen: React.FC = () => {
         </Box>
     )
 }
+
+export default TimersScreen

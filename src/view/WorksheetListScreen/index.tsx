@@ -11,7 +11,7 @@ import { getWorksheetListUseCase } from '@useCases/worksheet/getWorksheetList'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import useSWR from 'swr'
 
-const WorksheetList: React.FC = () => {
+const WorksheetListScreen: React.FC = () => {
     const { sizes, colors } = useTheme()
     const [refreshing, setRefreshing] = useState(false)
 
@@ -56,4 +56,4 @@ const WorksheetList: React.FC = () => {
     )
 }
 
-export default WorksheetList
+export default WorksheetListScreen
