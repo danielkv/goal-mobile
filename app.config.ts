@@ -9,7 +9,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         name: 'goal-mobile',
         slug: 'goal-mobile',
         version: '1.0.0',
-        orientation: 'portrait',
+
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
