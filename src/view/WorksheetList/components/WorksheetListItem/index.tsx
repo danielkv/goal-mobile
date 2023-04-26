@@ -1,4 +1,5 @@
 import React from 'react'
+import { Platform } from 'react-native'
 
 import { Avatar, HStack, Heading, Pressable, Text, VStack, useTheme } from 'native-base'
 
@@ -10,19 +11,29 @@ import dayjs from 'dayjs'
 export interface WorksheetListItemProps {
     item: Worksheet
     current?: boolean
-    onClick?: (item: Worksheet) => void
+    onPress?: (item: Worksheet) => void
 }
 
-const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, current }) => {
+const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, current, onPress }) => {
     const { colors } = useTheme()
 
     return (
         <Pressable
+            _pressed={
+                Platform.OS === 'ios'
+                    ? {
+                          bg: 'gray.700',
+                      }
+                    : undefined
+            }
             px={5}
             py={4}
             android_ripple={{ color: colors.gray[700] }}
             backgroundColor={colors.gray[600]}
             borderRadius="md"
+            onPress={() => {
+                onPress?.(item)
+            }}
         >
             <HStack space={5} alignItems="center">
                 <FontAwesome5 name="clipboard-list" size={24} color={colors.gray[400]} />
