@@ -4,6 +4,12 @@ export type TReactNavigationStackParamList = {
     Home: undefined
 
     TimersScreen: undefined
+
+    WorksheetList: undefined
+
+    WorksheetDays: { id: string }
+
+    DayView: { worksheetId: string; dayId: string }
 }
 
 export enum ERouteName {
@@ -12,4 +18,12 @@ export enum ERouteName {
     Home = 'Home',
 
     TimersScreen = 'TimersScreen',
+
+    WorksheetList = 'WorksheetList',
+
+    WorksheetDays = 'WorksheetDays',
+
+    DayView = 'DayView',
+
+    SectionCarousel = 'SectionCarousel',
 }

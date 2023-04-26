@@ -7,8 +7,14 @@ import Router from './src/router'
 import { theme } from './src/theme'
 import { NavigationContainer } from '@react-navigation/native'
 import { initialLoadUseCase } from '@useCases/init/initialLoad'
+import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
+import duration from 'dayjs/plugin/duration'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
+
+dayjs.locale('pt-br')
+dayjs.extend(duration)
 
 SplashScreen.preventAutoHideAsync()
 
