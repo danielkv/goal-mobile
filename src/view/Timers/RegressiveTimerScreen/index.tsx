@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useWindowDimensions } from 'react-native'
 
 import { Center } from 'native-base'
 
@@ -8,9 +7,6 @@ import { TWatchProgressStatus, TWeatherActivityStatus } from '@common/interfaces
 import CountingClockComponent from '@components/CountingClock'
 
 const RegressiveTimerScreen: React.FC = () => {
-    const { width, height } = useWindowDimensions()
-    const isPortrait = height > width
-
     const [count, setCount] = useState(0)
     const [weatherActivityStatus, setWeatherActivityStatus] = useState<TWeatherActivityStatus>('work')
     const [watchProgressStatus, setWatchProgressStatus] = useState<TWatchProgressStatus>('running')
@@ -34,30 +30,21 @@ const RegressiveTimerScreen: React.FC = () => {
     }
 
     return (
-        <>
-            {isPortrait ? (
-                <Center width={'100%'}>
-                    <CountingClockComponent
-                        time="00:00.000"
-                        Icon={RegressiveSvg}
-                        isPortrait={isPortrait}
-                        numberRounds={count}
-                        onPressWatchStartButton={() => setCount(count + 1)}
-                        onPressClockEditButton={() => handleStatus()}
-                        onPressResetTimeButton={handleWatchProgressStatus}
-                        onPressTimePauseButton={() => setCount(count + 1)}
-                        isTabata
-                        hasRound
-                        weatherActivityStatus={weatherActivityStatus}
-                        watchProgressStatus={watchProgressStatus}
-                    />
-                </Center>
-            ) : (
-                <Center width={'100%'}>
-                    <CountingClockComponent time="00:00.000" Icon={RegressiveSvg} isPortrait={isPortrait} />
-                </Center>
-            )}
-        </>
+        <Center safeArea>
+            <CountingClockComponent
+                time="00:00:000"
+                Icon={RegressiveSvg}
+                numberRounds={count}
+                onPressWatchStartButton={() => setCount(count + 1)}
+                onPressClockEditButton={() => handleStatus()}
+                onPressResetTimeButton={handleWatchProgressStatus}
+                onPressTimePauseButton={() => setCount(count + 1)}
+                isTabata
+                hasRound
+                weatherActivityStatus={weatherActivityStatus}
+                watchProgressStatus={watchProgressStatus}
+            />
+        </Center>
     )
 }
 
