@@ -4,14 +4,14 @@ import { Avatar, Box, Heading, Pressable, Text, VStack, useTheme } from 'native-
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
-import { DayModel } from '@models/day'
+import { IDayModel } from '@models/day'
 import { pluralize } from '@utils/strings'
 import dayjs from 'dayjs'
 
 export interface WorksheetDayItemProps {
-    item: DayModel
+    item: IDayModel
 
-    onPress?: (item: DayModel) => void
+    onPress?: (item: IDayModel) => void
 }
 
 const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) => {
@@ -23,13 +23,11 @@ const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) =>
 
     return (
         <Pressable
-            _pressed={
-                Platform.OS === 'ios'
-                    ? {
-                          bg: 'gray.700',
-                      }
-                    : undefined
-            }
+            _pressed={Platform.select({
+                ios: {
+                    bg: 'gray.700',
+                },
+            })}
             px={5}
             py={4}
             flex={1}

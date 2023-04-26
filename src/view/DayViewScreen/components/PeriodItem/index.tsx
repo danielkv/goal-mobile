@@ -2,29 +2,19 @@ import { Platform } from 'react-native'
 
 import { Box, HStack, Pressable, Text, VStack, useTheme } from 'native-base'
 
-import EventBlock from '../EventBlock'
-import RestBlock from '../RestBlock'
-import TextBlock from '../TextBlock'
-import { Period } from '@models/day'
+import BlockItem from '@components/BlockItem'
+import { IPeriod } from '@models/day'
 import dayjs from 'dayjs'
 
 export interface WorksheetDayItemProps {
-    item: Period
+    item: IPeriod
     date: string
-    worksheetId: string
-    dayId: string
     periodNumber: number
-    onGroupPress?: (worksheetId: string, dayId: string, groupIndex: number) => void
+    indexSum: number
+    onSectionPress?: (sectionIndex: number) => void
 }
 
-const PeriodItem: React.FC<WorksheetDayItemProps> = ({
-    item,
-    onGroupPress,
-    date,
-    periodNumber,
-    dayId,
-    worksheetId,
-}) => {
+const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, onSectionPress, date, periodNumber, indexSum }) => {
     const { colors } = useTheme()
     const dateJs = dayjs(date)
 
@@ -42,17 +32,16 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({
                 </Text>
             </HStack>
             <VStack alignItems="center" space={4}>
-                {item.groups.map((group, index) => (
+                {item.sections.map((group, index) => (
                     <Pressable
-                        _pressed={
-                            Platform.OS === 'ios'
-                                ? {
-                                      bg: 'gray.700',
-                                  }
-                                : undefined
-                        }
+                        key={`${group.name}.${index}`}
+                        _pressed={Platform.select({
+                            ios: {
+                                bg: 'gray.700',
+                            },
+                        })}
                         android_ripple={{ color: colors.gray[700] }}
-                        onPress={() => onGroupPress?.(worksheetId, dayId, index)}
+                        onPress={() => onSectionPress?.(indexSum + index)}
                     >
                         <VStack p={3} alignItems="center" key={group.name} maxW="80%">
                             <Box bg="amber.100">
@@ -61,16 +50,9 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({
                                 </Text>
                             </Box>
                             <VStack mt={5} space={5}>
-                                {group.blocks.map((block) => {
-                                    switch (block.type) {
-                                        case 'event':
-                                            return <EventBlock block={block} />
-                                        case 'rest':
-                                            return <RestBlock block={block} />
-                                        case 'text':
-                                            return <TextBlock block={block} />
-                                    }
-                                })}
+                                {group.blocks.map((block, index) => (
+                                    <BlockItem key={`${block.type}.${index}`} block={block} textAlign="center" />
+                                ))}
                             </VStack>
                         </VStack>
                     </Pressable>

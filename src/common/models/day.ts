@@ -1,30 +1,26 @@
-import { Block, EventRound } from './block'
+import { IBlock } from './block'
 
-export type Group = {
+export interface ISection {
     name: string
-    blocks: Block[]
+    blocks: IBlock[]
 }
 
-export type Period = {
+export interface IPeriod {
     name?: string
-    groups: Group[]
+    sections: ISection[]
 }
 
-export type Day = {
+export interface IDayModel {
+    id: string
     name: string
     date: string // YYYY-MM-DD
-    periods: Period[]
+    periods: IPeriod[]
 }
 
-export type Worksheet = {
+export interface IWorksheetModel {
     id: string
     name: string
     info?: string
     startDate: string // YYYY-MM-DD
-    days: Day[]
+    days: IDayModel[]
 }
-
-export type TPeaces = Day | Period | Group | Block | EventRound
-
-export type DayModel = Day & { id: string }
-export type WorksheetModel = Omit<Worksheet, 'id' | 'days'> & { id: string; days: DayModel[] }

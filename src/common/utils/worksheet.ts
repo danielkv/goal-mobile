@@ -1,14 +1,14 @@
-import { BlockType, EventType } from '@models/block'
-import { IEventBlock, MovementWeight } from '@models/block'
+import { TBlockType, TEventType } from '@models/block'
+import { IEventBlock, IMovementWeight } from '@models/block'
 import { getTimeFromSeconds } from '@utils/time'
 
-export const blockTypesMap: Record<Exclude<BlockType, ''>, string> = {
+export const blockTypesMap: Record<Exclude<TBlockType, ''>, string> = {
     event: 'Evento ',
     rest: 'REST',
     text: 'Texto',
 }
 
-export const eventTypesMap: Record<EventType, string> = {
+export const eventTypesMap: Record<TEventType, string> = {
     not_timed: 'Sem tempo',
     for_time: 'For Time',
     amrap: 'AMRAP',
@@ -16,7 +16,7 @@ export const eventTypesMap: Record<EventType, string> = {
     max_weight: 'Carga máxima',
 }
 
-export function displayWeight(weight?: MovementWeight): string {
+export function displayWeight(weight?: IMovementWeight): string {
     if (!weight?.value || weight.type === 'none') return ''
 
     const value = getRoundsDisplay(weight.value, '', `${weight.type} `)
@@ -27,7 +27,7 @@ export function displayWeight(weight?: MovementWeight): string {
 export const getTimeCap = (block: IEventBlock) => {
     if (block.event_type === 'emom') {
         const each = getTimeFromSeconds(block.each)
-        const forTime = getTimeFromSeconds(block.for)
+        const forTime = getTimeFromSeconds(block.numberOfRounds)
         return ` - Cada ${each} por ${forTime}`
     }
 
