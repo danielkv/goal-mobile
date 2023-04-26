@@ -28,7 +28,7 @@ const WorksheetList: React.FC = () => {
 
     if (error) return <AlertBox type="error" title="Ocorreu um erro" text={getErrorMessage(error)} />
 
-    if (!data && isLoading)
+    if (!data?.length && isLoading)
         return (
             <Flex flex={1} alignItems="center" justifyContent="center">
                 <ActivityIndicator size={30} />

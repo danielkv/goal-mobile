@@ -37,20 +37,20 @@ export type EventBlockNotTimed = {
     event_type: 'not_timed'
 }
 
-export type EventBlock = {
+export type IEventBlock = {
     type: 'event'
     name?: string
     rounds: EventRound[]
     event_type: EventType
 } & (EventBlockEMOM | EventBlockTimecap | EventBlockNotTimed)
 
-export type RestBlock = {
+export type IRestBlock = {
     type: 'rest'
     time: number
     text?: string
 }
 
-export type TextBlock = {
+export type ITextBlock = {
     type: 'text'
     text: string
 }
@@ -59,9 +59,4 @@ export type EmptyBlock = {
     type: ''
 }
 
-export type Block = { info?: string; type: BlockType } & (
-    | EventBlock
-    | RestBlock
-    | TextBlock
-    | EmptyBlock
-)
+export type Block = { info?: string; type: BlockType } & (IEventBlock | IRestBlock | ITextBlock | EmptyBlock)

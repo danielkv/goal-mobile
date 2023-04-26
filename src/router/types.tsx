@@ -8,6 +8,8 @@ export type TReactNavigationStackParamList = {
     WorksheetList: undefined
 
     WorksheetDays: { id: string }
+
+    WorksheetDay: { worksheetId: string; dayId: string; date: string }
 }
 
 export enum ERouteName {
@@ -20,4 +22,6 @@ export enum ERouteName {
     WorksheetList = 'WorksheetList',
 
     WorksheetDays = 'WorksheetDays',
+
+    WorksheetDay = 'WorksheetDay',
 }

@@ -26,4 +26,5 @@ export type Worksheet = {
 
 export type TPeaces = Day | Period | Group | Block | EventRound
 
-export type WorksheetModel = Omit<Worksheet, 'id'> & { id: string }
+export type DayModel = Day & { id: string }
+export type WorksheetModel = Omit<Worksheet, 'id' | 'days'> & { id: string; days: DayModel[] }
