@@ -5,20 +5,23 @@ import { extendTheme } from 'native-base'
 
 const standardScreenHeight = 740
 
+const colorRed = {
+    50: '#FDB9C4',
+    100: '#FB9AAA',
+    200: '#F87A8F',
+    300: '#F55C75',
+    400: '#F23E5B',
+    500: '#EE2042',
+    600: '#C81734',
+    700: '#A00F27',
+    800: '#77091B',
+    900: '#4C0511',
+}
+
 export const theme = extendTheme({
     colors: {
-        primary: {
-            50: '#FDB9C4',
-            100: '#FB9AAA',
-            200: '#F87A8F',
-            300: '#F55C75',
-            400: '#F23E5B',
-            500: '#EE2042',
-            600: '#C81734',
-            700: '#A00F27',
-            800: '#77091B',
-            900: '#4C0511',
-        },
+        primary: colorRed,
+        red: colorRed,
         gray: {
             100: '#F5F5F5',
             200: '#D3D3D3',

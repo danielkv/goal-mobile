@@ -31,6 +31,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             favicon: './assets/favicon.png',
         },
 
-        extra: envs.parsed,
+        extra: {
+            ...envs.parsed,
+            eas: {
+                projectId: 'ed242d48-5e82-4082-8477-7e5aea15b1d7',
+            },
+        },
+
+        updates: {
+            url: 'https://u.expo.dev/ed242d48-5e82-4082-8477-7e5aea15b1d7',
+        },
+        runtimeVersion: {
+            policy: 'sdkVersion',
+        },
     }
 }

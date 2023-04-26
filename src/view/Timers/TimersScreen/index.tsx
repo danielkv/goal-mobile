@@ -1,6 +1,6 @@
 import { Box, HStack, Heading } from 'native-base'
 
-import { TimerCard } from './components/Card'
+import TimerCard from './components/Card'
 import EmomSvg from '@assets/svg/emom.svg'
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import StopwatchSvg from '@assets/svg/stopwatch.svg'

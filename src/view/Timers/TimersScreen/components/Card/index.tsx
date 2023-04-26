@@ -8,7 +8,7 @@ interface TimerCardProps extends IPressableProps {
     Icon: React.FC<SvgProps>
 }
 
-export const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
+const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
     const { colors } = useTheme()
 
     return (
@@ -16,13 +16,11 @@ export const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, 
             flex={1}
             minH={192}
             bg="gray.600"
-            _pressed={
-                Platform.OS === 'ios'
-                    ? {
-                          bg: 'gray.700',
-                      }
-                    : undefined
-            }
+            _pressed={Platform.select({
+                ios: {
+                    bg: 'gray.700',
+                },
+            })}
             android_ripple={{ color: colors.gray[700] }}
             alignItems="center"
             justifyContent="center"
@@ -39,3 +37,5 @@ export const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, 
         </Pressable>
     )
 }
+
+export default TimerCard

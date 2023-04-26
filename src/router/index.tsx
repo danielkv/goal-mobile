@@ -2,10 +2,12 @@ import { useTheme } from 'native-base'
 
 import { ERouteName } from './types'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
 import TimersScreen from '@view/Timers/TimersScreen'
+import WorksheetDays from '@view/WorksheetDays'
 import WorksheetListScreen from '@view/WorksheetListScreen'
 
 const Stack = createNativeStackNavigator()
@@ -46,6 +48,13 @@ function Router() {
                     title: 'Timer regressivo',
                 }}
             />
+            <Stack.Screen
+                name={ERouteName.WorksheetList}
+                options={{ title: 'Planilhas' }}
+                component={WorksheetListScreen}
+            />
+            <Stack.Screen name={ERouteName.WorksheetDays} options={{ title: 'Dias' }} component={WorksheetDays} />
+            <Stack.Screen name={ERouteName.DayView} options={{ title: 'Dia' }} component={DayViewScreen} />
         </Stack.Navigator>
     )
 }
