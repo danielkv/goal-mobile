@@ -1,12 +1,12 @@
 import { SvgProps } from 'react-native-svg'
 
-import { TWatchProgressStatus, TWeatherActivityStatus } from '@common/interfaces/timers'
+import { TActivityStatus, TWatchProgressStatus } from '@common/interfaces/timers'
 
 export interface CountingClockProps {
     time: string
     Icon: React.FC<SvgProps>
     numberRounds?: number
-    weatherActivityStatus?: TWeatherActivityStatus
+    weatherActivityStatus?: TActivityStatus
     watchProgressStatus: TWatchProgressStatus
     onPressPlayButton: () => void
     onPressEditButton: () => void

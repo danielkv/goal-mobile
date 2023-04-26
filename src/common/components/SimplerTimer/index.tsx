@@ -1,22 +1,35 @@
 import { useEffect } from 'react'
 import { useWindowDimensions } from 'react-native'
+import { SvgProps } from 'react-native-svg'
 
 import { Box, Flex, HStack, Pressable, Text, useTheme } from 'native-base'
 
 import { MaterialIcons } from '@expo/vector-icons'
 
-import { CountingClockProps } from './types'
+import { TActivityStatus, TWatchProgressStatus } from '@common/interfaces/timers'
 import { useNavigation } from '@react-navigation/native'
 
-const SimplerTimer: React.FC<CountingClockProps> = ({
+export interface SimplerTimerProps {
+    time: string
+    Icon: React.FC<SvgProps>
+    numberRounds?: number
+    activityStatus?: TActivityStatus
+    watchProgressStatus: TWatchProgressStatus
+    onPressPlayButton: () => void
+    onPressEditButton: () => void
+    onPressPauseButton: () => void
+    onPressResetButton: () => void
+}
+
+const SimplerTimer: React.FC<SimplerTimerProps> = ({
     time,
     Icon,
     numberRounds,
-    onPressPlayButton: onPressWatchStartButton,
-    onPressEditButton: onPressClockEditButton,
-    onPressPauseButton: onPressTimePauseButton,
-    onPressResetButton: onPressResetTimeButton,
-    weatherActivityStatus,
+    onPressPlayButton,
+    onPressEditButton,
+    onPressPauseButton,
+    onPressResetButton,
+    activityStatus,
     watchProgressStatus,
 }) => {
     const { width, height } = useWindowDimensions()
@@ -31,9 +44,9 @@ const SimplerTimer: React.FC<CountingClockProps> = ({
 
     return (
         <Box flex={1} alignItems="center" justifyContent="center">
-            {weatherActivityStatus !== undefined && (
+            {activityStatus !== undefined && (
                 <Box
-                    bg={weatherActivityStatus === 'work' ? 'red.500' : 'gray.900'}
+                    bg={activityStatus === 'work' ? 'red.500' : 'gray.900'}
                     mb={5}
                     px={2}
                     py={1}
@@ -43,7 +56,7 @@ const SimplerTimer: React.FC<CountingClockProps> = ({
                         fontWeight: 700,
                     }}
                 >
-                    {weatherActivityStatus.toLocaleUpperCase()}
+                    {activityStatus.toLocaleUpperCase()}
                 </Box>
             )}
 
@@ -78,7 +91,7 @@ const SimplerTimer: React.FC<CountingClockProps> = ({
             <HStack mt={isPortrait ? 10 : 0} alignItems={'center'} space={5}>
                 {watchProgressStatus === 'running' ? (
                     <>
-                        <Pressable onPress={onPressTimePauseButton}>
+                        <Pressable onPress={onPressPauseButton}>
                             {({ isPressed }) => (
                                 <MaterialIcons
                                     name="pause-circle-filled"
@@ -90,7 +103,7 @@ const SimplerTimer: React.FC<CountingClockProps> = ({
                     </>
                 ) : (
                     <>
-                        <Pressable onPress={onPressWatchStartButton}>
+                        <Pressable onPress={onPressPlayButton}>
                             {({ isPressed }) => (
                                 <MaterialIcons
                                     name="play-circle-filled"
@@ -99,7 +112,7 @@ const SimplerTimer: React.FC<CountingClockProps> = ({
                                 />
                             )}
                         </Pressable>
-                        <Pressable onPress={onPressResetTimeButton}>
+                        <Pressable onPress={onPressResetButton}>
                             {({ isPressed }) => (
                                 <MaterialIcons
                                     name="replay-circle-filled"
@@ -108,7 +121,7 @@ const SimplerTimer: React.FC<CountingClockProps> = ({
                                 />
                             )}
                         </Pressable>
-                        <Pressable onPress={onPressClockEditButton}>
+                        <Pressable onPress={onPressEditButton}>
                             {({ isPressed }) => (
                                 <MaterialIcons
                                     name="edit"

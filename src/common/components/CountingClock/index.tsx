@@ -3,7 +3,7 @@ import { SvgProps } from 'react-native-svg'
 
 import LandscapeMode from './LandscapeMode'
 import PortraitMode from './PortraitMode'
-import { TWatchProgressStatus, TWeatherActivityStatus } from '@common/interfaces/timers'
+import { TActivityStatus, TWatchProgressStatus } from '@common/interfaces/timers'
 
 export interface CountingClockProps {
     time?: string
@@ -13,7 +13,7 @@ export interface CountingClockProps {
     buttonTitle?: string
     hasRound?: boolean
     isTabata?: boolean
-    weatherActivityStatus?: TWeatherActivityStatus
+    weatherActivityStatus?: TActivityStatus
     watchProgressStatus?: TWatchProgressStatus
     onPressWatchStartButton?: () => void
     onPressClockEditButton?: () => void
@@ -21,59 +21,11 @@ export interface CountingClockProps {
     onPressResetTimeButton?: () => void
 }
 
-const CountingClockComponent: React.FC<CountingClockProps> = ({
-    time,
-    Icon,
-    numberRounds,
-    buttonTitle,
-    onPressWatchStartButton,
-    onPressClockEditButton,
-    onPressTimePauseButton,
-    onPressResetTimeButton,
-    hasRound,
-    isTabata,
-    weatherActivityStatus,
-    watchProgressStatus,
-    ...rest
-}) => {
+const CountingClockComponent: React.FC<CountingClockProps> = (props) => {
     const { width, height } = useWindowDimensions()
     const isPortrait = height > width
 
-    return (
-        <>
-            {isPortrait
-                ? PortraitMode({
-                      time,
-                      Icon,
-                      numberRounds,
-                      buttonTitle,
-                      onPressWatchStartButton,
-                      onPressClockEditButton,
-                      onPressTimePauseButton,
-                      onPressResetTimeButton,
-                      hasRound,
-                      isTabata,
-                      weatherActivityStatus,
-                      watchProgressStatus,
-                      ...rest,
-                  })
-                : LandscapeMode({
-                      time,
-                      Icon,
-                      numberRounds,
-                      buttonTitle,
-                      onPressWatchStartButton,
-                      onPressClockEditButton,
-                      onPressTimePauseButton,
-                      onPressResetTimeButton,
-                      hasRound,
-                      isTabata,
-                      weatherActivityStatus,
-                      watchProgressStatus,
-                      ...rest,
-                  })}
-        </>
-    )
+    return <>{isPortrait ? PortraitMode(props) : LandscapeMode(props)}</>
 }
 
 export default CountingClockComponent
