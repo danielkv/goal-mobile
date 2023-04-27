@@ -28,7 +28,7 @@ const TimersScreen: React.FC = () => {
                 />
             </HStack>
             <HStack space={4}>
-                <TimerCard title="Tabata" Icon={TabataIcon} />
+                <TimerCard title="Tabata" Icon={TabataIcon} onPress={() => navigate(ERouteName.TabataTimerScreen)} />
                 <TimerCard title="EMOM" Icon={EmomSvg} onPress={() => navigate(ERouteName.EmomTimerScreen)} />
             </HStack>
         </Box>

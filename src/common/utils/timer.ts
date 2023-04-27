@@ -1,4 +1,4 @@
-import { TTimerStatus } from '@common/interfaces/timers'
+import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import { EventEmitter } from 'events'
 
 export interface ITimer {
@@ -12,7 +12,7 @@ export class StopwatchTimer extends EventEmitter {
     protected _startTime: number = 0
     protected _currentTime: number = 0
     protected tickInterval: NodeJS.Timer | undefined
-    protected _intervalTimeout: number = 500
+    protected _intervalTimeout: number = 300
 
     status: TTimerStatus = 'initial'
 
@@ -206,7 +206,7 @@ export class TabataTimer extends StopwatchTimer {
     private clockWork!: RegressiveTimer
     private clockRest!: RegressiveTimer
     private currentRound = 1
-    private current: 'work' | 'rest' = 'work'
+    private activityStatus: TActivityStatus = 'work'
 
     constructor(private readonly work: number, private readonly rest: number, private readonly rounds: number) {
         super()
@@ -219,11 +219,11 @@ export class TabataTimer extends StopwatchTimer {
     }
 
     private next() {
-        if (this.current === 'work') {
+        if (this.activityStatus === 'work') {
             this.clockWork.stop()
             this.clockRest.reset()
             this.clockRest.start()
-            this.current = 'rest'
+            this.setActivityStatus('rest')
         } else {
             if (this.getCurrentRound() + 1 > this.rounds) {
                 super.endTimer()
@@ -234,8 +234,13 @@ export class TabataTimer extends StopwatchTimer {
 
             this.clockWork.reset()
             this.clockWork.start()
-            this.current = 'work'
+            this.setActivityStatus('work')
         }
+    }
+
+    protected setActivityStatus(status: TActivityStatus) {
+        this.activityStatus = status
+        this.emit('changeActivityStatus', this.activityStatus, this.status)
     }
 
     protected checkEnded(): boolean {
@@ -247,7 +252,7 @@ export class TabataTimer extends StopwatchTimer {
     }
 
     start() {
-        if (this.current === 'work') this.clockWork.start()
+        if (this.activityStatus === 'work') this.clockWork.start()
         else this.clockRest.start()
         super.start()
     }
@@ -264,12 +269,12 @@ export class TabataTimer extends StopwatchTimer {
     }
 
     public getCurrentTime(): number {
-        if (this.current === 'work') return this.clockWork.getCurrentTime()
+        if (this.activityStatus === 'work') return this.clockWork.getCurrentTime()
         else return this.clockRest.getCurrentTime()
     }
 
     public getStartTime(): number {
-        if (this.current === 'work') return this.clockWork.getStartTime()
+        if (this.activityStatus === 'work') return this.clockWork.getStartTime()
         else return this.clockRest.getStartTime()
     }
 
@@ -287,7 +292,7 @@ export class TabataTimer extends StopwatchTimer {
     }
 
     public getElapsedTime(): number {
-        if (this.current === 'work') return this.clockWork.getElapsedTime()
+        if (this.activityStatus === 'work') return this.clockWork.getElapsedTime()
         else return this.clockRest.getElapsedTime()
     }
 }

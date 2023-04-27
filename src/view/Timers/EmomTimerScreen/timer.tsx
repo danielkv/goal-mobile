@@ -1,30 +1,31 @@
 import { useRef, useState } from 'react'
 
-import StopwatchSvg from '@assets/svg/stopwatch.svg'
+import RegressiveSvg from '@assets/svg/regressive.svg'
 import { TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimerSoundsRef } from '@contexts/timers/useTimerSounds'
-import { RegressiveTimer } from '@utils/timer'
+import { EmomTimer, RegressiveTimer } from '@utils/timer'
 import dayjs from 'dayjs'
 
-export interface RegressiveDisplayProps {
-    initialTime: number
+export interface EmomDisplayProps {
+    each: number
+    rounds: number
     initialCountdown: number
     onPressReset(): void
 }
 
-const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
-    initialTime,
+const EmomDisplay: React.FC<EmomDisplayProps> = ({
+    each,
+    rounds,
     initialCountdown: _initialCountdown,
     onPressReset,
 }) => {
-    const [currentTime, setCurrentTime] = useState(initialTime)
+    const [currentTime, setCurrentTime] = useState(each)
+    const [currentRound, setCurrentRound] = useState(1)
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
     const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
 
-    console.log(currentStatus)
-
-    const clockRef = useRef<RegressiveTimer>()
+    const clockRef = useRef<EmomTimer>()
     const initialCountdownRef = useRef<RegressiveTimer>()
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
 
@@ -47,20 +48,21 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     }
 
     const handlePressResetButton = () => {
-        clockRef.current?.reset()
         setInitialCountdown(_initialCountdown)
-        setCurrentTime(initialTime)
+        setCurrentTime(0)
+        clockRef.current?.reset()
     }
 
     const setupTimer = () => {
-        clockRef.current = new RegressiveTimer(initialTime)
+        clockRef.current = new EmomTimer(each, rounds)
 
         clockRef.current.on('changeStatus', (status) => {
             setCurrentStatus(status)
         })
 
-        clockRef.current.once('start', () => {
-            startSoundRef.current?.playFromPositionAsync(0)
+        clockRef.current.on('changeRound', (current: number) => {
+            if (currentStatus === 'running') startSoundRef.current?.playFromPositionAsync(0)
+            setCurrentRound(current)
         })
 
         clockRef.current.on('end', () => {
@@ -82,6 +84,10 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     const setupCountdown = () => {
         initialCountdownRef.current = new RegressiveTimer(_initialCountdown)
 
+        initialCountdownRef.current.once('end', () => {
+            startSoundRef.current?.playFromPositionAsync(0)
+        })
+
         initialCountdownRef.current.once('start', () => {
             beepSoundRef.current?.playFromPositionAsync(0)
         })
@@ -100,7 +106,8 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     return (
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
-            Icon={StopwatchSvg}
+            Icon={RegressiveSvg}
+            round={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}
             watchProgressStatus={currentStatus}
@@ -113,4 +120,4 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     )
 }
 
-export default RegressiveDisplay
+export default EmomDisplay

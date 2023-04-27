@@ -29,7 +29,11 @@ const RegressiveTimerScreen: React.FC = () => {
                     </Box>
                 </>
             ) : (
-                <RegressiveDisplay initialCountdown={0} initialTime={time1} onPressReset={() => setState('form')} />
+                <RegressiveDisplay
+                    initialCountdown={countdown}
+                    initialTime={time1}
+                    onPressReset={() => setState('form')}
+                />
             )}
         </Center>
     )

@@ -27,15 +27,16 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
 
     const handlePressPlayButton = () => {
-        if (currentStatus === 'initial') {
+        if (currentStatus === 'initial') setupTimer()
+
+        if (initialCountdown && currentStatus === 'initial') {
             setCurrentStatus('running')
 
             const countdownTimer = setupCountdown()
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
-                const timer = setupTimer()
-                timer.start()
+                clockRef.current?.start()
             })
             return
         }
@@ -66,6 +67,7 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
 
         clockRef.current.on('reset', () => {
             setCurrentTime(0)
+            setCurrentStatus('initial')
         })
 
         return clockRef.current

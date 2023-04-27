@@ -1,3 +1,4 @@
+import { pluralize } from './strings'
 import { TBlockType, TEventType } from '@models/block'
 import { IEventBlock, IMovementWeight } from '@models/block'
 import { getTimeFromSeconds } from '@utils/time'
@@ -11,6 +12,7 @@ export const blockTypesMap: Record<Exclude<TBlockType, ''>, string> = {
 export const eventTypesMap: Record<TEventType, string> = {
     not_timed: 'Sem tempo',
     for_time: 'For Time',
+    tabata: 'Tabata',
     amrap: 'AMRAP',
     emom: 'EMOM',
     max_weight: 'Carga máxima',
@@ -27,8 +29,13 @@ export function displayWeight(weight?: IMovementWeight): string {
 export const getTimeCap = (block: IEventBlock) => {
     if (block.event_type === 'emom') {
         const each = getTimeFromSeconds(block.each)
-        const forTime = getTimeFromSeconds(block.numberOfRounds)
-        return ` - Cada ${each} por ${forTime}`
+        return ` - Cada ${each} por ${block.numberOfRounds} ${pluralize(block.numberOfRounds, 'round')}`
+    }
+
+    if (block.event_type === 'tabata') {
+        const work = getTimeFromSeconds(block.work)
+        const rest = getTimeFromSeconds(block.rest)
+        return ` - ${work}/${rest} por ${block.numberOfRounds} ${pluralize(block.numberOfRounds, 'round')}`
     }
 
     if (block.event_type === 'not_timed') return ''

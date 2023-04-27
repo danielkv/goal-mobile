@@ -1,44 +1,48 @@
 import { useRef, useState } from 'react'
 
 import RegressiveSvg from '@assets/svg/regressive.svg'
-import { TTimerStatus } from '@common/interfaces/timers'
+import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimerSoundsRef } from '@contexts/timers/useTimerSounds'
-import { EmomTimer, RegressiveTimer } from '@utils/timer'
+import { RegressiveTimer, TabataTimer } from '@utils/timer'
 import dayjs from 'dayjs'
 
-export interface EmomDisplayProps {
-    each: number
+export interface TabataDisplayProps {
+    work: number
+    rest: number
     rounds: number
     initialCountdown: number
     onPressReset(): void
 }
 
-const EmomDisplay: React.FC<EmomDisplayProps> = ({
-    each,
+const TabataDisplay: React.FC<TabataDisplayProps> = ({
+    work,
+    rest,
     rounds,
     initialCountdown: _initialCountdown,
     onPressReset,
 }) => {
-    const [currentTime, setCurrentTime] = useState(each)
+    const [currentTime, setCurrentTime] = useState(work)
     const [currentRound, setCurrentRound] = useState(1)
+    const [currentActivityStatus, setCurrentActivityStatus] = useState<TActivityStatus>('work')
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
     const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
 
-    const clockRef = useRef<EmomTimer>()
+    const clockRef = useRef<TabataTimer>()
     const initialCountdownRef = useRef<RegressiveTimer>()
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
 
     const handlePressPlayButton = () => {
-        if (currentStatus === 'initial') {
+        if (currentStatus === 'initial') setupTimer()
+
+        if (initialCountdown && currentStatus === 'initial') {
             setCurrentStatus('running')
 
             const countdownTimer = setupCountdown()
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
-                const timer = setupTimer()
-                timer.start()
+                clockRef.current?.start()
             })
             return
         }
@@ -53,15 +57,23 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
     }
 
     const setupTimer = () => {
-        clockRef.current = new EmomTimer(each, rounds)
+        clockRef.current = new TabataTimer(work, rest, rounds)
 
         clockRef.current.on('changeStatus', (status) => {
+            console.log(status)
             setCurrentStatus(status)
         })
 
+        clockRef.current.once('start', () => {
+            startSoundRef.current?.playFromPositionAsync(0)
+        })
+
         clockRef.current.on('changeRound', (current: number) => {
-            if (currentStatus === 'running') startSoundRef.current?.playFromPositionAsync(0)
             setCurrentRound(current)
+        })
+        clockRef.current.on('changeActivityStatus', (current: TActivityStatus, status: TTimerStatus) => {
+            if (status === 'running') startSoundRef.current?.playFromPositionAsync(0)
+            setCurrentActivityStatus(current)
         })
 
         clockRef.current.on('end', () => {
@@ -74,6 +86,7 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
 
         clockRef.current.on('reset', () => {
             setCurrentTime(0)
+            setCurrentStatus('initial')
         })
 
         return clockRef.current
@@ -81,10 +94,6 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
 
     const setupCountdown = () => {
         initialCountdownRef.current = new RegressiveTimer(_initialCountdown)
-
-        initialCountdownRef.current.once('end', () => {
-            startSoundRef.current?.playFromPositionAsync(0)
-        })
 
         initialCountdownRef.current.once('start', () => {
             beepSoundRef.current?.playFromPositionAsync(0)
@@ -105,6 +114,7 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
             Icon={RegressiveSvg}
+            activityStatus={currentActivityStatus}
             round={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}
@@ -118,4 +128,4 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
     )
 }
 
-export default EmomDisplay
+export default TabataDisplay

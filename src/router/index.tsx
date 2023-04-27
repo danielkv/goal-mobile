@@ -5,9 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
-import EmomTimerScreen from '@view/Timers/EmomTImerScreen'
+import EmomTimerScreen from '@view/Timers/EmomTimerScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
 import StopwatchTimerScreen from '@view/Timers/StopwatchTImerScreen'
+import TabataTimerScreen from '@view/Timers/TabataTimerScreen'
 import TimersScreen from '@view/Timers/TimersScreen'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetListScreen from '@view/WorksheetListScreen'
@@ -62,6 +63,13 @@ function Router() {
                 component={EmomTimerScreen}
                 options={{
                     title: 'EMOM',
+                }}
+            />
+            <Stack.Screen
+                name={ERouteName.TabataTimerScreen}
+                component={TabataTimerScreen}
+                options={{
+                    title: 'Tabata',
                 }}
             />
             <Stack.Screen

@@ -11,6 +11,8 @@ export type TReactNavigationStackParamList = {
 
     RegressiveTimerScreen: undefined
 
+    TabataTimerScreen: undefined
+
     StopwatchTimerScreen: undefined
 
     WorksheetList: undefined
@@ -34,6 +36,8 @@ export enum ERouteName {
     StopwatchTimerScreen = 'StopwatchTimerScreen',
 
     EmomTimerScreen = 'EmomTimerScreen',
+
+    TabataTimerScreen = 'TabataTimerScreen',
 
     WorksheetList = 'WorksheetList',
 

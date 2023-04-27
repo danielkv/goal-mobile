@@ -3,6 +3,7 @@
     "compilerOptions": {
         "strict": true,
         "noUnusedLocals": true,
+        "allowJs": false,
         "baseUrl": "./",
         "paths": {
             "@components/*": ["src/common/components/*"],
