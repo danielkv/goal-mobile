@@ -21,7 +21,7 @@ const StopwatchTimerScreen: React.FC = () => {
                     </Box>
                 </>
             ) : (
-                <StopwatchDisplay finalTime={time1} onPressReset={() => setState('form')} />
+                <StopwatchDisplay initialCountdown={3} finalTime={time1} onPressReset={() => setState('form')} />
             )}
         </Center>
     )

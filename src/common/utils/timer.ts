@@ -1,6 +1,6 @@
+import { TTimerStatus } from '@common/interfaces/timers'
 import { EventEmitter } from 'events'
 
-export type TTimerStatus = 'running' | 'stopped' | 'initial'
 export interface ITimer {
     status: TTimerStatus
     start(): void
@@ -8,7 +8,7 @@ export interface ITimer {
     reset(): void
 }
 
-abstract class TimerBase extends EventEmitter {
+export class StopwatchTimer extends EventEmitter {
     protected _startTime: number = 0
     protected _currentTime: number = 0
     protected tickInterval: NodeJS.Timer | undefined
@@ -16,7 +16,7 @@ abstract class TimerBase extends EventEmitter {
 
     status: TTimerStatus = 'initial'
 
-    constructor() {
+    constructor(private readonly end?: number) {
         super()
     }
 
@@ -40,8 +40,7 @@ abstract class TimerBase extends EventEmitter {
         if (this.status !== 'running') return
 
         if (this.checkEnded()) {
-            this.stop()
-            this.emit('end')
+            this.endTimer()
             return
         }
 
@@ -56,7 +55,14 @@ abstract class TimerBase extends EventEmitter {
     }
 
     protected checkEnded(): boolean {
-        return false
+        if (this.end === undefined) return false
+
+        return this.getElapsedTime() >= this.end
+    }
+    protected endTimer() {
+        this.stop('finished')
+
+        this.emit('end')
     }
 
     start(): void {
@@ -70,11 +76,11 @@ abstract class TimerBase extends EventEmitter {
         this.emitStart()
     }
 
-    stop(): void {
+    stop(status: TTimerStatus = 'stopped'): void {
         if (this.tickInterval) clearInterval(this.tickInterval)
 
         this.setCurrentTime()
-        this.status = 'stopped'
+        this.status = status
         this.emitChangeStatus()
         this.emitStop()
     }
@@ -105,19 +111,7 @@ abstract class TimerBase extends EventEmitter {
     }
 }
 
-export class StopwatchTimer extends TimerBase implements ITimer {
-    constructor(private readonly end?: number) {
-        super()
-    }
-
-    protected checkEnded(): boolean {
-        if (this.end === undefined) return false
-
-        return this.getElapsedTime() >= this.end
-    }
-}
-
-export class RegressiveTimer extends TimerBase {
+export class RegressiveTimer extends StopwatchTimer {
     constructor(private readonly from: number) {
         super()
     }
@@ -135,7 +129,7 @@ export class RegressiveTimer extends TimerBase {
     }
 }
 
-export class EmomTimer extends TimerBase {
+export class EmomTimer extends StopwatchTimer {
     private clock!: RegressiveTimer
     private currentRound = 1
 
@@ -175,6 +169,10 @@ export class EmomTimer extends TimerBase {
         super.stop()
     }
 
+    protected checkEnded(): boolean {
+        return false
+    }
+
     private setCurrentRound(n: number) {
         this.currentRound = n
         this.emit('changeRound', this.getCurrentRound(), this.getElapsedTime())
@@ -205,7 +203,7 @@ export class EmomTimer extends TimerBase {
     }
 }
 
-export class TabataTimer extends TimerBase {
+export class TabataTimer extends StopwatchTimer {
     private clockWork!: RegressiveTimer
     private clockRest!: RegressiveTimer
     private currentRound = 1
@@ -229,8 +227,7 @@ export class TabataTimer extends TimerBase {
             this.current = 'rest'
         } else {
             if (this.getCurrentRound() + 1 > this.rounds) {
-                this.stop()
-                this.emit('end')
+                super.endTimer()
                 return
             }
 
@@ -240,6 +237,10 @@ export class TabataTimer extends TimerBase {
             this.clockWork.start()
             this.current = 'work'
         }
+    }
+
+    protected checkEnded(): boolean {
+        return false
     }
 
     getCurrentRound() {

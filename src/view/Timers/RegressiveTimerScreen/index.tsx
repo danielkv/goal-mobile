@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Box, Button, Center } from 'native-base'
 
-import RegressiveTimerTimer from './timer'
+import RegressiveDisplay from './timer'
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import TimerForm from '@components/TimerForm'
 
@@ -21,7 +21,7 @@ const RegressiveTimerScreen: React.FC = () => {
                     </Box>
                 </>
             ) : (
-                <RegressiveTimerTimer initialTime1={time1} onPressReset={() => setState('form')} />
+                <RegressiveDisplay initialCountdown={3} initialTime={time1} onPressReset={() => setState('form')} />
             )}
         </Center>
     )

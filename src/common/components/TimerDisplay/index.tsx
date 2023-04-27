@@ -6,7 +6,7 @@ import { Box, Flex, HStack, Pressable, Text, useTheme } from 'native-base'
 
 import { MaterialIcons } from '@expo/vector-icons'
 
-import { TActivityStatus, TWatchProgressStatus } from '@common/interfaces/timers'
+import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import { useNavigation } from '@react-navigation/native'
 
 export interface TimerDisplayProps {
@@ -14,7 +14,8 @@ export interface TimerDisplayProps {
     Icon: React.FC<SvgProps>
     numberRounds?: number
     activityStatus?: TActivityStatus
-    watchProgressStatus: TWatchProgressStatus
+    watchProgressStatus: TTimerStatus
+    initialCountdown?: string
     onPressPlayButton: () => void
     onPressEditButton: () => void
     onPressPauseButton: () => void
@@ -27,6 +28,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     numberRounds,
     activityStatus,
     watchProgressStatus,
+    initialCountdown,
     onPressPlayButton,
     onPressEditButton,
     onPressPauseButton,
@@ -41,6 +43,19 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     }, [isPortrait])
 
     const { colors, sizes } = useTheme()
+
+    if (watchProgressStatus === 'initial')
+        return (
+            <Pressable onPress={onPressPlayButton}>
+                {({ isPressed }) => (
+                    <MaterialIcons
+                        name="play-circle-filled"
+                        color={isPressed ? colors.red[600] : colors.red[500]}
+                        size={100}
+                    />
+                )}
+            </Pressable>
+        )
 
     return (
         <Box flex={1} alignItems="center" justifyContent="center">
@@ -70,12 +85,17 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                         <Icon fill={colors.gray[900]} width={isPortrait ? 60 : 48} />
                     </Box>
 
-                    <Text color={colors.gray[200]} fontWeight={700} fontSize={'5xl'} lineHeight={'6xl'}>
-                        {time}
+                    <Text
+                        color={colors.gray[200]}
+                        fontWeight={700}
+                        fontSize={initialCountdown !== undefined ? '8xl' : '5xl'}
+                        lineHeight={initialCountdown !== undefined ? '9xl' : '6xl'}
+                    >
+                        {initialCountdown || time}
                     </Text>
                 </Flex>
 
-                {numberRounds !== undefined && (
+                {initialCountdown === undefined && numberRounds !== undefined && (
                     <Flex direction={isPortrait ? 'column' : 'row'} alignItems="center" style={{ gap: sizes[3] }}>
                         <Text fontSize="md" fontWeight={400} lineHeight="2xl" color="gray.400">
                             Round
@@ -88,51 +108,55 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                 )}
             </Flex>
 
-            <HStack mt={isPortrait ? 10 : 0} alignItems={'center'} space={5}>
-                {watchProgressStatus === 'running' ? (
-                    <>
-                        <Pressable onPress={onPressPauseButton}>
-                            {({ isPressed }) => (
-                                <MaterialIcons
-                                    name="pause-circle-filled"
-                                    color={isPressed ? 'black' : colors.gray[900]}
-                                    size={isPortrait ? 75 : 65}
-                                />
+            {initialCountdown === undefined && (
+                <HStack mt={isPortrait ? 10 : 0} alignItems={'center'} space={5}>
+                    {watchProgressStatus === 'running' ? (
+                        <>
+                            <Pressable onPress={onPressPauseButton}>
+                                {({ isPressed }) => (
+                                    <MaterialIcons
+                                        name="pause-circle-filled"
+                                        color={isPressed ? 'black' : colors.gray[900]}
+                                        size={isPortrait ? 75 : 65}
+                                    />
+                                )}
+                            </Pressable>
+                        </>
+                    ) : (
+                        <>
+                            {watchProgressStatus !== 'finished' && (
+                                <Pressable onPress={onPressPlayButton}>
+                                    {({ isPressed }) => (
+                                        <MaterialIcons
+                                            name="play-circle-filled"
+                                            color={isPressed ? colors.red[600] : colors.red[500]}
+                                            size={isPortrait ? 75 : 65}
+                                        />
+                                    )}
+                                </Pressable>
                             )}
-                        </Pressable>
-                    </>
-                ) : (
-                    <>
-                        <Pressable onPress={onPressPlayButton}>
-                            {({ isPressed }) => (
-                                <MaterialIcons
-                                    name="play-circle-filled"
-                                    color={isPressed ? colors.red[600] : colors.red[500]}
-                                    size={isPortrait ? 75 : 65}
-                                />
-                            )}
-                        </Pressable>
-                        <Pressable onPress={onPressResetButton}>
-                            {({ isPressed }) => (
-                                <MaterialIcons
-                                    name="replay-circle-filled"
-                                    color={isPressed ? 'black' : colors.gray[900]}
-                                    size={isPortrait ? 75 : 65}
-                                />
-                            )}
-                        </Pressable>
-                        <Pressable onPress={onPressEditButton}>
-                            {({ isPressed }) => (
-                                <MaterialIcons
-                                    name="edit"
-                                    color={isPressed ? 'black' : colors.gray[900]}
-                                    size={isPortrait ? 50 : 40}
-                                />
-                            )}
-                        </Pressable>
-                    </>
-                )}
-            </HStack>
+                            <Pressable onPress={onPressResetButton}>
+                                {({ isPressed }) => (
+                                    <MaterialIcons
+                                        name="replay-circle-filled"
+                                        color={isPressed ? 'black' : colors.gray[900]}
+                                        size={isPortrait ? 75 : 65}
+                                    />
+                                )}
+                            </Pressable>
+                            <Pressable onPress={onPressEditButton}>
+                                {({ isPressed }) => (
+                                    <MaterialIcons
+                                        name="edit"
+                                        color={isPressed ? 'black' : colors.gray[900]}
+                                        size={isPortrait ? 50 : 40}
+                                    />
+                                )}
+                            </Pressable>
+                        </>
+                    )}
+                </HStack>
+            )}
         </Box>
     )
 }
