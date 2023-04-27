@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 export interface TimerDisplayProps {
     time: string
     Icon: React.FC<SvgProps>
-    numberRounds?: number
+    round?: number
     activityStatus?: TActivityStatus
     watchProgressStatus: TTimerStatus
     initialCountdown?: string
@@ -25,7 +25,7 @@ export interface TimerDisplayProps {
 const TimerDisplay: React.FC<TimerDisplayProps> = ({
     time,
     Icon,
-    numberRounds,
+    round,
     activityStatus,
     watchProgressStatus,
     initialCountdown,
@@ -95,14 +95,14 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     </Text>
                 </Flex>
 
-                {initialCountdown === undefined && numberRounds !== undefined && (
+                {initialCountdown === undefined && round !== undefined && (
                     <Flex direction={isPortrait ? 'column' : 'row'} alignItems="center" style={{ gap: sizes[3] }}>
                         <Text fontSize="md" fontWeight={400} lineHeight="2xl" color="gray.400">
                             Round
                         </Text>
 
                         <Text fontSize="6xl" fontWeight={700} lineHeight="6xl" color="gray.200">
-                            {numberRounds}
+                            {round}
                         </Text>
                     </Flex>
                 )}

@@ -90,7 +90,6 @@ export class StopwatchTimer extends EventEmitter {
         this.status = 'initial'
         this._currentTime = 0
         this._startTime = 0
-        this.emitChangeStatus()
         this.emitReset()
     }
 

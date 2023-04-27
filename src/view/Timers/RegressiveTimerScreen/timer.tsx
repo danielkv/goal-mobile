@@ -57,10 +57,6 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
             setCurrentStatus(status)
         })
 
-        clockRef.current.on('start', () => {
-            startSoundRef.current?.playFromPositionAsync(0)
-        })
-
         clockRef.current.on('end', () => {
             finishSoundRef.current?.playFromPositionAsync(0)
         })
@@ -78,6 +74,10 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
 
     const setupCountdown = () => {
         initialCountdownRef.current = new RegressiveTimer(_initialCountdown)
+
+        initialCountdownRef.current.once('end', () => {
+            startSoundRef.current?.playFromPositionAsync(0)
+        })
 
         initialCountdownRef.current.once('start', () => {
             beepSoundRef.current?.playFromPositionAsync(0)

@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
+import EmomTimerScreen from '@view/Timers/EmomTImerScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
 import StopwatchTimerScreen from '@view/Timers/StopwatchTImerScreen'
 import TimersScreen from '@view/Timers/TimersScreen'
@@ -54,6 +55,13 @@ function Router() {
                 component={StopwatchTimerScreen}
                 options={{
                     title: 'Cronômetro',
+                }}
+            />
+            <Stack.Screen
+                name={ERouteName.EmomTimerScreen}
+                component={EmomTimerScreen}
+                options={{
+                    title: 'EMOM',
                 }}
             />
             <Stack.Screen

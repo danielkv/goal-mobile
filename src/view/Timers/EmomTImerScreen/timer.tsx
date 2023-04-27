@@ -4,25 +4,28 @@ import RegressiveSvg from '@assets/svg/regressive.svg'
 import { TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimerSoundsRef } from '@contexts/timers/useTimerSounds'
-import { RegressiveTimer, StopwatchTimer } from '@utils/timer'
+import { EmomTimer, RegressiveTimer } from '@utils/timer'
 import dayjs from 'dayjs'
 
-export interface StopwatchDisplayProps {
-    finalTime: number
+export interface EmomDisplayProps {
+    each: number
+    rounds: number
     initialCountdown: number
     onPressReset(): void
 }
 
-const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
-    finalTime,
+const EmomDisplay: React.FC<EmomDisplayProps> = ({
+    each,
+    rounds,
     initialCountdown: _initialCountdown,
     onPressReset,
 }) => {
-    const [currentTime, setCurrentTime] = useState(0)
+    const [currentTime, setCurrentTime] = useState(each)
+    const [currentRound, setCurrentRound] = useState(1)
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
     const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
 
-    const clockRef = useRef<StopwatchTimer>()
+    const clockRef = useRef<EmomTimer>()
     const initialCountdownRef = useRef<RegressiveTimer>()
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
 
@@ -50,10 +53,15 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
     }
 
     const setupTimer = () => {
-        clockRef.current = new StopwatchTimer(finalTime)
+        clockRef.current = new EmomTimer(each, rounds)
 
         clockRef.current.on('changeStatus', (status) => {
             setCurrentStatus(status)
+        })
+
+        clockRef.current.on('changeRound', (current: number) => {
+            if (currentStatus === 'running') startSoundRef.current?.playFromPositionAsync(0)
+            setCurrentRound(current)
         })
 
         clockRef.current.on('end', () => {
@@ -97,6 +105,7 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
             Icon={RegressiveSvg}
+            round={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}
             watchProgressStatus={currentStatus}
@@ -109,4 +118,4 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
     )
 }
 
-export default StopwatchDisplay
+export default EmomDisplay
