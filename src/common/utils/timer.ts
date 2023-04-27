@@ -12,16 +12,16 @@ abstract class TimerBase extends EventEmitter {
     protected _startTime: number = 0
     protected _currentTime: number = 0
     protected tickInterval: NodeJS.Timer | undefined
-    protected _intervalTimeout: number = 50
+    protected _intervalTimeout: number = 500
+
     status: TTimerStatus = 'initial'
 
     constructor() {
         super()
     }
 
-    public getDisplayTime(): number {
-        const count = this._currentTime - this._startTime
-        return count < 0 ? 0 : count
+    public getElapsedTime(): number {
+        return Math.floor(this.getCurrentTime())
     }
 
     public getCurrentTime(): number {
@@ -32,11 +32,19 @@ abstract class TimerBase extends EventEmitter {
         return this._startTime
     }
 
-    protected setCurrentTime(): void {
-        this._currentTime = Date.now()
+    protected setCurrentTime() {
+        this._currentTime += this._intervalTimeout / 1000
     }
 
     protected tick() {
+        if (this.status !== 'running') return
+
+        if (this.checkEnded()) {
+            this.stop()
+            this.emit('end')
+            return
+        }
+
         this.setCurrentTime()
         this.emitTick()
     }
@@ -45,6 +53,10 @@ abstract class TimerBase extends EventEmitter {
         if (this.tickInterval) clearInterval(this.tickInterval)
 
         this.tickInterval = setInterval(() => this.tick(), this._intervalTimeout)
+    }
+
+    protected checkEnded(): boolean {
+        return false
     }
 
     start(): void {
@@ -80,60 +92,51 @@ abstract class TimerBase extends EventEmitter {
         this.emit('changeStatus', this.status)
     }
     protected emitReset() {
-        this.emit('reset', this.getDisplayTime(), this.getStartTime(), this.getCurrentTime())
+        this.emit('reset', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime())
     }
     protected emitStop() {
-        this.emit('stop', this.getDisplayTime(), this.getStartTime(), this.getCurrentTime())
+        this.emit('stop', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime())
     }
     protected emitStart() {
-        this.emit('start', this.getDisplayTime(), this.getStartTime(), this.getCurrentTime())
+        this.emit('start', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime())
     }
     protected emitTick() {
-        this.emit('tick', this.getDisplayTime(), this.getStartTime(), this.getCurrentTime())
+        this.emit('tick', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime())
     }
 }
 
 export class StopwatchTimer extends TimerBase implements ITimer {
-    start() {
-        if (this.status === 'running') return
+    constructor(private readonly end?: number) {
+        super()
+    }
 
-        if (this._startTime === 0) this._startTime = Date.now()
+    protected checkEnded(): boolean {
+        if (this.end === undefined) return false
 
-        super.start()
+        return this.getElapsedTime() >= this.end
     }
 }
 
 export class RegressiveTimer extends TimerBase {
     constructor(private readonly from: number) {
         super()
-        this._intervalTimeout = 500
     }
 
-    protected tick() {
-        if (this.status !== 'running') return
-
-        if (this.getDisplayTime() <= 0) {
-            this.stop()
-            this.emit('end')
-            return
-        }
-
-        this._currentTime += this._intervalTimeout / 1000
-
-        this.emitTick()
+    protected checkEnded() {
+        return this.getElapsedTime() <= 0
     }
 
     protected setCurrentTime() {
-        return
+        this._currentTime += this._intervalTimeout / 1000
     }
 
-    public getDisplayTime(): number {
+    public getElapsedTime(): number {
         return this.from - Math.floor(this.getCurrentTime())
     }
 }
 
 export class EmomTimer extends TimerBase {
-    private clock!: StopwatchTimer
+    private clock!: RegressiveTimer
     private currentRound = 1
 
     constructor(private readonly each: number, private readonly rounds: number) {
@@ -144,7 +147,7 @@ export class EmomTimer extends TimerBase {
         this.clock.on('end', () => this.nextRound())
     }
 
-    nextRound() {
+    protected nextRound() {
         if (this.getCurrentRound() + 1 > this.rounds) {
             this.clock.stop()
             this.stop()
@@ -158,7 +161,7 @@ export class EmomTimer extends TimerBase {
         this.clock.start()
     }
 
-    getCurrentRound() {
+    protected getCurrentRound() {
         return this.currentRound
     }
 
@@ -174,7 +177,7 @@ export class EmomTimer extends TimerBase {
 
     private setCurrentRound(n: number) {
         this.currentRound = n
-        this.emit('changeRound', this.getCurrentRound(), this.getDisplayTime())
+        this.emit('changeRound', this.getCurrentRound(), this.getElapsedTime())
     }
 
     public getCurrentTime(): number {
@@ -197,14 +200,14 @@ export class EmomTimer extends TimerBase {
         this.emit('reset', this.getCurrentRound(), this.each, this.rounds)
     }
 
-    public getDisplayTime(): number {
-        return this.clock.getDisplayTime()
+    public getElapsedTime(): number {
+        return this.clock.getElapsedTime()
     }
 }
 
 export class TabataTimer extends TimerBase {
-    private clockWork!: StopwatchTimer
-    private clockRest!: StopwatchTimer
+    private clockWork!: RegressiveTimer
+    private clockRest!: RegressiveTimer
     private currentRound = 1
     private current: 'work' | 'rest' = 'work'
 
@@ -257,7 +260,7 @@ export class TabataTimer extends TimerBase {
 
     private setCurrentRound(n: number) {
         this.currentRound = n
-        this.emit('changeRound', this.getCurrentRound(), this.getDisplayTime())
+        this.emit('changeRound', this.getCurrentRound(), this.getElapsedTime())
     }
 
     public getCurrentTime(): number {
@@ -283,8 +286,8 @@ export class TabataTimer extends TimerBase {
         this.emit('reset', this.getCurrentRound(), this.work, this.rest, this.rounds)
     }
 
-    public getDisplayTime(): number {
-        if (this.current === 'work') return this.clockWork.getDisplayTime()
-        else return this.clockRest.getDisplayTime()
+    public getElapsedTime(): number {
+        if (this.current === 'work') return this.clockWork.getElapsedTime()
+        else return this.clockRest.getElapsedTime()
     }
 }

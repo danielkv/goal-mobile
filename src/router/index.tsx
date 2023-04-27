@@ -6,6 +6,7 @@ import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
+import StopwatchTimerScreen from '@view/Timers/StopwatchTImerScreen'
 import TimersScreen from '@view/Timers/TimersScreen'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetListScreen from '@view/WorksheetListScreen'
@@ -46,6 +47,13 @@ function Router() {
                 component={RegressiveTimerScreen}
                 options={{
                     title: 'Timer regressivo',
+                }}
+            />
+            <Stack.Screen
+                name={ERouteName.StopwatchTimerScreen}
+                component={StopwatchTimerScreen}
+                options={{
+                    title: 'Cronômetro',
                 }}
             />
             <Stack.Screen

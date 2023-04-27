@@ -16,7 +16,11 @@ const TimersScreen: React.FC = () => {
                 Selecione o Timer
             </Heading>
             <HStack space={4} mb={4}>
-                <TimerCard title="Stopwatch" Icon={StopwatchSvg} />
+                <TimerCard
+                    title="Stopwatch"
+                    Icon={StopwatchSvg}
+                    onPress={() => navigate(ERouteName.StopwatchTimerScreen)}
+                />
                 <TimerCard
                     title="Regressivo"
                     Icon={RegressiveSvg}
