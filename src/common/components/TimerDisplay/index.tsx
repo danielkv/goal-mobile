@@ -9,7 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { TActivityStatus, TWatchProgressStatus } from '@common/interfaces/timers'
 import { useNavigation } from '@react-navigation/native'
 
-export interface SimplerTimerProps {
+export interface TimerDisplayProps {
     time: string
     Icon: React.FC<SvgProps>
     numberRounds?: number
@@ -21,16 +21,16 @@ export interface SimplerTimerProps {
     onPressResetButton: () => void
 }
 
-const SimplerTimer: React.FC<SimplerTimerProps> = ({
+const TimerDisplay: React.FC<TimerDisplayProps> = ({
     time,
     Icon,
     numberRounds,
+    activityStatus,
+    watchProgressStatus,
     onPressPlayButton,
     onPressEditButton,
     onPressPauseButton,
     onPressResetButton,
-    activityStatus,
-    watchProgressStatus,
 }) => {
     const { width, height } = useWindowDimensions()
     const isPortrait = height > width
@@ -137,4 +137,4 @@ const SimplerTimer: React.FC<SimplerTimerProps> = ({
     )
 }
 
-export default SimplerTimer
+export default TimerDisplay

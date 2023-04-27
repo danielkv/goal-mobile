@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import RegressiveSvg from '@assets/svg/regressive.svg'
-import SimplerTimer from '@components/SimplerTimer'
+import TimerDisplay from '@components/TimerDisplay'
 import { StopwatchTimer, TTimerStatus } from '@utils/timer'
 import dayjs from 'dayjs'
 
@@ -33,7 +33,7 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({ finalTime, onPressR
     }, [])
 
     return (
-        <SimplerTimer
+        <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
             Icon={RegressiveSvg}
             onPressEditButton={onPressReset}
