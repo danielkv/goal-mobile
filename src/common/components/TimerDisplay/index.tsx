@@ -8,6 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import { useNavigation } from '@react-navigation/native'
+import { useKeepAwake } from 'expo-keep-awake'
 
 export interface TimerDisplayProps {
     time: string
@@ -37,6 +38,8 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     const { width, height } = useWindowDimensions()
     const isPortrait = height > width
     const navigation = useNavigation()
+
+    useKeepAwake()
 
     useEffect(() => {
         navigation.setOptions({ headerStyle: { backgroundColor: isPortrait ? colors.gray[900] : colors.gray[700] } })
@@ -85,14 +88,25 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                         <Icon fill={colors.gray[900]} width={isPortrait ? 60 : 48} />
                     </Box>
 
-                    <Text
-                        color={colors.gray[200]}
-                        fontWeight={700}
-                        fontSize={initialCountdown !== undefined ? '8xl' : '5xl'}
-                        lineHeight={initialCountdown !== undefined ? '9xl' : '6xl'}
-                    >
-                        {initialCountdown || time}
-                    </Text>
+                    {initialCountdown ? (
+                        <Text
+                            color={colors.red[200]}
+                            fontWeight={700}
+                            fontSize={isPortrait ? '8xl' : '9xl'}
+                            lineHeight={isPortrait ? '9xl' : '9xl'}
+                        >
+                            {initialCountdown}
+                        </Text>
+                    ) : (
+                        <Text
+                            color={colors.gray[200]}
+                            fontWeight={700}
+                            fontSize={isPortrait ? '7xl' : '8xl'}
+                            lineHeight={isPortrait ? '8xl' : '8xl'}
+                        >
+                            {time}
+                        </Text>
+                    )}
                 </Flex>
 
                 {initialCountdown === undefined && round !== undefined && (
