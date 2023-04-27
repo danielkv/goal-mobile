@@ -18,7 +18,7 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     initialCountdown: _initialCountdown,
     onPressReset,
 }) => {
-    const [currentTime, setCurrentTime] = useState(0)
+    const [currentTime, setCurrentTime] = useState(initialTime)
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
     const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
 
@@ -27,15 +27,16 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
 
     const handlePressPlayButton = () => {
-        if (currentStatus === 'initial') {
+        setupTimer()
+
+        if (initialCountdown && currentStatus === 'initial') {
             setCurrentStatus('running')
 
             const countdownTimer = setupCountdown()
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
-                const timer = setupTimer()
-                timer.start()
+                clockRef.current?.start()
             })
             return
         }
