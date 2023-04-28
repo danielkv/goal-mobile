@@ -10,7 +10,7 @@ export interface UseTimerSounds {
     playRoundChange(): void
 }
 
-export function useTimerSoundsRef(): UseTimerSounds {
+export function useTimerSounds(): UseTimerSounds {
     const beepSoundRef = useRef<Audio.Sound | null>(null)
     const startSoundRef = useRef<Audio.Sound | null>(null)
     const finishSoundRef = useRef<Audio.Sound | null>(null)
@@ -34,6 +34,8 @@ export function useTimerSoundsRef(): UseTimerSounds {
     }, [])
 
     function playBeep() {
+        beepSoundRef.current?.setVolumeAsync(1)
+
         beepSoundRef.current?.playFromPositionAsync(0)
     }
     function playStart() {

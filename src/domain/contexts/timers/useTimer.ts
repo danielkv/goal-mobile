@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 
 import { TTimerStatus } from '@common/interfaces/timers'
-import { UseTimerSounds, useTimerSoundsRef } from '@contexts/timers/useTimerSounds'
+import { UseTimerSounds, useTimerSounds } from '@contexts/timers/useTimerSounds'
 import { RegressiveTimer, StopwatchTimer } from '@utils/timer'
 
 interface Args {
@@ -17,7 +17,7 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
     const [initialCountdown, setInitialCountdown] = useState<number | null>(_initialCountdown)
 
     const initialCountdownRef = useRef<RegressiveTimer>()
-    const sounds = useTimerSoundsRef()
+    const sounds = useTimerSounds()
 
     useEffect(() => {
         return () => {
