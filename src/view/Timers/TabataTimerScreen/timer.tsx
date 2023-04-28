@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
-import { useTimerSoundsRef } from '@contexts/timers/useTimerSounds'
-import { RegressiveTimer, TabataTimer } from '@utils/timer'
+import { useTimer } from '@contexts/timers/useTimer'
+import { TabataTimer } from '@utils/timer'
 import dayjs from 'dayjs'
 
 export interface TabataDisplayProps {
@@ -22,100 +22,33 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
     initialCountdown: _initialCountdown,
     onPressReset,
 }) => {
-    const [currentTime, setCurrentTime] = useState(work)
     const [currentRound, setCurrentRound] = useState(1)
     const [currentActivityStatus, setCurrentActivityStatus] = useState<TActivityStatus>('work')
-    const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
-    const [initialCountdown, setInitialCountdown] = useState<number | null>(_initialCountdown)
 
     const clockRef = useRef<TabataTimer>()
-    const initialCountdownRef = useRef<RegressiveTimer>()
-    const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
 
     useEffect(() => {
+        clockRef.current = new TabataTimer(work, rest, rounds)
+
         return () => {
             clockRef.current?.stop()
-            initialCountdownRef.current?.stop()
         }
     }, [])
 
-    const handlePressPlayButton = () => {
-        if (currentStatus === 'initial') setupTimer()
-
-        if (initialCountdown && currentStatus === 'initial') {
-            setCurrentStatus('running')
-
-            const countdownTimer = setupCountdown()
-            countdownTimer.start()
-
-            countdownTimer.once('end', () => {
-                setInitialCountdown(null)
-                clockRef.current?.start()
+    const { currentStatus, currentTime, handlePressPlayButton, handlePressResetButton, initialCountdown } = useTimer({
+        clockRef,
+        initialCountdown: _initialCountdown,
+        initialCurrentTime: work,
+        onSetupTimer: (clockRef, sounds) => {
+            clockRef.current?.on('changeActivityStatus', (current: TActivityStatus, status: TTimerStatus) => {
+                if (status === 'running') sounds.playRoundChange()
+                setCurrentActivityStatus(current)
             })
-            return
-        }
-
-        clockRef.current?.start()
-    }
-
-    const handlePressResetButton = () => {
-        setInitialCountdown(_initialCountdown)
-        setCurrentTime(0)
-        clockRef.current?.reset()
-    }
-
-    const setupTimer = () => {
-        clockRef.current = new TabataTimer(work, rest, rounds)
-
-        clockRef.current.on('changeStatus', (status) => {
-            setCurrentStatus(status)
-        })
-
-        clockRef.current.once('start', () => {
-            startSoundRef.current?.playFromPositionAsync(0)
-        })
-
-        clockRef.current.on('changeRound', (current: number) => {
-            setCurrentRound(current)
-        })
-        clockRef.current.on('changeActivityStatus', (current: TActivityStatus, status: TTimerStatus) => {
-            if (status === 'running') startSoundRef.current?.playFromPositionAsync(0)
-            setCurrentActivityStatus(current)
-        })
-
-        clockRef.current.on('end', () => {
-            finishSoundRef.current?.playFromPositionAsync(0)
-        })
-
-        clockRef.current.on('tick', (duration: number) => {
-            setCurrentTime(duration)
-        })
-
-        clockRef.current.on('reset', () => {
-            setCurrentTime(0)
-            setCurrentStatus('initial')
-        })
-
-        return clockRef.current
-    }
-
-    const setupCountdown = () => {
-        initialCountdownRef.current = new RegressiveTimer(_initialCountdown)
-
-        initialCountdownRef.current.once('start', () => {
-            beepSoundRef.current?.playFromPositionAsync(0)
-        })
-
-        initialCountdownRef.current.on('tick', (displayTime: number) => {
-            setInitialCountdown((prev) => {
-                if (displayTime > 0 && displayTime != prev) beepSoundRef.current?.playFromPositionAsync(0)
-
-                return displayTime
+            clockRef.current?.on('changeRound', (current: number) => {
+                setCurrentRound(current)
             })
-        })
-
-        return initialCountdownRef.current
-    }
+        },
+    })
 
     return (
         <TimerDisplay

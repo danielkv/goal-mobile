@@ -1,9 +1,14 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { loadTimerSoundsUseCase } from './loadTimerSounds'
 import { Audio } from 'expo-av'
 
-type UseTimerSounds = [RefObject<Audio.Sound | null>, RefObject<Audio.Sound | null>, RefObject<Audio.Sound | null>]
+export interface UseTimerSounds {
+    playBeep(): void
+    playStart(): void
+    playFinish(): void
+    playRoundChange(): void
+}
 
 export function useTimerSoundsRef(): UseTimerSounds {
     const beepSoundRef = useRef<Audio.Sound | null>(null)
@@ -28,5 +33,18 @@ export function useTimerSoundsRef(): UseTimerSounds {
         }
     }, [])
 
-    return [beepSoundRef, startSoundRef, finishSoundRef]
+    function playBeep() {
+        beepSoundRef.current?.playFromPositionAsync(0)
+    }
+    function playStart() {
+        startSoundRef.current?.playFromPositionAsync(0)
+    }
+    function playFinish() {
+        finishSoundRef.current?.playFromPositionAsync(0)
+    }
+    function playRoundChange() {
+        startSoundRef.current?.playFromPositionAsync(0)
+    }
+
+    return { playBeep, playStart, playFinish, playRoundChange }
 }
