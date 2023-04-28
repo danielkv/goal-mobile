@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import { TTimerStatus } from '@common/interfaces/timers'
@@ -20,13 +20,18 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
 }) => {
     const [currentTime, setCurrentTime] = useState(initialTime)
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
-    const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
-
-    console.log(currentStatus)
+    const [initialCountdown, setInitialCountdown] = useState<number | null>(_initialCountdown)
 
     const clockRef = useRef<RegressiveTimer>()
     const initialCountdownRef = useRef<RegressiveTimer>()
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
+
+    useEffect(() => {
+        return () => {
+            clockRef.current?.stop()
+            initialCountdownRef.current?.stop()
+        }
+    }, [])
 
     const handlePressPlayButton = () => {
         if (currentStatus === 'initial') setupTimer()
@@ -38,6 +43,7 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
+                setInitialCountdown(null)
                 clockRef.current?.start()
             })
             return
@@ -99,7 +105,7 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
 
     return (
         <TimerDisplay
-            time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
+            time={dayjs.duration(currentTime, 'second').format('mm:ss')}
             Icon={StopwatchSvg}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}

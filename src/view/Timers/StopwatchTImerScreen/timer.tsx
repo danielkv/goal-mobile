@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import { TTimerStatus } from '@common/interfaces/timers'
@@ -20,11 +20,18 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
 }) => {
     const [currentTime, setCurrentTime] = useState(0)
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
-    const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
+    const [initialCountdown, setInitialCountdown] = useState<number | null>(_initialCountdown)
 
     const clockRef = useRef<StopwatchTimer>()
     const initialCountdownRef = useRef<RegressiveTimer>()
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
+
+    useEffect(() => {
+        return () => {
+            clockRef.current?.stop()
+            initialCountdownRef.current?.stop()
+        }
+    }, [])
 
     const handlePressPlayButton = () => {
         if (currentStatus === 'initial') setupTimer()
@@ -36,6 +43,7 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
+                setInitialCountdown(null)
                 clockRef.current?.start()
             })
             return

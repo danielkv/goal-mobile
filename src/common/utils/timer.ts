@@ -12,7 +12,7 @@ export class StopwatchTimer extends EventEmitter {
     protected _startTime: number = 0
     protected _currentTime: number = 0
     protected tickInterval: NodeJS.Timer | undefined
-    protected _intervalTimeout: number = 300
+    protected _intervalTimeout: number = 1000
 
     status: TTimerStatus = 'initial'
 
@@ -21,7 +21,7 @@ export class StopwatchTimer extends EventEmitter {
     }
 
     public getElapsedTime(): number {
-        return Math.floor(this.getCurrentTime())
+        return this.getCurrentTime()
     }
 
     public getCurrentTime(): number {
@@ -33,18 +33,19 @@ export class StopwatchTimer extends EventEmitter {
     }
 
     protected setCurrentTime() {
-        this._currentTime += this._intervalTimeout / 1000
+        this._currentTime += Math.floor(this._intervalTimeout / 1000)
     }
 
     protected tick() {
         if (this.status !== 'running') return
+
+        this.setCurrentTime()
 
         if (this.checkEnded()) {
             this.endTimer()
             return
         }
 
-        this.setCurrentTime()
         this.emitTick()
     }
 
@@ -117,10 +118,6 @@ export class RegressiveTimer extends StopwatchTimer {
 
     protected checkEnded() {
         return this.getElapsedTime() <= 0
-    }
-
-    protected setCurrentTime() {
-        this._currentTime += this._intervalTimeout / 1000
     }
 
     public getElapsedTime(): number {

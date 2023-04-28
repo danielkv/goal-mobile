@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
@@ -26,11 +26,18 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
     const [currentRound, setCurrentRound] = useState(1)
     const [currentActivityStatus, setCurrentActivityStatus] = useState<TActivityStatus>('work')
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
-    const [initialCountdown, setInitialCountdown] = useState<number | undefined>(_initialCountdown)
+    const [initialCountdown, setInitialCountdown] = useState<number | null>(_initialCountdown)
 
     const clockRef = useRef<TabataTimer>()
     const initialCountdownRef = useRef<RegressiveTimer>()
     const [beepSoundRef, startSoundRef, finishSoundRef] = useTimerSoundsRef()
+
+    useEffect(() => {
+        return () => {
+            clockRef.current?.stop()
+            initialCountdownRef.current?.stop()
+        }
+    }, [])
 
     const handlePressPlayButton = () => {
         if (currentStatus === 'initial') setupTimer()
@@ -42,6 +49,7 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
+                setInitialCountdown(null)
                 clockRef.current?.start()
             })
             return
@@ -60,7 +68,6 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
         clockRef.current = new TabataTimer(work, rest, rounds)
 
         clockRef.current.on('changeStatus', (status) => {
-            console.log(status)
             setCurrentStatus(status)
         })
 
