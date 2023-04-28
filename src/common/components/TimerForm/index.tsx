@@ -68,7 +68,7 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
             </Box>
             <HStack>
                 <Text mr={3} fontSize="sm" fontWeight={400} lineHeight="2xl" color="gray.400">
-                    Countdown {props.countdown}s
+                    {props.countdown > 0 ? `Countdown ${props.countdown}s` : 'Sem countdown'}
                 </Text>
                 <Pressable onPress={() => setupCountdownDialogOpen(true)}>
                     {({ isPressed }) => (
@@ -81,6 +81,11 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
                     {getTime1Label(props.type)}
                 </Text>
                 <TimeField value={props.time1} onChange={(value) => props.onChangeTime1(value)} />
+                {props.type === 'stopwatch' && (
+                    <Text fontSize="xs" color="gray.500">
+                        00:00 para indeterminado
+                    </Text>
+                )}
             </VStack>
             {props.type === 'tabata' && props.time2 !== undefined && !!props.onChangeTime2 && (
                 <VStack alignItems="center">
@@ -126,6 +131,9 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
                             value={String(props.countdown)}
                             onChangeText={(value) => props.onChangeCountdown(Number(value))}
                         />
+                        <Text fontSize="xs" color="gray.300">
+                            0 sem countdown
+                        </Text>
                     </AlertDialog.Body>
                     <AlertDialog.Footer bg="gray.600" borderColor="gray.900">
                         <Button.Group space={2}>

@@ -56,7 +56,7 @@ export class StopwatchTimer extends EventEmitter {
     }
 
     protected checkEnded(): boolean {
-        if (this.end === undefined) return false
+        if (!this.end || this.end <= 0) return false
 
         return this.getElapsedTime() >= this.end
     }

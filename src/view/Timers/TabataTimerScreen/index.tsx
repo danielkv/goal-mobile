@@ -9,10 +9,10 @@ import TimerForm from '@components/TimerForm'
 const TabataTimerScreen: React.FC = () => {
     const [state, setState] = useState<'form' | 'timer'>('form')
 
-    const [work, setWork] = useState(5)
-    const [rest, setRest] = useState(2)
+    const [work, setWork] = useState(20)
+    const [rest, setRest] = useState(10)
     const [rounds, setRounds] = useState(8)
-    const [countdown, setupCountdown] = useState(0)
+    const [countdown, setupCountdown] = useState(3)
 
     return (
         <Box flex={1} safeAreaBottom>

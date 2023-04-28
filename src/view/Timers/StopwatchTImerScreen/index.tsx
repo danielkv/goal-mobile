@@ -9,7 +9,7 @@ import TimerForm from '@components/TimerForm'
 const StopwatchTimerScreen: React.FC = () => {
     const [state, setState] = useState<'form' | 'timer'>('form')
 
-    const [time1, setTime1] = useState(600)
+    const [time1, setTime1] = useState(0)
     const [countdown, setupCountdown] = useState(3)
 
     return (
