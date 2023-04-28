@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Box, Button, Center } from 'native-base'
+import { Box, Button, Center, ScrollView } from 'native-base'
 
 import EmomDisplay from './timer'
 import EmomSvg from '@assets/svg/emom.svg'
@@ -14,9 +14,9 @@ const EmomTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(3)
 
     return (
-        <Center flex={1}>
+        <Box flex={1} safeAreaBottom>
             {state === 'form' ? (
-                <>
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }}>
                     <TimerForm
                         type="emom"
                         rounds={rounds}
@@ -27,10 +27,10 @@ const EmomTimerScreen: React.FC = () => {
                         time1={each}
                         onChangeTime1={setEach}
                     />
-                    <Box mt={5}>
+                    <Center mt={5}>
                         <Button onPress={() => setState('timer')}>Aplicar</Button>
-                    </Box>
-                </>
+                    </Center>
+                </ScrollView>
             ) : (
                 <EmomDisplay
                     rounds={rounds}
@@ -39,7 +39,7 @@ const EmomTimerScreen: React.FC = () => {
                     onPressReset={() => setState('form')}
                 />
             )}
-        </Center>
+        </Box>
     )
 }
 

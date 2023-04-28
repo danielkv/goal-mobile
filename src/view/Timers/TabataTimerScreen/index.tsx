@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Box, Button, Center } from 'native-base'
+import { Box, Button, Center, ScrollView } from 'native-base'
 
 import TabataDisplay from './timer'
 import TabataSvg from '@assets/svg/tabata.svg'
@@ -15,9 +15,9 @@ const TabataTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(0)
 
     return (
-        <Center flex={1}>
+        <Box flex={1} safeAreaBottom>
             {state === 'form' ? (
-                <>
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }}>
                     <TimerForm
                         type="tabata"
                         rounds={rounds}
@@ -30,10 +30,10 @@ const TabataTimerScreen: React.FC = () => {
                         time2={rest}
                         onChangeTime2={setRest}
                     />
-                    <Box mt={5}>
+                    <Center mt={5}>
                         <Button onPress={() => setState('timer')}>Aplicar</Button>
-                    </Box>
-                </>
+                    </Center>
+                </ScrollView>
             ) : (
                 <TabataDisplay
                     initialCountdown={countdown}
@@ -43,7 +43,7 @@ const TabataTimerScreen: React.FC = () => {
                     onPressReset={() => setState('form')}
                 />
             )}
-        </Center>
+        </Box>
     )
 }
 

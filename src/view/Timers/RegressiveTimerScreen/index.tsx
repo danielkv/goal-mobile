@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Box, Button, Center } from 'native-base'
+import { Box, Button, Center, ScrollView } from 'native-base'
 
 import RegressiveDisplay from './timer'
 import RegressiveSvg from '@assets/svg/regressive.svg'
@@ -13,9 +13,9 @@ const RegressiveTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(3)
 
     return (
-        <Center flex={1}>
+        <Box flex={1} safeAreaBottom>
             {state === 'form' ? (
-                <>
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }}>
                     <TimerForm
                         countdown={countdown}
                         onChangeCountdown={setupCountdown}
@@ -24,10 +24,10 @@ const RegressiveTimerScreen: React.FC = () => {
                         time1={time1}
                         onChangeTime1={setTime1}
                     />
-                    <Box mt={5}>
+                    <Center mt={5}>
                         <Button onPress={() => setState('timer')}>Aplicar</Button>
-                    </Box>
-                </>
+                    </Center>
+                </ScrollView>
             ) : (
                 <RegressiveDisplay
                     initialCountdown={countdown}
@@ -35,7 +35,7 @@ const RegressiveTimerScreen: React.FC = () => {
                     onPressReset={() => setState('form')}
                 />
             )}
-        </Center>
+        </Box>
     )
 }
 

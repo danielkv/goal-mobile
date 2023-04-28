@@ -62,11 +62,10 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
     }, [])
 
     return (
-        <VStack alignItems="center" justifyContent="center" space={5}>
+        <VStack flex={1} alignItems="center" justifyContent="center" space={5}>
             <Box>
                 <props.Icon fill={colors.gray[900]} width={60} />
             </Box>
-
             <HStack>
                 <Text mr={3} fontSize="sm" fontWeight={400} lineHeight="2xl" color="gray.400">
                     Countdown {props.countdown}s
@@ -77,14 +76,12 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
                     )}
                 </Pressable>
             </HStack>
-
             <VStack alignItems="center">
                 <Text fontSize="sm" fontWeight={400} lineHeight="2xl" color="gray.400">
                     {getTime1Label(props.type)}
                 </Text>
                 <TimeField value={props.time1} onChange={(value) => props.onChangeTime1(value)} />
             </VStack>
-
             {props.type === 'tabata' && props.time2 !== undefined && !!props.onChangeTime2 && (
                 <VStack alignItems="center">
                     <Text fontSize="sm" fontWeight={400} lineHeight="2xl" color="gray.400">
@@ -93,7 +90,6 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
                     <TimeField value={props.time2} onChange={(value) => props.onChangeTime2(value)} />
                 </VStack>
             )}
-
             {(props.type === 'tabata' || props.type === 'emom') && (
                 <VStack alignItems="center">
                     <Text fontSize="sm" fontWeight={400} lineHeight="2xl" color="gray.400">
@@ -118,7 +114,6 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
                     </HStack>
                 </VStack>
             )}
-
             <AlertDialog leastDestructiveRef={cancelRef} isOpen={contdownDialogOpen} onClose={handleClose}>
                 <AlertDialog.Content bg="gray.600">
                     <AlertDialog.Header bg="gray.600" borderColor="gray.900">

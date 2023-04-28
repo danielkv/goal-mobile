@@ -9,6 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import { useNavigation } from '@react-navigation/native'
 import { useKeepAwake } from 'expo-keep-awake'
+import * as ScreenOrientation from 'expo-screen-orientation'
 
 export interface TimerDisplayProps {
     time: string
@@ -42,6 +43,14 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     useKeepAwake()
 
     useEffect(() => {
+        ScreenOrientation.unlockAsync()
+
+        return () => {
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+        }
+    }, [])
+
+    useEffect(() => {
         navigation.setOptions({ headerStyle: { backgroundColor: isPortrait ? colors.gray[900] : colors.gray[700] } })
     }, [isPortrait])
 
@@ -49,15 +58,17 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
 
     if (watchProgressStatus === 'initial')
         return (
-            <Pressable onPress={onPressPlayButton}>
-                {({ isPressed }) => (
-                    <MaterialIcons
-                        name="play-circle-filled"
-                        color={isPressed ? colors.red[600] : colors.red[500]}
-                        size={100}
-                    />
-                )}
-            </Pressable>
+            <Box flex={1} alignItems="center" justifyContent="center">
+                <Pressable onPress={onPressPlayButton}>
+                    {({ isPressed }) => (
+                        <MaterialIcons
+                            name="play-circle-filled"
+                            color={isPressed ? colors.red[600] : colors.red[500]}
+                            size={100}
+                        />
+                    )}
+                </Pressable>
+            </Box>
         )
 
     return (
