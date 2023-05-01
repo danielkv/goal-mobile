@@ -9,7 +9,7 @@ const TextField: React.FC<TextFieldProps> = ({ label, error, ...props }) => {
         <FormControl>
             <VStack space={2}>
                 {label && (
-                    <Text fontSize={12} color="red.100">
+                    <Text fontSize={12} color="gray.100">
                         {label}
                     </Text>
                 )}

@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         name: 'goal-mobile',
         slug: 'goal-mobile',
         version: '1.0.0',
-        orientation: 'portrait',
+
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
@@ -21,6 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         assetBundlePatterns: ['**/*'],
         ios: {
             supportsTablet: true,
+            requireFullScreen: true,
         },
         android: {
             adaptiveIcon: {
@@ -46,5 +47,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         runtimeVersion: {
             policy: 'sdkVersion',
         },
+        plugins: [
+            [
+                'expo-screen-orientation',
+                {
+                    initialOrientation: 'PORTRAIT',
+                },
+            ],
+        ],
     }
 }

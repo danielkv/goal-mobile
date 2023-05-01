@@ -1,16 +1,17 @@
-import { Button, Center, Text, View } from 'native-base'
+import { Button, Center } from 'native-base'
 
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 
-const Home: React.FC = () => {
+const HomeScreen: React.FC = () => {
     const { navigate } = useNavigation()
+
     return (
         <Center px={4} pt={8}>
-            <Button onPress={() => navigate(ERouteName.Login)} mb={4} minW={40} minH={10}>
+            <Button onPress={() => navigate(ERouteName.LoginScreen)} mb={4} minW={40} minH={10}>
                 Login Page
             </Button>
-            <Button onPress={() => navigate(ERouteName.WorksheetList)} mb={4} minW={40} minH={10}>
+            <Button onPress={() => navigate(ERouteName.WorksheetListScreen)} mb={4} minW={40} minH={10}>
                 WorksheetList Page
             </Button>
             <Button onPress={() => navigate(ERouteName.TimersScreen)} mb={4} minW={40} minH={10}>
@@ -20,4 +21,4 @@ const Home: React.FC = () => {
     )
 }
 
-export default Home
+export default HomeScreen

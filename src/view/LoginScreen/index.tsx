@@ -15,7 +15,7 @@ import { logUserInUseCase } from '@useCases/auth/logUserIn'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import { FormikConfig, useFormik } from 'formik'
 
-const Login: React.FC = () => {
+const LoginScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigation = useNavigation()
 
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
         try {
             await logUserInUseCase({ provider: 'email', ...result })
 
-            navigation.navigate(ERouteName.Home)
+            navigation.navigate(ERouteName.HomeScreen)
         } catch (err) {
             Alert.alert('Ocorreu um erro', getErrorMessage(err))
         }
@@ -86,4 +86,4 @@ const Login: React.FC = () => {
     )
 }
 
-export default Login
+export default LoginScreen

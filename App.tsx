@@ -10,6 +10,7 @@ import { initialLoadUseCase } from '@useCases/init/initialLoad'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 import duration from 'dayjs/plugin/duration'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 
@@ -22,6 +23,8 @@ export default function App() {
     const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+
         initialLoadUseCase()
             .then(() => {
                 setLoaded(true)
