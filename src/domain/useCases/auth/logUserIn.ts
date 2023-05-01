@@ -1,5 +1,6 @@
+import { createSessionCookieUseCase } from './sessionCookie'
 import { FIREBASE_AUTH } from '@common/providers/firebase'
-import { UserContext, saveLocalUserContext, setUserContext } from '@contexts/user/userContext'
+import { saveLocalUserCredentials, setUserCredentials } from '@contexts/user/userContext'
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth'
 
 type EmailCredentials = { provider: 'email'; email: string; password: string }
@@ -10,18 +11,18 @@ export async function logUserInUseCase(credentials: Credentials) {
     const credentialResult = await _loginRouter(credentials)
     if (!credentialResult) throw new Error('Nenhum usuário foi logado')
 
+    const idToken = await credentialResult.user.getIdToken()
+
+    const cookie = await createSessionCookieUseCase(idToken)
+
     const userContext = {
-        name: credentialResult.user.displayName || '',
-        token: await credentialResult.user.getIdToken(),
+        sessionCookie: cookie.data.sessionCookie,
+        email: credentialResult.user.email || '',
         userId: credentialResult.user.uid,
     }
 
-    await saveLocalUserContext(userContext)
-    setUserContext(userContext)
-}
-
-export function contextLoginUseCase(context: UserContext) {
-    return setUserContext(context)
+    await saveLocalUserCredentials(userContext)
+    setUserCredentials(userContext)
 }
 
 async function _loginRouter(credentials: Credentials): Promise<UserCredential | null> {
