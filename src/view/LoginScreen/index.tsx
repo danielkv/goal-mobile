@@ -43,7 +43,7 @@ const LoginScreen: React.FC = () => {
                 </Box>
 
                 <Box mb={8}>
-                    <Heading mb={2} textAlign="center">
+                    <Heading mb={2} lineHeight="2xl" textAlign="center">
                         Bem vindo
                     </Heading>
                     <Text textAlign="center">Faça seu login</Text>
