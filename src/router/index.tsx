@@ -1,7 +1,11 @@
-import { useTheme } from 'native-base'
+import { IconButton, useTheme } from 'native-base'
+
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { ERouteName } from './types'
+import { useUserContext } from '@contexts/user/userContext'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
@@ -27,11 +31,21 @@ function Router() {
                 headerBackTitleVisible: false,
                 headerTintColor: colors.gray[300],
                 headerTitleAlign: 'left',
+                headerRight: () => {
+                    const user = useUserContext()
+
+                    if (!user.credentials) return null
+                    return (
+                        <IconButton onPress={logUserOutUseCase}>
+                            <MaterialIcons name="logout" size={22} color={colors.gray[100]} />
+                        </IconButton>
+                    )
+                },
             }}
             initialRouteName={ERouteName.HomeScreen}
         >
-            <Stack.Screen name={ERouteName.HomeScreen} component={HomeScreen} />
-            <Stack.Screen name={ERouteName.LoginScreen} component={LoginScreen} />
+            <Stack.Screen name={ERouteName.HomeScreen} component={HomeScreen} options={{ title: 'My Goal' }} />
+            <Stack.Screen name={ERouteName.LoginScreen} component={LoginScreen} options={{ title: 'Login' }} />
             <Stack.Screen
                 name={ERouteName.WorksheetListScreen}
                 options={{ title: 'Planilhas' }}
