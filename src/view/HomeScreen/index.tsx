@@ -22,11 +22,14 @@ const HomeScreen: React.FC = () => {
                         alt="Logo Goal"
                     />
                 </Box>
-                <VStack space={6} mb={125}>
+                <VStack space={6} mb={81}>
                     {user.credentials ? (
                         <Button onPress={() => navigate(ERouteName.WorksheetListScreen)}>Planilhas</Button>
                     ) : (
-                        <Button onPress={() => navigate(ERouteName.LoginScreen)}>Logar</Button>
+                        <>
+                            <Button onPress={() => navigate(ERouteName.LoginScreen)}>Logar</Button>
+                            <Button onPress={() => navigate(ERouteName.SubscriptionScreen)}>Cadastrar</Button>
+                        </>
                     )}
 
                     <Button onPress={() => navigate(ERouteName.TimersScreen)}>Timers</Button>

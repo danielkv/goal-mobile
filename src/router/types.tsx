@@ -1,6 +1,8 @@
 export type TReactNavigationStackParamList = {
     LoginScreen: undefined
 
+    SubscriptionScreen: undefined
+
     HomeScreen: undefined
 
     WorksheetListScreen: undefined
@@ -24,6 +26,8 @@ export type TReactNavigationStackParamList = {
 
 export enum ERouteName {
     LoginScreen = 'LoginScreen',
+
+    SubscriptionScreen = 'SubscriptionScreen',
 
     HomeScreen = 'HomeScreen',
 

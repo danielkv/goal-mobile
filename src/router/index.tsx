@@ -9,6 +9,7 @@ import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
+import SubscriptionScreen from '@view/SubscriptionScreen'
 import EmomTimerScreen from '@view/Timers/EmomTimerScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
 import StopwatchTimerScreen from '@view/Timers/StopwatchTImerScreen'
@@ -46,6 +47,11 @@ function Router() {
         >
             <Stack.Screen name={ERouteName.HomeScreen} component={HomeScreen} options={{ title: 'My Goal' }} />
             <Stack.Screen name={ERouteName.LoginScreen} component={LoginScreen} options={{ title: 'Login' }} />
+            <Stack.Screen
+                name={ERouteName.SubscriptionScreen}
+                component={SubscriptionScreen}
+                options={{ title: 'Cadastro' }}
+            />
             <Stack.Screen
                 name={ERouteName.WorksheetListScreen}
                 options={{ title: 'Planilhas' }}
