@@ -5,7 +5,8 @@ import { HStack, Pressable, Text, useTheme } from 'native-base'
 import { FontAwesome5 } from '@expo/vector-icons'
 
 import { IEventMovement } from '@models/block'
-import { displayWeight, getRoundsDisplay } from '@utils/worksheet'
+import { numberHelper } from '@utils/numbers'
+import { displayWeight } from '@utils/worksheet'
 import * as Linking from 'expo-linking'
 
 export interface EventBlockMovementProps {
@@ -16,7 +17,7 @@ export interface EventBlockMovementProps {
 const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, textAlign = 'center' }) => {
     const { colors } = useTheme()
     const weight = displayWeight(movement.weight)
-    const reps = getRoundsDisplay(movement.reps, '')
+    const reps = numberHelper.convertNumbers(movement.reps, { suffix: '' })
     const repsDisplay = reps && reps !== '0' ? `${reps} ` : ''
     const displayMovement = `${repsDisplay}${movement.name}${weight}`
 
