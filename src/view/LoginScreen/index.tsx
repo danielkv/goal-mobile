@@ -99,7 +99,7 @@ const LoginScreen: React.FC = () => {
                             Login
                         </Button>
                         <Button
-                            isLoading={isSubmitting}
+                            disabled={isSubmitting}
                             colorScheme="gray"
                             width="full"
                             onPress={() => navigation.navigate(ERouteName.SubscriptionScreen)}

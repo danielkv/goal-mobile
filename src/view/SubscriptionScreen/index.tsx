@@ -103,7 +103,7 @@ const SubscriptionScreen: React.FC = () => {
                             Cadastrar
                         </Button>
                         <Button
-                            isLoading={isSubmitting}
+                            disabled={isSubmitting}
                             width="full"
                             colorScheme="gray"
                             onPress={() => navigation.navigate(ERouteName.LoginScreen)}

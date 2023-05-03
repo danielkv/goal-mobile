@@ -1,4 +1,3 @@
-import React from 'react'
 import { Platform } from 'react-native'
 
 import { Avatar, HStack, Heading, Pressable, Text, VStack, useTheme } from 'native-base'
