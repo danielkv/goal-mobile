@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { TextInput } from 'react-native'
 
 import { HStack, Text, useTheme } from 'native-base'

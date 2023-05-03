@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Box } from 'native-base'
 
 import AppBottomBar from '@components/AppBottomBar'
