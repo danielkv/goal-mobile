@@ -6,10 +6,11 @@ const envs = dotenv.config({ path: './.env' })
 export default ({ config }: ConfigContext): ExpoConfig => {
     return {
         ...config,
+        owner: 'goal',
         name: 'goal-mobile',
         slug: 'goal-mobile',
         version: '1.0.0',
-        orientation: 'portrait',
+
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
@@ -20,6 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         assetBundlePatterns: ['**/*'],
         ios: {
             supportsTablet: true,
+            requireFullScreen: true,
         },
         android: {
             adaptiveIcon: {
@@ -34,15 +36,24 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         extra: {
             ...envs.parsed,
             eas: {
-                projectId: 'ed242d48-5e82-4082-8477-7e5aea15b1d7',
+                projectId: 'a5ca3be7-cbb0-4f41-aa54-d96bc45da066',
             },
         },
 
         updates: {
-            url: 'https://u.expo.dev/ed242d48-5e82-4082-8477-7e5aea15b1d7',
+            url: 'https://u.expo.dev/a5ca3be7-cbb0-4f41-aa54-d96bc45da066',
         },
+
         runtimeVersion: {
             policy: 'sdkVersion',
         },
+        plugins: [
+            [
+                'expo-screen-orientation',
+                {
+                    initialOrientation: 'PORTRAIT',
+                },
+            ],
+        ],
     }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { RefreshControl } from 'react-native'
 
 import { Box, Flex, useTheme } from 'native-base'
@@ -6,7 +6,8 @@ import { Box, Flex, useTheme } from 'native-base'
 import WorksheetDayItem from './components/WorksheetDayItem'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { useUserContext } from '@contexts/user/userContext'
+import { RouteProp, StackActions, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import { ERouteName, TReactNavigationStackParamList } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
 import { getWorksheetByIdUseCase } from '@useCases/worksheet/getWorksheetById'
@@ -19,12 +20,19 @@ const WorksheetDays: React.FC = () => {
     const {
         params: { id: worksheetId },
     } = useRoute<RouteProp<TReactNavigationStackParamList, 'WorksheetDays'>>()
-    const { navigate } = useNavigation()
+    const { navigate, dispatch } = useNavigation()
+    const user = useUserContext()
 
     const { data, isLoading, error, mutate } = useSWR(
         [worksheetId, 'worksheetDay'],
         (args: string[]) => getWorksheetByIdUseCase(args[0]),
         {}
+    )
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+        }, [user])
     )
 
     const handleRefresh = async () => {

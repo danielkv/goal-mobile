@@ -6,6 +6,7 @@ import { Box, Flex, useTheme } from 'native-base'
 import WorksheetListItem from './components/WorksheetListItem'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
+import { useUserContext } from '@contexts/user/userContext'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
@@ -13,10 +14,11 @@ import { getWorksheetListUseCase } from '@useCases/worksheet/getWorksheetList'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import useSWR from 'swr'
 
-const WorksheetList: React.FC = () => {
+const WorksheetListScreen: React.FC = () => {
     const { sizes, colors } = useTheme()
     const [refreshing, setRefreshing] = useState(false)
     const { navigate } = useNavigation()
+    const user = useUserContext()
 
     const { data, isLoading, error, mutate } = useSWR('worksheetList', getWorksheetListUseCase, {})
 
@@ -47,6 +49,10 @@ const WorksheetList: React.FC = () => {
                     />
                 </Box>
             )}
+            ListHeaderComponent={() => {
+                if (user.credentials) return null
+                return <AlertBox type="info" text="Para ver qualquer planilha você precisa estar logado" />
+            }}
             estimatedItemSize={93}
             contentContainerStyle={{ padding: sizes[7] }}
             showsHorizontalScrollIndicator={false}
@@ -63,4 +69,4 @@ const WorksheetList: React.FC = () => {
     )
 }
 
-export default WorksheetList
+export default WorksheetListScreen

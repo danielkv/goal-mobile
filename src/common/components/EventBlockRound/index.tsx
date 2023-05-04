@@ -2,7 +2,7 @@ import { Text, VStack } from 'native-base'
 
 import EventBlockMovement from '@components/EventBlockMovement'
 import { IEventRound } from '@models/block'
-import { getRoundsDisplay } from '@utils/worksheet'
+import { numberHelper } from '@utils/numbers'
 
 export interface EventBlockRoundProps {
     round: IEventRound
@@ -19,7 +19,7 @@ const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'c
             )}
             {!!round.repeat && (
                 <Text textAlign={textAlign} fontWeight="bold" fontSize="sm">
-                    {getRoundsDisplay(round.repeat)}
+                    {numberHelper.convertNumbers(round.repeat)}
                 </Text>
             )}
             <VStack>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, { Easing, useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
@@ -7,7 +7,10 @@ import { Box, HStack, ScrollView } from 'native-base'
 
 import SectionItem from './components/SectionItem'
 import { IFlatSection } from '@common/interfaces/worksheet'
+import { useUserContext } from '@contexts/user/userContext'
 import { IDayModel } from '@models/day'
+import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
+import { ERouteName } from '@router/types'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SECTION_CARD_WIDTH = SCREEN_WIDTH * 0.8
@@ -20,6 +23,14 @@ export interface SectionCarouselView {
 const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
     const initialSection = 0
     const [activeSlide, setActiveSlide] = useState(initialSection)
+    const { dispatch } = useNavigation()
+    const user = useUserContext()
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+        }, [user])
+    )
 
     const sections = useMemo(
         () =>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Text } from 'native-base'
 
 import { IRestBlock } from '@models/block'

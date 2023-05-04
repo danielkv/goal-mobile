@@ -1,32 +1,42 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 
-export interface UserContext {
-    token: string
+export interface UserContextCredentials {
+    sessionCookie: string
     userId: string
-    name: string
+    email: string
+}
+
+export interface UserContext {
+    credentials: UserContextCredentials | null
+    setCredentials(newCredentials: UserContextCredentials | null): void
 }
 
 const USER_CONTEXT_STORAGE_KEY = '@goal/UserContext'
 
-export const useUserContext = create<UserContext | null>(() => null)
+export const useUserContext = create<UserContext>((set) => ({
+    credentials: null,
+    setCredentials(newCredentials: UserContextCredentials | null): void {
+        set({ credentials: newCredentials })
+    },
+}))
 
-export const setUserContext = (context: UserContext | null): void => {
-    useUserContext.setState(context)
+export const setUserCredentials = (credentials: UserContextCredentials | null): void => {
+    useUserContext.getState().setCredentials(credentials)
 }
 
-export function saveLocalUserContext(context: UserContext) {
+export function saveLocalUserCredentials(context: UserContextCredentials) {
     const data = JSON.stringify(context)
     return AsyncStorage.setItem(USER_CONTEXT_STORAGE_KEY, data)
 }
 
-export async function getLocalUserContext(): Promise<UserContext | null> {
+export async function getLocalUserCredentials(): Promise<UserContextCredentials | null> {
     const data = await AsyncStorage.getItem(USER_CONTEXT_STORAGE_KEY)
     if (!data) return null
 
-    return JSON.parse(data) as UserContext
+    return JSON.parse(data) as UserContextCredentials
 }
 
-export async function removeLocalUserContext(): Promise<void> {
+export async function removeLocalUserCredentials(): Promise<void> {
     await AsyncStorage.removeItem(USER_CONTEXT_STORAGE_KEY)
 }

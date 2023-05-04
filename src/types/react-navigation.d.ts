@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { TReactNavigationStackParamList } from '@router/types'
 
 declare global {

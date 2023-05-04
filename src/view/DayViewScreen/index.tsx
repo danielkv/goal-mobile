@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { Flex, HStack, IconButton, useTheme } from 'native-base'
+import { Box, Fab, Flex, HStack, IconButton } from 'native-base'
 
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -19,7 +19,6 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import useSWR from 'swr'
 
 const DayViewScreen: React.FC = () => {
-    const { colors } = useTheme()
     const [keepAwake, setKeepAwake] = useState(false)
 
     const {
@@ -67,20 +66,6 @@ const DayViewScreen: React.FC = () => {
                     <IconButton size={12} rounded="full" onPress={handleToggleKeepAwake}>
                         <MaterialIcons name={!keepAwake ? 'lightbulb-outline' : 'lightbulb'} size={16} color="white" />
                     </IconButton>
-                    <IconButton size={12} rounded="full" onPress={() => setViewType('list')}>
-                        <MaterialIcons
-                            name="format-list-numbered"
-                            size={16}
-                            color={viewType === 'list' ? 'white' : colors.gray[400]}
-                        />
-                    </IconButton>
-                    <IconButton size={12} rounded="full" onPress={() => setViewType('carousel')}>
-                        <MaterialIcons
-                            name="view-carousel"
-                            size={16}
-                            color={viewType === 'carousel' ? 'white' : colors.gray[400]}
-                        />
-                    </IconButton>
                 </HStack>
             ),
         })
@@ -97,7 +82,20 @@ const DayViewScreen: React.FC = () => {
 
     if (!data) return <AlertBox type="info" text="Nenhum resultado encontrato" />
 
-    return <>{viewType === 'carousel' ? <SectionCarouselView day={data} /> : <PeriodsListView day={data} />}</>
+    return (
+        <Box flex={1}>
+            {viewType === 'carousel' ? <SectionCarouselView day={data} /> : <PeriodsListView day={data} />}
+
+            <Fab
+                onPress={() => setViewType(viewType === 'list' ? 'carousel' : 'list')}
+                icon={
+                    <MaterialIcons name={viewType === 'list' ? 'view-carousel' : 'view-list'} size={16} color="white" />
+                }
+                colorScheme="trueGray"
+                mb={20}
+            />
+        </Box>
+    )
 }
 
 export default DayViewScreen
