@@ -1,0 +1,38 @@
+{
+	"expo": {
+		"runtimeVersion": "1.0"
+	},
+	"cli": {
+		"version": ">= 3.10.2"
+	},
+	"build": {
+		"production": {
+			"node": "18.2.1",
+			"channel": "production"
+		},
+		"preview": {
+			"extends": "production",
+			"distribution": "internal",
+			"channel": "staging"
+		},
+		"development": {
+			"extends": "production",
+			"distribution": "internal",
+			"developmentClient": true,
+			"channel": "development"
+		}
+	},
+	"submit": {
+		"production": {
+			"android": {
+				"serviceAccountKeyPath": "../path/to/api-xxx-yyy-zzz.json",
+				"track": "internal"
+			},
+			"ios": {
+				"appleId": "daniel_kv@hotmail.com",
+				"ascAppId": "",
+				"appleTeamId": ""
+			}
+		}
+	}
+}

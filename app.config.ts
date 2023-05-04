@@ -10,13 +10,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         name: 'goal-mobile',
         slug: 'goal-mobile',
         version: '1.0.0',
-
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
             image: './src/assets/splash.png',
-            resizeMode: 'contain',
-            backgroundColor: '#ffffff',
+            resizeMode: 'cover',
+            backgroundColor: '#202020',
         },
         assetBundlePatterns: ['**/*'],
         ios: {
@@ -26,11 +25,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         android: {
             adaptiveIcon: {
                 foregroundImage: './src/assets/adaptive-icon.png',
-                backgroundColor: '#ffffff',
+                backgroundColor: '#202020',
             },
-        },
-        web: {
-            favicon: './assets/favicon.png',
         },
 
         extra: {
