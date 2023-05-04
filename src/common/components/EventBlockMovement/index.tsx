@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 
-import { HStack, Pressable, Text, useTheme } from 'native-base'
+import { Box, HStack, Pressable, Text, useTheme } from 'native-base'
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
@@ -27,7 +27,7 @@ const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, textA
     }
 
     return (
-        <>
+        <Box>
             {movement.videoUrl ? (
                 <Pressable
                     _pressed={Platform.select({
@@ -43,18 +43,18 @@ const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, textA
                         justifyContent={textAlign === 'center' ? 'center' : 'flex-start'}
                         space={2}
                     >
-                        <Text color="gray.300" fontSize="xs" textAlign={textAlign}>
+                        <Text color="gray.300" fontSize="sm" textAlign={textAlign}>
                             {displayMovement}
                         </Text>
                         <FontAwesome5 name="external-link-alt" size={12} color={colors.gray[300]} />
                     </HStack>
                 </Pressable>
             ) : (
-                <Text fontSize="xs" color="gray.300" textAlign={textAlign}>
+                <Text textBreakStrategy="balanced" fontSize="sm" color="gray.300" textAlign={textAlign}>
                     {displayMovement}
                 </Text>
             )}
-        </>
+        </Box>
     )
 }
 

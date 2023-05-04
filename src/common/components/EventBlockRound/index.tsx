@@ -1,4 +1,4 @@
-import { Text, VStack } from 'native-base'
+import { Box, Text, VStack } from 'native-base'
 
 import EventBlockMovement from '@components/EventBlockMovement'
 import { IEventRound } from '@models/block'
@@ -11,7 +11,7 @@ export interface EventBlockRoundProps {
 
 const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'center' }) => {
     return (
-        <>
+        <Box bg="gray.800" rounded="md" p={2}>
             {!!round.name && (
                 <Text textAlign={textAlign} color="gray.100" fontSize="sm">
                     {round.name}
@@ -22,12 +22,14 @@ const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'c
                     {numberHelper.convertNumbers(round.repeat)}
                 </Text>
             )}
-            <VStack>
+            <VStack alignItems={textAlign === 'center' ? 'center' : 'flex-start'}>
                 {round.movements.map((movement, index) => (
-                    <EventBlockMovement key={`${movement.name}.${index}`} movement={movement} textAlign={textAlign} />
+                    <Box key={`${movement.name}.${index}`}>
+                        <EventBlockMovement movement={movement} textAlign={textAlign} />
+                    </Box>
                 ))}
             </VStack>
-        </>
+        </Box>
     )
 }
 

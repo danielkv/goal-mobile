@@ -26,6 +26,7 @@ function Router() {
     return (
         <Stack.Navigator
             screenOptions={{
+                title: 'Goal',
                 contentStyle: { backgroundColor: colors.gray[700] },
                 headerStyle: { backgroundColor: colors.gray[900] },
                 headerTitleStyle: { color: colors.white },
@@ -45,7 +46,7 @@ function Router() {
             }}
             initialRouteName={ERouteName.HomeScreen}
         >
-            <Stack.Screen name={ERouteName.HomeScreen} component={HomeScreen} options={{ title: 'My Goal' }} />
+            <Stack.Screen name={ERouteName.HomeScreen} component={HomeScreen} options={{ title: 'Goal' }} />
             <Stack.Screen name={ERouteName.LoginScreen} component={LoginScreen} options={{ title: 'Login' }} />
             <Stack.Screen
                 name={ERouteName.SubscriptionScreen}

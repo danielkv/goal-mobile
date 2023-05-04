@@ -43,7 +43,7 @@ const PeriodsListView: React.FC<PeriodsListView> = ({ day }) => {
                     </Box>
                 )
             }}
-            contentContainerStyle={{ paddingVertical: sizes[7], paddingHorizontal: sizes[5] }}
+            contentContainerStyle={{ paddingVertical: sizes[7], paddingHorizontal: sizes[3] }}
             showsHorizontalScrollIndicator={false}
             estimatedItemSize={640}
         />

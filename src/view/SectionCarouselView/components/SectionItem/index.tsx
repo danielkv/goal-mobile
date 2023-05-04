@@ -24,13 +24,13 @@ const SectionItem: React.FC<SectionItemProps> = ({ item, width }) => {
                 </Text>
             </HStack>
 
-            <VStack my={5} space={4} alignItems="center">
+            <VStack my={5} space={4} px={2}>
                 {item.blocks.map((block, index) => (
-                    <Box key={`${block.type}.${index}`} bg="gray.900" w="80%" rounded="md" p={3}>
-                        <Box mb={4}>
+                    <Box key={`${block.type}.${index}`} bg="gray.900" rounded="md" p={2}>
+                        <Box mb={2}>
                             <BlockItem block={block} textAlign="left" />
                         </Box>
-                        <Box px={2} roundedTop="sm" bg="gray.500" position="absolute" bottom={0} right={3}>
+                        <Box px={1} roundedTop="sm" bg="gray.500" position="absolute" bottom={0} right={3}>
                             <Text fontSize="2xs">{`${sectionNumber}.${index + 1}`}</Text>
                         </Box>
                     </Box>

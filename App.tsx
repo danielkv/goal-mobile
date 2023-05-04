@@ -6,6 +6,7 @@ import { NativeBaseProvider } from 'native-base'
 import { theme } from './src/theme'
 import { NavigationContainer } from '@react-navigation/native'
 import { initialLoadUseCase } from '@useCases/init/initialLoad'
+import { getErrorMessage } from '@utils/getErrorMessage'
 import AppLayout from '@view/AppLayout'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
@@ -22,17 +23,20 @@ SplashScreen.preventAutoHideAsync()
 export default function App() {
     const [loaded, setLoaded] = useState(false)
 
-    useEffect(() => {
-        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+    async function initialLoad() {
+        try {
+            await initialLoadUseCase()
+            setLoaded(true)
+            return await SplashScreen.hideAsync()
+        } catch (err) {
+            Alert.alert('Error', getErrorMessage(err), [{ style: 'default', onPress: () => initialLoad() }])
+        }
+    }
 
-        initialLoadUseCase()
-            .then(() => {
-                setLoaded(true)
-            })
-            .then(() => SplashScreen.hideAsync())
-            .catch((err) => {
-                Alert.alert('Error', err.message)
-            })
+    useEffect(() => {
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT).catch(() => {})
+
+        initialLoad()
     }, [])
 
     if (!loaded) return null
@@ -40,7 +44,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <NativeBaseProvider theme={theme}>
-                <StatusBar style="auto" />
+                <StatusBar style="light" />
                 <AppLayout />
             </NativeBaseProvider>
         </NavigationContainer>

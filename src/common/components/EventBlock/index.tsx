@@ -19,15 +19,15 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
             )}
             {block.event_type !== 'not_timed' &&
                 (textAlign === 'center' ? (
-                    <Text bg={'gray.900'} px={5} py={1} mb={1} fontSize="xs" textAlign={textAlign}>
+                    <Text bg={'gray.900'} px={5} py={1} mb={1} fontSize="sm" textAlign={textAlign}>
                         {eventTypesMap[block.event_type]} {getTimeCap(block)}
                     </Text>
                 ) : (
-                    <Text fontSize="xs" textAlign={textAlign}>
+                    <Text fontSize="sm" textAlign={textAlign}>
                         {eventTypesMap[block.event_type]} {getTimeCap(block)}
                     </Text>
                 ))}
-            <VStack>
+            <VStack space={2}>
                 {block.rounds.map((round, index) => (
                     <EventBlockRound key={`${round.name}${index}`} round={round} textAlign={textAlign} />
                 ))}

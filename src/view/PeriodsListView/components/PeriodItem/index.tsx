@@ -30,13 +30,13 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, onSectionPress, dat
             </HStack>
             <VStack alignItems="center" space={4}>
                 {item.sections.map((group, index) => (
-                    <VStack key={`${group.name}.${index}`} p={3} alignItems="center" maxW="80%">
-                        <Box bg="amber.100">
+                    <VStack key={`${group.name}.${index}`} alignItems="center" mx={2} my={5}>
+                        <Box>
                             <Text textAlign="center" bg="red.500" px={7} py={3} fontSize="md" fontWeight="bold">
                                 {group.name}
                             </Text>
                         </Box>
-                        <VStack mt={5} space={5}>
+                        <VStack space={1} mt={3}>
                             {group.blocks.map((block, index) => (
                                 <BlockItem key={`${block.type}.${index}`} block={block} textAlign="center" />
                             ))}

@@ -13,7 +13,7 @@ import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/n
 import { ERouteName } from '@router/types'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
-const SECTION_CARD_WIDTH = SCREEN_WIDTH * 0.8
+const SECTION_CARD_WIDTH = SCREEN_WIDTH * 0.9
 const SECTION_CARD_MARGIN = 17
 
 export interface SectionCarouselView {
