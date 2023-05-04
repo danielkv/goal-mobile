@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import RegressiveSvg from '@assets/svg/regressive.svg'
+import TabataSvg from '@assets/svg/tabata.svg'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
@@ -53,7 +53,7 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
     return (
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
-            Icon={RegressiveSvg}
+            Icon={TabataSvg}
             activityStatus={currentActivityStatus}
             round={currentRound}
             onPressEditButton={onPressReset}

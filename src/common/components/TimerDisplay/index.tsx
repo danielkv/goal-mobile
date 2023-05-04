@@ -97,7 +97,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
             >
                 <Flex direction={isPortrait ? 'column' : 'row'} alignItems="center" style={{ gap: sizes[3] }}>
                     <Box>
-                        <Icon fill={colors.gray[900]} width={isPortrait ? 60 : 48} />
+                        <Icon fill={colors.gray[500]} width={isPortrait ? 60 : 48} />
                     </Box>
 
                     {initialCountdown ? (
@@ -142,7 +142,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                                 {({ isPressed }) => (
                                     <MaterialIcons
                                         name="pause-circle-filled"
-                                        color={isPressed ? 'black' : colors.gray[900]}
+                                        color={isPressed ? 'black' : colors.gray[500]}
                                         size={isPortrait ? 75 : 65}
                                     />
                                 )}
@@ -165,7 +165,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                                 {({ isPressed }) => (
                                     <MaterialIcons
                                         name="replay-circle-filled"
-                                        color={isPressed ? 'black' : colors.gray[900]}
+                                        color={isPressed ? 'black' : colors.gray[500]}
                                         size={isPortrait ? 75 : 65}
                                     />
                                 )}
@@ -174,7 +174,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                                 {({ isPressed }) => (
                                     <MaterialIcons
                                         name="edit"
-                                        color={isPressed ? 'black' : colors.gray[900]}
+                                        color={isPressed ? 'black' : colors.gray[500]}
                                         size={isPortrait ? 50 : 40}
                                     />
                                 )}

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import RegressiveSvg from '@assets/svg/regressive.svg'
+import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
 import { StopwatchTimer } from '@utils/timer'
@@ -34,7 +34,7 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
     return (
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
-            Icon={RegressiveSvg}
+            Icon={StopwatchSvg}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}
             watchProgressStatus={currentStatus}

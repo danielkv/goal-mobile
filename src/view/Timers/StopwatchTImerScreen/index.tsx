@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Box, Button, Center, ScrollView } from 'native-base'
 
 import StopwatchDisplay from './timer'
-import RegressiveSvg from '@assets/svg/regressive.svg'
+import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TimerForm from '@components/TimerForm'
 
 const StopwatchTimerScreen: React.FC = () => {
@@ -20,7 +20,7 @@ const StopwatchTimerScreen: React.FC = () => {
                         countdown={countdown}
                         onChangeCountdown={setupCountdown}
                         type="stopwatch"
-                        Icon={RegressiveSvg}
+                        Icon={StopwatchSvg}
                         time1={time1}
                         onChangeTime1={setTime1}
                     />

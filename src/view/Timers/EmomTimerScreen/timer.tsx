@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import RegressiveSvg from '@assets/svg/regressive.svg'
+import EmomSvg from '@assets/svg/emom.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
 import { EmomTimer } from '@utils/timer'
@@ -46,7 +46,7 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
     return (
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
-            Icon={RegressiveSvg}
+            Icon={EmomSvg}
             round={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}

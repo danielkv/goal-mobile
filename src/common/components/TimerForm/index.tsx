@@ -64,7 +64,7 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
     return (
         <VStack flex={1} alignItems="center" justifyContent="center" space={5}>
             <Box>
-                <props.Icon fill={colors.gray[900]} width={60} />
+                <props.Icon fill={colors.gray[500]} width={60} />
             </Box>
             <HStack>
                 <Text mr={3} fontSize="sm" fontWeight={400} lineHeight="2xl" color="gray.400">
