@@ -2,6 +2,7 @@ import { HStack, useTheme } from 'native-base'
 
 import { MaterialIcons } from '@expo/vector-icons'
 
+import { useOrientation } from '@common/hooks/useOrientation'
 import MenuButton from '@components/MenuButton'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
@@ -9,6 +10,9 @@ import { ERouteName } from '@router/types'
 const AppBottomBar: React.FC = () => {
     const { colors } = useTheme()
     const { navigate } = useNavigation()
+    const orientation = useOrientation()
+
+    if (orientation === 'landscape') return null
 
     return (
         <HStack

@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useWindowDimensions } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 
 import { Box, Flex, HStack, Pressable, Text, useTheme } from 'native-base'
 
 import { MaterialIcons } from '@expo/vector-icons'
 
+import { useOrientation } from '@common/hooks/useOrientation'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import { useNavigation } from '@react-navigation/native'
 import { useKeepAwake } from 'expo-keep-awake'
@@ -36,8 +36,9 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     onPressPauseButton,
     onPressResetButton,
 }) => {
-    const { width, height } = useWindowDimensions()
-    const isPortrait = height > width
+    const orientation = useOrientation()
+    const isPortrait = orientation === 'portrait'
+
     const navigation = useNavigation()
 
     useKeepAwake()
