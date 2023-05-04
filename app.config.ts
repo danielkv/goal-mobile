@@ -7,9 +7,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     return {
         ...config,
         owner: 'goal',
-        name: 'goal-mobile',
+        name: 'Goal',
         slug: 'goal-mobile',
-        version: '1.0.0',
+        version: '1.0.1',
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
@@ -19,10 +19,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
         assetBundlePatterns: ['**/*'],
         ios: {
+            bundleIdentifier: 'app.mygoal.goal',
             supportsTablet: true,
             requireFullScreen: true,
         },
         android: {
+            package: 'app.mygoal.goal',
             adaptiveIcon: {
                 foregroundImage: './src/assets/adaptive-icon.png',
                 backgroundColor: '#202020',
