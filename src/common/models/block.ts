@@ -67,6 +67,7 @@ export type IEventBlock = {
     rounds: IRound[]
     event_type: TEventType
     numberOfRounds?: number
+    info?: string
 } & (IEventBlockEMOM | IEventBlockTimecap | IEventBlockNotTimed | IEventBlockTabata)
 
 export interface IRestBlock {
