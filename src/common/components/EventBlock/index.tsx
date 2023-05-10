@@ -28,33 +28,35 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
 
     return (
         <>
-            <HStack justifyContent="space-between" alignItems="flex-start">
-                <VStack mt={1}>
-                    {!!block.name && (
-                        <Text fontSize="xs" textAlign={textAlign}>
-                            {block.name}
-                        </Text>
+            {(!!block.name || !!blockTitle || !!block.info) && (
+                <HStack bg={'gray.900'} justifyContent="space-between" alignItems="flex-start">
+                    <VStack mt={1}>
+                        {!!block.name && (
+                            <Text fontSize="xs" textAlign={textAlign}>
+                                {block.name}
+                            </Text>
+                        )}
+                        {!!blockTitle &&
+                            (textAlign === 'center' ? (
+                                <Text px={5} py={1} mb={1} fontSize="sm" textAlign={textAlign}>
+                                    {blockTitle}
+                                </Text>
+                            ) : (
+                                <Text fontWeight="bold" fontSize="md" ml={1} mb={1} textAlign={textAlign}>
+                                    {blockTitle}
+                                </Text>
+                            ))}
+                    </VStack>
+                    {block.info && (
+                        <IconButton
+                            rounded="full"
+                            p={1}
+                            onPress={handleOpenInfo}
+                            icon={<MaterialIcons name="info" size={22} color={colors.gray[500]} />}
+                        />
                     )}
-                    {!!blockTitle &&
-                        (textAlign === 'center' ? (
-                            <Text bg={'gray.900'} px={5} py={1} mb={1} fontSize="sm" textAlign={textAlign}>
-                                {blockTitle}
-                            </Text>
-                        ) : (
-                            <Text fontWeight="bold" fontSize="md" ml={1} mb={1} textAlign={textAlign}>
-                                {blockTitle}
-                            </Text>
-                        ))}
-                </VStack>
-                {block.info && (
-                    <IconButton
-                        rounded="full"
-                        p={1}
-                        onPress={handleOpenInfo}
-                        icon={<MaterialIcons name="info" size={22} color={colors.gray[500]} />}
-                    />
-                )}
-            </HStack>
+                </HStack>
+            )}
             <VStack space={2}>
                 {block.rounds.map((round, index) => (
                     <EventBlockRound key={`${round.type}${index}`} round={round} textAlign={textAlign} />

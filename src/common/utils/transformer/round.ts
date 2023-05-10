@@ -1,12 +1,10 @@
-import cloneDeep from 'clone-deep'
-
-import { IEventMovement, IRound, IRoundEMOM, IRoundTabata, IRoundTimecap } from '@models/block'
-import { TTimerTypes } from '@models/time'
-import { roundTypes } from '@utils/worksheetInitials'
-
 import { BaseTransformer } from './base'
 import { MovementTransformer, movementTransformer } from './movement'
 import { numberHelper } from './numbers'
+import { IEventMovement, IRound, IRoundEMOM, IRoundTabata, IRoundTimecap } from '@models/block'
+import { TTimerTypes } from '@models/time'
+import { roundTypes } from '@utils/worksheetInitials'
+import cloneDeep from 'clone-deep'
 
 type TRoundTypeTransform = 'emom' | 'for time' | 'amrap' | 'tabata'
 

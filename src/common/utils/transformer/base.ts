@@ -1,10 +1,8 @@
-import dayjs from 'dayjs'
-
+import { RegexHelper } from './RegexHelper'
 import { TTimerTypes } from '@models/time'
 import { pluralize } from '@utils/strings'
 import { getTimeFromSeconds } from '@utils/time'
-
-import { RegexHelper } from './RegexHelper'
+import dayjs from 'dayjs'
 
 export abstract class BaseTransformer extends RegexHelper {
     protected timeRegex = /^((?<t1>\d+)\s?(?<t1_type>m(?:in)?|s(?:ec)?)(?:(?<t2>\d+)\s?s(?:ec)?)?)$/i
@@ -133,10 +131,9 @@ export abstract class BaseTransformer extends RegexHelper {
         return ` - ${[timecap, roundsDisplay].filter((info) => info).join(' - ')}`
     }
 
-    protected displayNumberOfRounds(rounds?: number, suffix = 'rounds'): string {
+    protected displayNumberOfRounds(rounds?: number, suffix = 'rounds', prefix?: string): string {
         if (!rounds) return ''
         if (rounds <= 1) return ''
-        if (!suffix) return String(rounds)
-        return `${rounds} ${suffix}`
+        return `${[prefix, rounds, suffix].filter((part) => part).join(' ')}`
     }
 }
