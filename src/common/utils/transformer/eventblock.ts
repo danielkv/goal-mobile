@@ -1,7 +1,8 @@
-import { BaseTransformer } from './base'
-import { RoundTransformer, roundTransformer } from './round'
 import { IEventBlock, IEventBlockEMOM, IEventBlockTabata, IEventBlockTimecap, IRound, TEventType } from '@models/block'
 import { eventTypes } from '@utils/worksheetInitials'
+
+import { BaseTransformer } from './base'
+import { RoundTransformer, roundTransformer } from './round'
 
 type TEventTypeTransform = 'emom' | 'for time' | 'max' | 'amrap' | 'tabata'
 
