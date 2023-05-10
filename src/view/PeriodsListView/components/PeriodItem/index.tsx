@@ -9,10 +9,9 @@ export interface WorksheetDayItemProps {
     date: string
     periodNumber: number
     indexSum: number
-    onSectionPress?: (sectionIndex: number) => void
 }
 
-const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, onSectionPress, date, periodNumber }) => {
+const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, date, periodNumber }) => {
     const dateJs = dayjs(date)
 
     return (
@@ -30,7 +29,7 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, onSectionPress, dat
             </HStack>
             <VStack alignItems="center" space={4}>
                 {item.sections.map((group, index) => (
-                    <VStack key={`${group.name}.${index}`} alignItems="center" mx={2} my={5}>
+                    <VStack key={`${group.name}.${index}`} alignItems="center" mx={2} my={2}>
                         <Box>
                             <Text textAlign="center" bg="red.500" px={7} py={3} fontSize="md" fontWeight="bold">
                                 {group.name}
