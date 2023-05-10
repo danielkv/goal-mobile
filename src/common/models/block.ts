@@ -1,8 +1,6 @@
-export type TEventType = 'for_time' | 'max_weight' | 'amrap' | 'emom' | 'tabata' | 'not_timed'
+import { IEMOMTimer, ITabataTimer, ITimecapTimer, TTimerTypes } from './time'
 
 export type TWeightTypes = 'kg' | 'lb' | '%' | 'none'
-
-export type TBlockType = 'event' | 'rest' | 'text' | ''
 
 export interface IMovementWeight {
     type: TWeightTypes
@@ -16,38 +14,59 @@ export interface IEventMovement {
     videoUrl?: string
 }
 
-export interface IEventRound {
-    name?: string
-    repeat?: string
+export type IRoundTimecap = {
+    type: Exclude<TTimerTypes, 'emom' | 'not_timed' | 'tabata'>
+} & ITimecapTimer
+
+export type IRoundEMOM = {
+    type: 'emom'
+} & IEMOMTimer
+
+export type IRoundTabata = {
+    type: 'tabata'
+} & ITabataTimer
+
+export type IRoundRest = {
+    type: 'rest'
+    time: number
+}
+
+export type IRoundNotTimed = {
+    type: 'not_timed' | 'complex'
+}
+
+export type TRoundTypes = TTimerTypes | 'rest' | 'complex'
+
+export type IRound = {
+    type: TRoundTypes
+    numberOfRounds?: number
     movements: IEventMovement[]
-}
+} & (IRoundTimecap | IRoundEMOM | IRoundTabata | IRoundRest | IRoundNotTimed)
 
-export interface IEventBlockEMOM {
+export type IEventBlockEMOM = {
     event_type: 'emom'
-    each: number
-    numberOfRounds: number
-}
+} & IEMOMTimer
 
-export interface IEventBlockTimecap {
-    event_type: Extract<TEventType, 'for_time' | 'max_weight' | 'amrap'>
-    timecap: number // seconds
-}
-
-export interface IEventBlockNotTimed {
-    event_type: 'not_timed'
-}
 export type IEventBlockTabata = {
     event_type: 'tabata'
-    work: number
-    rest: number
-    numberOfRounds: number
+} & ITabataTimer
+
+export type TEventType = TTimerTypes | 'max_weight'
+
+export type IEventBlockTimecap = {
+    event_type: 'for_time' | 'amrap' | 'max_weight'
+} & ITimecapTimer
+
+export type IEventBlockNotTimed = {
+    event_type: 'not_timed'
 }
 
 export type IEventBlock = {
     type: 'event'
     name?: string
-    rounds: IEventRound[]
+    rounds: IRound[]
     event_type: TEventType
+    numberOfRounds?: number
 } & (IEventBlockEMOM | IEventBlockTimecap | IEventBlockNotTimed | IEventBlockTabata)
 
 export interface IRestBlock {
@@ -65,4 +84,5 @@ export interface EmptyBlock {
     type: ''
 }
 
+export type TBlockType = 'event' | 'rest' | 'text' | ''
 export type IBlock = { info?: string; type: TBlockType } & (IEventBlock | IRestBlock | ITextBlock | EmptyBlock)

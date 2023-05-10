@@ -45,7 +45,7 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
     )
 
     return (
-        <Box flexGrow={1} py={6}>
+        <Box flexGrow={1} pt={6}>
             <HStack justifyContent="center" mb={6}>
                 {sections.map((item, index) => {
                     const selected = index === activeSlide
@@ -74,8 +74,10 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
             </HStack>
             <PagerView style={{ flex: 1 }} onPageSelected={({ nativeEvent: { position } }) => setActiveSlide(position)}>
                 {sections.map((item, index) => (
-                    <Box key={`${item.name}.${index}`} mx={`${SECTION_CARD_MARGIN}px`}>
-                        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+                    <Box key={`${item.name}.${index}`}>
+                        <ScrollView
+                            contentContainerStyle={{ alignItems: 'center', paddingHorizontal: SECTION_CARD_MARGIN }}
+                        >
                             <SectionItem width={SECTION_CARD_WIDTH} item={item} />
                         </ScrollView>
                     </Box>

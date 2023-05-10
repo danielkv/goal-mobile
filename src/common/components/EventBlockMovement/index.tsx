@@ -5,21 +5,19 @@ import { Box, HStack, Pressable, Text, useTheme } from 'native-base'
 import { FontAwesome5 } from '@expo/vector-icons'
 
 import { IEventMovement } from '@models/block'
-import { numberHelper } from '@utils/numbers'
-import { displayWeight } from '@utils/worksheet'
+import { movementTransformer } from '@utils/transformer/movement'
 import * as Linking from 'expo-linking'
 
 export interface EventBlockMovementProps {
     movement: IEventMovement
     textAlign?: 'center' | 'left'
+    hideReps: boolean
 }
 
-const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, textAlign = 'center' }) => {
+const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideReps, textAlign = 'center' }) => {
     const { colors } = useTheme()
-    const weight = displayWeight(movement.weight)
-    const reps = numberHelper.convertNumbers(movement.reps, { suffix: '' })
-    const repsDisplay = reps && reps !== '0' ? `${reps} ` : ''
-    const displayMovement = `${repsDisplay}${movement.name}${weight}`
+
+    const displayMovement = movementTransformer.displayMovement(movement, hideReps)
 
     const handleOnClickUrl = () => {
         if (!movement.videoUrl) return

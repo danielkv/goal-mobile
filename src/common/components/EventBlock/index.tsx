@@ -2,7 +2,7 @@ import { Text, VStack } from 'native-base'
 
 import EventBlockRound from '@components/EventBlockRound'
 import { IEventBlock } from '@models/block'
-import { eventTypesMap, getTimeCap } from '@utils/worksheet'
+import { eventBlockTransformer } from '@utils/transformer/eventblock'
 
 export interface PeriodEventBlock {
     block: IEventBlock
@@ -10,6 +10,8 @@ export interface PeriodEventBlock {
 }
 
 const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' }) => {
+    const blockTitle = eventBlockTransformer.displayTitle(block)
+
     return (
         <>
             {!!block.name && (
@@ -17,19 +19,20 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
                     {block.name}
                 </Text>
             )}
-            {block.event_type !== 'not_timed' &&
+            {!!blockTitle &&
+                block.event_type !== 'not_timed' &&
                 (textAlign === 'center' ? (
                     <Text bg={'gray.900'} px={5} py={1} mb={1} fontSize="sm" textAlign={textAlign}>
-                        {eventTypesMap[block.event_type]} {getTimeCap(block)}
+                        {blockTitle}
                     </Text>
                 ) : (
                     <Text fontSize="sm" textAlign={textAlign}>
-                        {eventTypesMap[block.event_type]} {getTimeCap(block)}
+                        {blockTitle}
                     </Text>
                 ))}
             <VStack space={2}>
                 {block.rounds.map((round, index) => (
-                    <EventBlockRound key={`${round.name}${index}`} round={round} textAlign={textAlign} />
+                    <EventBlockRound key={`${round.type}${index}`} round={round} textAlign={textAlign} />
                 ))}
             </VStack>
         </>
