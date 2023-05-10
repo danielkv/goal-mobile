@@ -20,13 +20,12 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
                 </Text>
             )}
             {!!blockTitle &&
-                block.event_type !== 'not_timed' &&
                 (textAlign === 'center' ? (
                     <Text bg={'gray.900'} px={5} py={1} mb={1} fontSize="sm" textAlign={textAlign}>
                         {blockTitle}
                     </Text>
                 ) : (
-                    <Text fontSize="sm" textAlign={textAlign}>
+                    <Text fontWeight="bold" fontSize="md" ml={1} mb={1} textAlign={textAlign}>
                         {blockTitle}
                     </Text>
                 ))}

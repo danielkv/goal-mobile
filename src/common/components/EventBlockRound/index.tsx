@@ -12,9 +12,9 @@ export interface EventBlockRoundProps {
 }
 
 const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'center' }) => {
-    const matchSequenceReps = useMemo(() => roundTransformer.matchSequenceReps(round.movements), [])
+    const sequenceReps = useMemo(() => roundTransformer.findSequenceReps(round.movements), [])
 
-    const roundTitle = roundTransformer.displayTitle(round, matchSequenceReps?.join('-'))
+    const roundTitle = roundTransformer.displayTitle(round, sequenceReps?.join('-'))
 
     return (
         <Box bg="gray.800" rounded="md" p={2}>
@@ -27,11 +27,7 @@ const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'c
                 <VStack alignItems={textAlign === 'center' ? 'center' : 'flex-start'}>
                     {round.movements.map((movement, index) => (
                         <Box key={`${movement.name}.${index}`}>
-                            <EventBlockMovement
-                                hideReps={!!matchSequenceReps}
-                                movement={movement}
-                                textAlign={textAlign}
-                            />
+                            <EventBlockMovement hideReps={!!sequenceReps} movement={movement} textAlign={textAlign} />
                         </Box>
                     ))}
                 </VStack>
