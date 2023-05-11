@@ -5,11 +5,15 @@ import { Box, Button, Center, ScrollView } from 'native-base'
 import StopwatchDisplay from './timer'
 import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TimerForm from '@components/TimerForm'
+import { RouteProp, useRoute } from '@react-navigation/native'
+import { TReactNavigationStackParamList } from '@router/types'
 
 const StopwatchTimerScreen: React.FC = () => {
+    const { params } = useRoute<RouteProp<TReactNavigationStackParamList, 'StopwatchTimerScreen'>>()
+
     const [state, setState] = useState<'form' | 'timer'>('form')
 
-    const [time1, setTime1] = useState(0)
+    const [timecap, setTimecap] = useState(() => params?.timecap || 0)
     const [countdown, setupCountdown] = useState(3)
 
     return (
@@ -21,8 +25,8 @@ const StopwatchTimerScreen: React.FC = () => {
                         onChangeCountdown={setupCountdown}
                         type="stopwatch"
                         Icon={StopwatchSvg}
-                        time1={time1}
-                        onChangeTime1={setTime1}
+                        time1={timecap}
+                        onChangeTime1={setTimecap}
                     />
                     <Center mt={5}>
                         <Button onPress={() => setState('timer')}>Aplicar</Button>
@@ -31,7 +35,7 @@ const StopwatchTimerScreen: React.FC = () => {
             ) : (
                 <StopwatchDisplay
                     initialCountdown={countdown}
-                    finalTime={time1}
+                    finalTime={timecap}
                     onPressReset={() => setState('form')}
                 />
             )}

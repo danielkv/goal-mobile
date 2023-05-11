@@ -1,3 +1,5 @@
+import { IEMOMTimer, ITabataTimer, ITimecapTimer } from '@models/time'
+
 export type TReactNavigationStackParamList = {
     LoginScreen: undefined
 
@@ -9,13 +11,13 @@ export type TReactNavigationStackParamList = {
 
     TimersScreen: undefined
 
-    EmomTimerScreen: undefined
+    EmomTimerScreen?: Partial<IEMOMTimer>
 
-    RegressiveTimerScreen: undefined
+    RegressiveTimerScreen?: Partial<ITimecapTimer>
 
-    TabataTimerScreen: undefined
+    TabataTimerScreen?: Partial<ITabataTimer>
 
-    StopwatchTimerScreen: undefined
+    StopwatchTimerScreen?: Partial<ITimecapTimer>
 
     WorksheetList: undefined
 

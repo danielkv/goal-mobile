@@ -5,12 +5,16 @@ import { Box, Button, Center, ScrollView } from 'native-base'
 import EmomDisplay from './timer'
 import EmomSvg from '@assets/svg/emom.svg'
 import TimerForm from '@components/TimerForm'
+import { RouteProp, useRoute } from '@react-navigation/native'
+import { TReactNavigationStackParamList } from '@router/types'
 
 const EmomTimerScreen: React.FC = () => {
+    const { params } = useRoute<RouteProp<TReactNavigationStackParamList, 'EmomTimerScreen'>>()
+
     const [state, setState] = useState<'form' | 'timer'>('form')
 
-    const [each, setEach] = useState(60)
-    const [rounds, setRounds] = useState(5)
+    const [each, setEach] = useState(() => params?.each || 60)
+    const [rounds, setRounds] = useState(() => params?.numberOfRounds || 5)
     const [countdown, setupCountdown] = useState(3)
 
     return (

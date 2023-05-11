@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react'
 
-import { AlertDialog, Button, HStack, IconButton, Text, VStack, useTheme } from 'native-base'
+import { AlertDialog, Button, HStack, Text, VStack, useTheme } from 'native-base'
 
 import { MaterialIcons } from '@expo/vector-icons'
 
 import EventBlockRound from '@components/EventBlockRound'
+import OpenTimerButton, { OpenTimerButtonProps } from '@components/OpenTimerButton'
 import { IEventBlock } from '@models/block'
+import { TTimerTypes } from '@models/time'
 import { eventBlockTransformer } from '@utils/transformer/eventblock'
 
 export interface PeriodEventBlock {
@@ -13,11 +15,63 @@ export interface PeriodEventBlock {
     textAlign?: 'center' | 'left'
 }
 
+const getTimerSettings = (block: IEventBlock): OpenTimerButtonProps['settings'] => {
+    switch (block.event_type) {
+        case 'amrap':
+        case 'max_weight':
+        case 'for_time':
+            return {
+                numberOfRounds: block.numberOfRounds,
+                timecap: block.timecap,
+            }
+        case 'emom':
+            return {
+                numberOfRounds: block.numberOfRounds,
+                each: block.each,
+            }
+        case 'tabata':
+            return {
+                numberOfRounds: block.numberOfRounds,
+                work: block.work,
+                rest: block.rest,
+            }
+    }
+
+    return {}
+}
+
+const getTimerType = (block: IEventBlock): Exclude<TTimerTypes, 'not_timed'> | null => {
+    switch (block.event_type) {
+        case 'emom':
+            if (block.each && block.each > 0 && block.numberOfRounds && block.numberOfRounds > 0) return 'emom'
+            break
+        case 'tabata':
+            if (
+                block.work &&
+                block.work > 0 &&
+                block.rest &&
+                block.rest > 0 &&
+                block.numberOfRounds &&
+                block.numberOfRounds > 0
+            )
+                return 'tabata'
+            break
+        case 'for_time':
+        case 'max_weight':
+        case 'amrap':
+            if (block.timecap && block.timecap > 0) return 'for_time'
+            break
+    }
+    return null
+}
+
 const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' }) => {
     const { colors } = useTheme()
     const blockTitle = eventBlockTransformer.displayTitle(block)
     const [infoOpen, setInfoOpen] = useState(false)
     const ref = useRef()
+
+    const timerType = getTimerType(block)
 
     const handleCloseInfo = () => {
         setInfoOpen(false)
@@ -47,16 +101,26 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
                                 </Text>
                             ))}
                     </VStack>
-                    {block.info && (
-                        <IconButton
-                            rounded="full"
-                            p={1}
+                </HStack>
+            )}
+
+            {(!!timerType || !!block.info) && (
+                <HStack space={2} my={2}>
+                    {!!timerType && <OpenTimerButton type={timerType} settings={getTimerSettings(block)} />}
+                    {!!block.info && (
+                        <Button
+                            flex={1}
+                            leftIcon={<MaterialIcons name="info-outline" size={26} color={colors.gray[300]} />}
+                            colorScheme="gray"
+                            size="sm"
                             onPress={handleOpenInfo}
-                            icon={<MaterialIcons name="info" size={22} color={colors.gray[500]} />}
-                        />
+                        >
+                            Informações
+                        </Button>
                     )}
                 </HStack>
             )}
+
             <VStack space={2}>
                 {block.rounds.map((round, index) => (
                     <EventBlockRound key={`${round.type}${index}`} round={round} textAlign={textAlign} />
