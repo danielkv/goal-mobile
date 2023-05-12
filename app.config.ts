@@ -1,7 +1,5 @@
-import * as dotenv from 'dotenv'
+import 'dotenv/config'
 import { ConfigContext, ExpoConfig } from 'expo/config'
-
-const envs = dotenv.config({ path: './.env' })
 
 export default ({ config }: ConfigContext): ExpoConfig => {
     return {
@@ -34,7 +32,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
 
         extra: {
-            ...envs.parsed,
+            APIKEY: process.env.APIKEY,
+            AUTHDOMAIN: process.env.AUTHDOMAIN,
+            PROJECTID: process.env.PROJECTID,
+            STORAGEBUCKET: process.env.STORAGEBUCKET,
+            MESSAGINGSENDERID: process.env.MESSAGINGSENDERID,
+            APPID: process.env.APPID,
+            MEASUREMENTID: process.env.MEASUREMENTID,
+            WEB_APP_URL: process.env.WEB_APP_URL,
+            WEB_APP_RESET_PASSWORD_URL: process.env.WEB_APP_RESET_PASSWORD_URL,
             eas: {
                 projectId: 'a5ca3be7-cbb0-4f41-aa54-d96bc45da066',
             },

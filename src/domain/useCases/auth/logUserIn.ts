@@ -1,5 +1,5 @@
 import { createSessionCookieUseCase } from './sessionCookie'
-import { FIREBASE_AUTH } from '@common/providers/firebase'
+import { firebaseProvider } from '@common/providers/firebase'
 import { saveLocalUserCredentials, setUserCredentials } from '@contexts/user/userContext'
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth'
 
@@ -32,7 +32,10 @@ async function _loginRouter(credentials: Credentials): Promise<UserCredential | 
 }
 
 async function _emailLogin(credentials: EmailCredentials) {
-    const user = await signInWithEmailAndPassword(FIREBASE_AUTH, credentials.email, credentials.password)
+    const auth = firebaseProvider.getAuth()
+    if (!auth) throw new Error('Provedor de autenticação não conectado')
+
+    const user = await signInWithEmailAndPassword(auth, credentials.email, credentials.password)
 
     return user
 }

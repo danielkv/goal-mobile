@@ -1,29 +1,54 @@
-import { getEnv } from '@utils/getEnv'
-import { initializeApp } from 'firebase/app'
-import { ProviderId, getAuth } from 'firebase/auth'
+import { Alert } from 'react-native'
+
+import Constants from 'expo-constants'
+import { FirebaseApp, initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
-export const FIREBASE_APP = initializeApp({
-    apiKey: getEnv('APIKEY'),
-    authDomain: getEnv('AUTHDOMAIN'),
-    projectId: getEnv('PROJECTID'),
-    storageBucket: getEnv('STORAGEBUCKET'),
-    messagingSenderId: getEnv('MESSAGINGSENDERID'),
-    appId: getEnv('APPID'),
-    measurementId: getEnv('MEASUREMENTID'),
-})
+class FirebaseProvider {
+    private app: FirebaseApp | null = null
 
-export const FIREBASE_AUTH = getAuth(FIREBASE_APP)
+    getApp() {
+        try {
+            if (this.app) return this.app
 
-export const FUNCTIONS = getFunctions(FIREBASE_APP)
+            this.app = initializeApp({
+                apiKey: Constants.expoConfig?.extra?.APIKEY,
+                authDomain: Constants.expoConfig?.extra?.AUTHDOMAIN,
+                projectId: Constants.expoConfig?.extra?.PROJECTID,
+                storageBucket: Constants.expoConfig?.extra?.STORAGEBUCKET,
+                messagingSenderId: Constants.expoConfig?.extra?.MESSAGINGSENDERID,
+                appId: Constants.expoConfig?.extra?.APPID,
+                measurementId: Constants.expoConfig?.extra?.MEASUREMENTID,
+            })
 
-export const signInOptions = [
-    {
-        provider: ProviderId.PASSWORD,
-        fullLabel: 'Login',
-        disableSignUp: { status: true },
-    },
-]
+            return this.app
+        } catch (err) {
+            Alert.alert('Ocorreu um erro ao inicialiar a conexão com o Banco de dados')
+        }
+    }
 
-export const FUNCTION_CALL = <RequestData = unknown, ResponseData = unknown>(fnName: string) =>
-    httpsCallable<RequestData, ResponseData>(FUNCTIONS, fnName)
+    getAuth() {
+        const app = this.getApp()
+        if (!app) throw new Error('Provedor de requisições não conectado')
+
+        return getAuth(app)
+    }
+
+    getFunctions() {
+        const app = this.getApp()
+        if (!app) throw new Error('Provedor de requisições não conectado')
+
+        return getFunctions(app)
+    }
+
+    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(fnName: string) {
+        const functions = this.getFunctions()
+        if (!functions) throw new Error('Provedor de requisições não conectado')
+
+        return httpsCallable<RequestData, ResponseData>(functions, fnName)
+    }
+    //
+}
+
+export const firebaseProvider = new FirebaseProvider()
