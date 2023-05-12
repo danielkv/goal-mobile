@@ -47,7 +47,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
         ScreenOrientation.unlockAsync()
 
         return () => {
-            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
         }
     }, [])
 
