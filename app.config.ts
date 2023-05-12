@@ -19,11 +19,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
         assetBundlePatterns: ['**/*'],
         ios: {
+            buildNumber: '2',
             bundleIdentifier: 'app.mygoal.goal',
             supportsTablet: true,
             requireFullScreen: true,
         },
         android: {
+            versionCode: 2,
             package: 'app.mygoal.goal',
             adaptiveIcon: {
                 foregroundImage: './src/assets/adaptive-icon.png',

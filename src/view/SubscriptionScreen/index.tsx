@@ -12,6 +12,8 @@ import TextField from '@components/TextField'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { createUserUseCase } from '@useCases/auth/createUser'
+import { logMessageUseCase } from '@useCases/log/logMessage'
+import { createAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import { FormikConfig, useFormik } from 'formik'
 
@@ -34,6 +36,8 @@ const SubscriptionScreen: React.FC = () => {
                 [{ style: 'default', onPress: () => navigation.navigate(ERouteName.LoginScreen) }]
             )
         } catch (err) {
+            const logError = createAppException('ERROR_CAUGHT', err)
+            logMessageUseCase(logError.toObject())
             Alert.alert('Ocorreu um erro', getErrorMessage(err))
         }
     }

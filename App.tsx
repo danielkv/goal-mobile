@@ -4,8 +4,11 @@ import { Alert } from 'react-native'
 import { NativeBaseProvider } from 'native-base'
 
 import { theme } from './src/theme'
+import ErrorBoundary from '@components/ErrorBoundary'
 import { NavigationContainer } from '@react-navigation/native'
 import { initialLoadUseCase } from '@useCases/init/initialLoad'
+import { logMessageUseCase } from '@useCases/log/logMessage'
+import { createAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import AppLayout from '@view/AppLayout'
 import dayjs from 'dayjs'
@@ -29,6 +32,8 @@ export default function App() {
             setLoaded(true)
             return await SplashScreen.hideAsync()
         } catch (err) {
+            const logError = createAppException('ERROR_CAUGHT', err)
+            logMessageUseCase(logError.toObject())
             Alert.alert('Error', getErrorMessage(err), [{ style: 'default', onPress: () => initialLoad() }])
         }
     }
@@ -45,7 +50,9 @@ export default function App() {
         <NavigationContainer>
             <NativeBaseProvider theme={theme}>
                 <StatusBar style="light" />
-                <AppLayout />
+                <ErrorBoundary>
+                    <AppLayout />
+                </ErrorBoundary>
             </NativeBaseProvider>
         </NavigationContainer>
     )
