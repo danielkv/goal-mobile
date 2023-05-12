@@ -7,7 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         owner: 'goal',
         name: 'Goal',
         slug: 'goal-mobile',
-        version: '1.0.1',
+        version: '1.0.3',
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
@@ -17,7 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
         assetBundlePatterns: ['**/*'],
         ios: {
-            buildNumber: '2',
+            buildNumber: '3',
             bundleIdentifier: 'app.mygoal.goal',
             supportsTablet: true,
             requireFullScreen: true,
