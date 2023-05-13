@@ -17,9 +17,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
         assetBundlePatterns: ['**/*'],
         ios: {
-            buildNumber: '3',
+            buildNumber: '4',
             bundleIdentifier: 'app.mygoal.goal',
-            supportsTablet: true,
+            supportsTablet: false,
             requireFullScreen: true,
         },
         android: {

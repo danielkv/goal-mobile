@@ -22,7 +22,8 @@
 	"submit": {
 		"production": {
 			"android": {
-				"track": "internal"
+				"track": "internal",
+				"releaseStatus": "completed"
 			},
 			"ios": {
 				"appleId": "daniel_kv@hotmail.com"
