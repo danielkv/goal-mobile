@@ -1,10 +1,13 @@
+import React from 'react'
+
 import { FormControl, IInputProps, Input, Text, VStack } from 'native-base'
 
-export interface TextFieldProps extends IInputProps {
+export interface TextFieldProps extends Omit<IInputProps, 'ref'> {
+    innerRef?: React.MutableRefObject<any> | React.RefCallback<any>
     label?: string
     error?: string
 }
-const TextField: React.FC<TextFieldProps> = ({ label, error, ...props }) => {
+const TextField: React.FC<TextFieldProps> = ({ label, error, innerRef, ...props }) => {
     return (
         <FormControl>
             <VStack space={2}>
@@ -13,7 +16,7 @@ const TextField: React.FC<TextFieldProps> = ({ label, error, ...props }) => {
                         {label}
                     </Text>
                 )}
-                <Input variant="unstyled" width="full" {...props} />
+                <Input variant="unstyled" width="full" {...props} ref={innerRef} />
                 {error && (
                     <Text color="red.400" fontSize={12} fontWeight="light">
                         {error}

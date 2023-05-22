@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Alert, Image, ImageBackground } from 'react-native'
 
 import { Box, Button, Heading, Icon, Link, Pressable, ScrollView, Stack, Text } from 'native-base'
@@ -21,6 +21,8 @@ const LoginScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigation = useNavigation()
     const [loadingResetPassword, setLoadingResetPassword] = useState(false)
+
+    const inputRefs = useRef<Record<string, any>>({})
 
     const onSubmit: FormikConfig<TLoginForm>['onSubmit'] = async (result) => {
         try {
@@ -45,6 +47,11 @@ const LoginScreen: React.FC = () => {
             if (errors.email) return
 
             await sendResetPasswordEmailUseCase(values.email)
+
+            Alert.alert(
+                'Instruções enviadas para seu email',
+                'Enviamos um email para você resetar sua senha. Caso não encontre o email na caixa de entrada, verifique no lixo eletrônico.'
+            )
         } catch (err) {
             Alert.alert('Ocorreu um erro', getErrorMessage(err))
         } finally {
@@ -55,7 +62,7 @@ const LoginScreen: React.FC = () => {
     return (
         <Box flex={1}>
             <ImageBackground style={{ flex: 1 }} source={LoginBg}>
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }}>
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <Box mt={50} mb={30}>
                         <Image source={LogoGoal} style={{ width: '100%', height: 60, resizeMode: 'contain' }} />
                     </Box>
@@ -70,18 +77,28 @@ const LoginScreen: React.FC = () => {
                     <Stack paddingX={5} space={4} w="100%" alignItems="center">
                         <TextField
                             label="Email"
+                            autoFocus
                             InputLeftElement={
                                 <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
                             }
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
+                            returnKeyType="next"
+                            innerRef={(ref: any) => (inputRefs.current['email'] = ref)}
+                            onSubmitEditing={() => {
+                                inputRefs.current['password']?.focus()
+                            }}
                         />
                         <TextField
+                            innerRef={(ref) => {
+                                inputRefs.current['password'] = ref
+                            }}
                             label="Senha"
                             onChangeText={handleChange('password')}
                             value={values.password}
                             error={errors.password}
+                            returnKeyType="join"
                             type={showPassword ? 'text' : 'password'}
                             InputRightElement={
                                 <Pressable onPress={() => setShowPassword(!showPassword)}>
@@ -93,6 +110,7 @@ const LoginScreen: React.FC = () => {
                                     />
                                 </Pressable>
                             }
+                            onSubmitEditing={() => handleSubmit()}
                         />
 
                         <Button isLoading={isSubmitting} width="full" onPress={() => handleSubmit()}>

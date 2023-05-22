@@ -20,7 +20,7 @@ const EmomTimerScreen: React.FC = () => {
     return (
         <Box flex={1} safeAreaBottom>
             {state === 'form' ? (
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }}>
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <TimerForm
                         type="emom"
                         rounds={rounds}

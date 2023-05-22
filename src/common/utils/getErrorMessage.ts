@@ -58,5 +58,7 @@ const errorMessages: Record<string, string> = {
     'auth/session-cookie-revoked': 'A sessão expirou, faça o login novamente',
     'auth/user-not-found': 'Usuário não encontrado.',
     'auth/wrong-password': 'Usuário ou senha incorreto',
+    'auth/too-many-requests':
+        'Seu acesso foi temporariamente desabilitado devido ao número de tentativas. Você pode liberar o acesso imediatamente resetando sua senha, ou tentar novamente mais tarde.',
     'auth/user-disabled': 'Seu usuário ainda não foi habilitado',
 }

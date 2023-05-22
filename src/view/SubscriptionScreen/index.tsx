@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Alert, Image, ImageBackground } from 'react-native'
 
 import { Box, Button, Icon, Pressable, ScrollView, Stack, Text } from 'native-base'
@@ -20,6 +20,8 @@ import { FormikConfig, useFormik } from 'formik'
 const SubscriptionScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigation = useNavigation()
+
+    const inputRefs = useRef<Record<string, any>>({})
 
     const onSubmit: FormikConfig<TLoginForm>['onSubmit'] = async (result) => {
         try {
@@ -51,7 +53,7 @@ const SubscriptionScreen: React.FC = () => {
     return (
         <Box flex={1} safeAreaBottom>
             <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={LoginBg}>
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }}>
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <Box mt={50} mb={30}>
                         <Image source={LogoGoal} style={{ width: '100%', height: 60, resizeMode: 'contain' }} />
                     </Box>
@@ -66,6 +68,11 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('name')}
                             value={values.name}
                             error={errors.name}
+                            returnKeyType="next"
+                            innerRef={(ref) => (inputRefs.current['name'] = ref)}
+                            onSubmitEditing={() => {
+                                inputRefs.current?.email?.focus()
+                            }}
                         />
                         <TextField
                             label="Email"
@@ -75,6 +82,11 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
+                            returnKeyType="next"
+                            innerRef={(ref) => (inputRefs.current['email'] = ref)}
+                            onSubmitEditing={() => {
+                                inputRefs.current?.phoneNumber?.focus()
+                            }}
                         />
                         <TextField
                             label="Telefone"
@@ -84,6 +96,11 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('phoneNumber')}
                             value={values.phoneNumber}
                             error={errors.phoneNumber}
+                            returnKeyType="next"
+                            innerRef={(ref) => (inputRefs.current['phoneNumber'] = ref)}
+                            onSubmitEditing={() => {
+                                inputRefs.current?.passwor?.focus()
+                            }}
                         />
                         <TextField
                             label="Senha"
@@ -101,6 +118,9 @@ const SubscriptionScreen: React.FC = () => {
                                     />
                                 </Pressable>
                             }
+                            returnKeyType="next"
+                            innerRef={(ref) => (inputRefs.current['password'] = ref)}
+                            onSubmitEditing={() => handleSubmit()}
                         />
 
                         <Button isLoading={isSubmitting} width="full" onPress={() => handleSubmit()}>
