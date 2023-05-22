@@ -17,7 +17,7 @@ export interface EventBlockMovementProps {
 const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideReps, textAlign = 'center' }) => {
     const { colors } = useTheme()
 
-    const displayMovement = movementTransformer.displayMovement(movement, hideReps)
+    const displayMovement = movementTransformer.display(movement, hideReps)
 
     const handleOnClickUrl = () => {
         if (!movement.videoUrl) return
