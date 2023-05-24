@@ -1,5 +1,7 @@
-import { User, sendEmailVerification } from 'firebase/auth'
+import { IUser } from '@models/user'
 
-export function sendEmailVerificationUseCase(user: User) {
+import { sendEmailVerification } from 'firebase/auth'
+
+export function sendEmailVerificationUseCase(user: IUser) {
     return sendEmailVerification(user)
 }

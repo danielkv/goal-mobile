@@ -35,7 +35,7 @@ const SubscriptionScreen: React.FC = () => {
 
             Alert.alert(
                 'Sua conta criada com sucesso',
-                'Verifique sua caixa de entrada ou lixo eletrônico para validar seu email.',
+                'No seu primeiro acesso será solicitado a verificação do seu email.',
                 [{ style: 'default', onPress: () => navigation.navigate(ERouteName.LoginScreen) }]
             )
         } catch (err) {

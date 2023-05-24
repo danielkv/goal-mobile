@@ -1,4 +1,6 @@
+import { IUser } from '@models/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { create } from 'zustand'
 
 export interface UserContextCredentials {
@@ -9,6 +11,8 @@ export interface UserContextCredentials {
 
 export interface UserContext {
     credentials: UserContextCredentials | null
+    user: IUser | null
+    serUser(user: IUser | null): void
     setCredentials(newCredentials: UserContextCredentials | null): void
 }
 
@@ -16,6 +20,10 @@ const USER_CONTEXT_STORAGE_KEY = '@goal/UserContext'
 
 export const useUserContext = create<UserContext>((set) => ({
     credentials: null,
+    user: null,
+    serUser(user: IUser | null) {
+        set({ user })
+    },
     setCredentials(newCredentials: UserContextCredentials | null): void {
         set({ credentials: newCredentials })
     },
@@ -23,6 +31,9 @@ export const useUserContext = create<UserContext>((set) => ({
 
 export const setUserCredentials = (credentials: UserContextCredentials | null): void => {
     useUserContext.getState().setCredentials(credentials)
+}
+export const setLoggedUser = (user: IUser | null): void => {
+    useUserContext.getState().serUser(user)
 }
 
 export function saveLocalUserCredentials(context: UserContextCredentials) {

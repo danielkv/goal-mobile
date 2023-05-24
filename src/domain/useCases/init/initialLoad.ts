@@ -1,10 +1,10 @@
+import { getLocalUserCredentials, setLoggedUser, setUserCredentials } from '@contexts/user/userContext'
 import { Inter_300Light, Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter'
-
-import { getLocalUserCredentials, setUserCredentials } from '@contexts/user/userContext'
 import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import { validateSessionCookieUseCase } from '@useCases/auth/sessionCookie'
 import { logMessageUseCase } from '@useCases/log/logMessage'
 import { createAppException } from '@utils/exceptions/AppException'
+
 import * as Fonts from 'expo-font'
 
 export async function initialLoadUseCase() {
@@ -18,7 +18,8 @@ export async function initialLoadUseCase() {
     if (localUser) {
         try {
             const validated = await validateSessionCookieUseCase(localUser.sessionCookie)
-            setUserCredentials(validated)
+            setUserCredentials(validated.credentials)
+            setLoggedUser(validated.user)
         } catch (err) {
             const logError = createAppException('ERROR_CAUGHT', err)
             logMessageUseCase(logError.toObject())

@@ -1,3 +1,5 @@
+import { User } from 'firebase/auth'
+
 export interface IUserInput {
     displayName: string
     phoneNumber: string
@@ -5,8 +7,6 @@ export interface IUserInput {
     password: string
 }
 
-export interface IUser {
-    uid: string
-    displayName: string
+export interface IUser extends User {
     email: string
 }

@@ -1,14 +1,13 @@
 import { IconButton, useTheme } from 'native-base'
 
-import { MaterialIcons } from '@expo/vector-icons'
-
-import { ERouteName } from './types'
 import { useUserContext } from '@contexts/user/userContext'
+import { MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
+import ProfileScreen from '@view/ProfileScreen'
 import SubscriptionScreen from '@view/SubscriptionScreen'
 import EmomTimerScreen from '@view/Timers/EmomTimerScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
@@ -18,10 +17,13 @@ import TimersScreen from '@view/Timers/TimersScreen'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetListScreen from '@view/WorksheetListScreen'
 
+import { ERouteName } from './types'
+
 const Stack = createNativeStackNavigator()
 
 function Router() {
     const { colors } = useTheme()
+    const { navigate } = useNavigation()
 
     return (
         <Stack.Navigator
@@ -38,8 +40,8 @@ function Router() {
 
                     if (!user.credentials) return null
                     return (
-                        <IconButton onPress={logUserOutUseCase}>
-                            <MaterialIcons name="logout" size={22} color={colors.gray[100]} />
+                        <IconButton onPress={() => navigate(ERouteName.Profile)}>
+                            <MaterialIcons name="person" size={22} color={colors.gray[100]} />
                         </IconButton>
                     )
                 },
@@ -100,6 +102,7 @@ function Router() {
             />
             <Stack.Screen name={ERouteName.WorksheetDays} options={{ title: 'Dias' }} component={WorksheetDays} />
             <Stack.Screen name={ERouteName.DayView} options={{ title: 'Dia' }} component={DayViewScreen} />
+            <Stack.Screen name={ERouteName.Profile} options={{ title: 'Meu Perfil' }} component={ProfileScreen} />
         </Stack.Navigator>
     )
 }
