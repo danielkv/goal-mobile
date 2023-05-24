@@ -3,19 +3,20 @@ import { Alert, Image, ImageBackground } from 'react-native'
 
 import { Box, Button, Icon, Pressable, ScrollView, Stack, Text } from 'native-base'
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-
-import { TLoginForm, initialValues, validationSchema } from './config'
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import TextField from '@components/TextField'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { createUserUseCase } from '@useCases/auth/createUser'
 import { logMessageUseCase } from '@useCases/log/logMessage'
 import { createAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
+
 import { FormikConfig, useFormik } from 'formik'
+
+import { TLoginForm, initialValues, validationSchema } from './config'
 
 const SubscriptionScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -33,8 +34,8 @@ const SubscriptionScreen: React.FC = () => {
             })
 
             Alert.alert(
-                'Conta criada com sucesso',
-                'Seu perfil será ativado em breve. Aguarde a ativação para fazer o login.',
+                'Sua conta criada com sucesso',
+                'Verifique sua caixa de entrada ou lixo eletrônico para validar seu email.',
                 [{ style: 'default', onPress: () => navigation.navigate(ERouteName.LoginScreen) }]
             )
         } catch (err) {

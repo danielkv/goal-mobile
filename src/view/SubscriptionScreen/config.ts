@@ -6,9 +6,9 @@ export const initialValues = (): TLoginForm => {
     if (__DEV__)
         return {
             name: 'Daniel K Guolo',
-            email: 'danielkv@gmail.com',
+            email: 'daniel_kv@hotmail.com',
             password: '123456',
-            phoneNumber: '48 98844 6690',
+            phoneNumber: '48 98844 6691',
         }
 
     return {

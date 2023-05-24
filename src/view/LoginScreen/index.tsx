@@ -3,19 +3,22 @@ import { Alert, Image, ImageBackground } from 'react-native'
 
 import { Box, Button, Heading, Icon, Link, Pressable, ScrollView, Stack, Text } from 'native-base'
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-
-import { TLoginForm, initialValues, validationSchema } from './config'
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import ActivityIndicator from '@components/ActivityIndicator'
 import TextField from '@components/TextField'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { logUserInUseCase } from '@useCases/auth/logUserIn'
+import { sendEmailVerificationUseCase } from '@useCases/auth/sendEmailVerification'
 import { sendResetPasswordEmailUseCase } from '@useCases/auth/sendResetPasswordEmail'
+import { isAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
+
 import { FormikConfig, useFormik } from 'formik'
+
+import { TLoginForm, initialValues, validationSchema } from './config'
 
 const LoginScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -30,6 +33,25 @@ const LoginScreen: React.FC = () => {
 
             navigation.navigate(ERouteName.HomeScreen)
         } catch (err) {
+            if (isAppException(err) && err.type === 'EMAIL_NOT_VERIFIED') {
+                return Alert.alert(
+                    'Seu email não foi verificado',
+                    'Verifique sua caixa de entrada ou lixo eletrônico para validar seu email',
+                    [
+                        {
+                            text: 'Reenviar email de verificação',
+                            onPress() {
+                                sendEmailVerificationUseCase((err as any).extraInfo)
+                            },
+                        },
+                        {
+                            text: 'OK',
+                            style: 'default',
+                            isPreferred: true,
+                        },
+                    ]
+                )
+            }
             Alert.alert('Ocorreu um erro', getErrorMessage(err))
         }
     }
