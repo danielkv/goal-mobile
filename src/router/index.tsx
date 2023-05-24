@@ -1,14 +1,13 @@
 import { IconButton, useTheme } from 'native-base'
 
-import { MaterialIcons } from '@expo/vector-icons'
-
-import { ERouteName } from './types'
 import { useUserContext } from '@contexts/user/userContext'
+import { MaterialIcons } from '@expo/vector-icons'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
+import PlansScreen from '@view/PlansScreen'
 import SubscriptionScreen from '@view/SubscriptionScreen'
 import EmomTimerScreen from '@view/Timers/EmomTimerScreen'
 import RegressiveTimerScreen from '@view/Timers/RegressiveTimerScreen'
@@ -17,6 +16,8 @@ import TabataTimerScreen from '@view/Timers/TabataTimerScreen'
 import TimersScreen from '@view/Timers/TimersScreen'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetListScreen from '@view/WorksheetListScreen'
+
+import { ERouteName } from './types'
 
 const Stack = createNativeStackNavigator()
 
@@ -100,6 +101,8 @@ function Router() {
             />
             <Stack.Screen name={ERouteName.WorksheetDays} options={{ title: 'Dias' }} component={WorksheetDays} />
             <Stack.Screen name={ERouteName.DayView} options={{ title: 'Dia' }} component={DayViewScreen} />
+
+            <Stack.Screen name={ERouteName.Plans} options={{ title: 'Planos' }} component={PlansScreen} />
         </Stack.Navigator>
     )
 }

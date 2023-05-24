@@ -24,7 +24,11 @@ const HomeScreen: React.FC = () => {
                 </Box>
                 <VStack space={6} mb={81}>
                     {user.credentials ? (
-                        <Button onPress={() => navigate(ERouteName.WorksheetListScreen)}>Planilhas</Button>
+                        user.credentials.subscription ? (
+                            <Button onPress={() => navigate(ERouteName.WorksheetListScreen)}>Planilhas</Button>
+                        ) : (
+                            <Button onPress={() => navigate(ERouteName.Plans)}>Selecionar um plano</Button>
+                        )
                     ) : (
                         <>
                             <Button onPress={() => navigate(ERouteName.LoginScreen)}>Logar</Button>
