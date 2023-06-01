@@ -23,7 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             bundleIdentifier: 'app.mygoal.goal',
             supportsTablet: false,
             requireFullScreen: true,
-            googleServicesFile: './GoogleService-Info.plist',
+            googleServicesFile: process.env.GOOGLE_SERVICES_IOS,
         },
         android: {
             versionCode: 3,
@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
                 foregroundImage: './src/assets/adaptive-icon.png',
                 backgroundColor: '#202020',
             },
-            googleServicesFile: './google-services.json',
+            googleServicesFile: process.env.GOOGLE_SERVICES_ANDROID,
         },
 
         extra: {
