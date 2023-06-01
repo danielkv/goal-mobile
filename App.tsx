@@ -3,7 +3,9 @@ import { Alert } from 'react-native'
 
 import { NativeBaseProvider } from 'native-base'
 
+import { firebaseProvider } from '@common/providers/firebase'
 import ErrorBoundary from '@components/ErrorBoundary'
+import { extractUserCredential, setLoggedUser } from '@contexts/user/userContext'
 import { NavigationContainer } from '@react-navigation/native'
 import { initialLoadUseCase } from '@useCases/init/initialLoad'
 import { logMessageUseCase } from '@useCases/log/logMessage'
@@ -46,7 +48,18 @@ export default function App() {
     useEffect(() => {
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch(() => {})
 
+        const unsubscribe = firebaseProvider.getAuth().onAuthStateChanged((user) => {
+            console.log(user)
+            if (!user) return setLoggedUser(null)
+
+            setLoggedUser(extractUserCredential(user))
+        })
+
         initialLoad()
+
+        return () => {
+            unsubscribe()
+        }
     }, [])
 
     if (!loaded) return null

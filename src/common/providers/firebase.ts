@@ -1,8 +1,7 @@
-import Constants from 'expo-constants'
-import { FirebaseApp, initializeApp } from 'firebase/app'
-import { ProviderId, connectAuthEmulator, getAuth } from 'firebase/auth'
-import * as firestoreFns from 'firebase/firestore'
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions'
+import firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import functions from '@react-native-firebase/functions'
 
 type TEmulatorConfig = {
     host: string
@@ -15,109 +14,63 @@ type TFirebaseProviderOptions = {
     emulators?: Partial<Record<TEmulators, TEmulatorConfig>>
 }
 
-type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never
-
-type TFS_FN_TYPES = 'collection' | 'collectionGroup' | 'doc'
-type TFirestoreFns = Omit<typeof firestoreFns, TFS_FN_TYPES> & {
-    [K in TFS_FN_TYPES]: OmitFirstArg<(typeof firestoreFns)[K]>
-}
+type HttpsCallable<RequestData = unknown, ResponseData = unknown> = (data?: RequestData) => Promise<{
+    data: ResponseData
+}>
 
 class FirebaseProvider {
-    private app: FirebaseApp | null = null
-
-    readonly signInOptions = [
-        {
-            provider: ProviderId.PASSWORD,
-            fullLabel: 'Login',
-            disableSignUp: { status: true },
-        },
-    ]
-
     constructor(readonly options?: TFirebaseProviderOptions) {}
 
-    getApp() {
-        if (this.app) return this.app
-
-        this.app = initializeApp({
-            apiKey: Constants.expoConfig?.extra?.APIKEY,
-            authDomain: Constants.expoConfig?.extra?.AUTHDOMAIN,
-            projectId: Constants.expoConfig?.extra?.PROJECTID,
-            storageBucket: Constants.expoConfig?.extra?.STORAGEBUCKET,
-            messagingSenderId: Constants.expoConfig?.extra?.MESSAGINGSENDERID,
-            appId: Constants.expoConfig?.extra?.APPID,
-            measurementId: Constants.expoConfig?.extra?.MEASUREMENTID,
-        })
-
+    getAuth() {
         if (this.options?.emulators?.auth) {
-            const auth = getAuth(this.app)
             const { host, port } = this.options.emulators.auth
             const url = `http://${host}:${port}`
-            connectAuthEmulator(auth, url)
+            auth().useEmulator(url)
         }
 
-        if (this.options?.emulators?.firestore) {
-            const firestore = firestoreFns.getFirestore(this.app)
-            const { host, port } = this.options.emulators.firestore
-            firestoreFns.connectFirestoreEmulator(firestore, host, port)
-        }
-
-        if (this.options?.emulators?.functions) {
-            const functions = getFunctions(this.app)
-            const { host, port } = this.options.emulators.functions
-            connectFunctionsEmulator(functions, host, port)
-        }
-
-        return this.app
-    }
-
-    getAuth() {
-        const app = this.getApp()
-
-        return getAuth(app)
+        return auth()
     }
 
     getFunctions() {
-        const app = this.getApp()
-
-        return getFunctions(app)
+        if (this.options?.emulators?.functions) {
+            const { host, port } = this.options.emulators.functions
+            functions().useEmulator(host, port)
+        }
+        return firebase.functions()
     }
 
     getFirestore() {
-        return firestoreFns.getFirestore(this.getApp())
-    }
-
-    firestore(): TFirestoreFns {
-        return {
-            ...firestoreFns,
-            collection: (...args) => firestoreFns.collection(this.getFirestore(), ...args),
-            collectionGroup: (...args) => firestoreFns.collectionGroup(this.getFirestore(), ...args),
-            doc: (...args) => firestoreFns.doc(this.getFirestore(), ...args),
+        if (this.options?.emulators?.firestore) {
+            const { host, port } = this.options.emulators.firestore
+            firestore().useEmulator(host, port)
         }
+
+        return firestore()
     }
 
-    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(fnName: string) {
-        const functions = this.getFunctions()
-
-        return httpsCallable<RequestData, ResponseData>(functions, fnName)
+    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(
+        fnName: string
+    ): HttpsCallable<RequestData, ResponseData> {
+        return this.getFunctions().httpsCallable(fnName)
     }
 }
 
-const useEmulator = false
+const useEmulator = __DEV__
 
 export const firebaseProvider = new FirebaseProvider({
     emulators: useEmulator
         ? {
               functions: {
-                  host: 'localhost',
+                  host: '10.1.1.173',
                   port: 5001,
               },
               firestore: {
-                  host: 'localhost',
+                  host: '10.1.1.173',
                   port: 8080,
               },
               auth: {
-                  host: 'localhost',
-                  port: 9099,
+                  host: '801e-177-72-24-33.ngrok-free.app',
+                  port: 80,
               },
           }
         : undefined,

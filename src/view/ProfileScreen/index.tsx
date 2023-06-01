@@ -3,7 +3,7 @@ import { Alert } from 'react-native'
 
 import { Button, Text, VStack, useTheme } from 'native-base'
 
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
@@ -14,13 +14,13 @@ import { getErrorMessage } from '@utils/getErrorMessage'
 const ProfileScreen: React.FC = () => {
     const { colors } = useTheme()
     const { dispatch } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
 
     const [loading, setLoading] = useState(false)
 
     useFocusEffect(
         useCallback(() => {
-            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+            if (!user) dispatch(StackActions.replace(ERouteName.LoginScreen))
         }, [user])
     )
 
@@ -52,11 +52,13 @@ const ProfileScreen: React.FC = () => {
         }
     }
 
+    if (!user) return null
+
     return (
         <VStack alignItems="stretch" p={6} space={4}>
             <VStack alignItems="center" space={4}>
                 <MaterialIcons name="person-pin" size={100} color={colors.gray[100]} />
-                <Text fontSize={16}>{user.credentials?.email}</Text>
+                <Text fontSize={16}>{user.email}</Text>
             </VStack>
             <Button
                 leftIcon={<MaterialIcons name="logout" size={20} color={colors.white} />}

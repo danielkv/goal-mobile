@@ -1,6 +1,6 @@
 import { IconButton, useTheme } from 'native-base'
 
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -36,9 +36,9 @@ function Router() {
                 headerTintColor: colors.gray[300],
                 headerTitleAlign: 'left',
                 headerRight: () => {
-                    const user = useUserContext()
+                    const user = useLoggedUser()
 
-                    if (!user.credentials) return null
+                    if (!user) return null
                     return (
                         <IconButton onPress={() => navigate(ERouteName.Profile)}>
                             <MaterialIcons name="person" size={22} color={colors.gray[100]} />
