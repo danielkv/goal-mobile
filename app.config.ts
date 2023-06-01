@@ -61,6 +61,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             '@react-native-firebase/app',
             '@react-native-firebase/perf',
             '@react-native-firebase/crashlytics',
+            '@react-native-firebase/auth',
             [
                 'expo-screen-orientation',
                 {
