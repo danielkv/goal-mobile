@@ -7,9 +7,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     return {
         ...config,
         owner: 'goal',
-        name: 'Goal',
+        name: 'My Goal',
         slug: 'goal-mobile',
-        version: '1.0.4',
+        version: '1.1.0',
         icon: './src/assets/icon.png',
         userInterfaceStyle: 'dark',
         splash: {
@@ -17,20 +17,22 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             resizeMode: 'cover',
             backgroundColor: '#202020',
         },
-        assetBundlePatterns: ['**/*'],
+        assetBundlePatterns: ['./src/**/*'],
         ios: {
-            buildNumber: '5',
+            buildNumber: '6',
             bundleIdentifier: 'app.mygoal.goal',
             supportsTablet: false,
             requireFullScreen: true,
+            googleServicesFile: './GoogleService-Info.plist',
         },
         android: {
-            versionCode: 2,
+            versionCode: 3,
             package: 'app.mygoal.goal',
             adaptiveIcon: {
                 foregroundImage: './src/assets/adaptive-icon.png',
                 backgroundColor: '#202020',
             },
+            googleServicesFile: './google-services.json',
         },
 
         extra: {
@@ -56,10 +58,21 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             policy: 'sdkVersion',
         },
         plugins: [
+            '@react-native-firebase/app',
+            '@react-native-firebase/perf',
+            '@react-native-firebase/crashlytics',
             [
                 'expo-screen-orientation',
                 {
                     initialOrientation: 'PORTRAIT',
+                },
+            ],
+            [
+                'expo-build-properties',
+                {
+                    ios: {
+                        useFrameworks: 'static',
+                    },
                 },
             ],
         ],
