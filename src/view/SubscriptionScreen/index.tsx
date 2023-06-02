@@ -82,6 +82,7 @@ const SubscriptionScreen: React.FC = () => {
                             InputLeftElement={
                                 <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
                             }
+                            keyboardType="email-address"
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
@@ -93,6 +94,7 @@ const SubscriptionScreen: React.FC = () => {
                         />
                         <TextField
                             label="Telefone"
+                            keyboardType="phone-pad"
                             InputLeftElement={
                                 <Icon as={<MaterialIcons name="phone" />} size={5} ml="2" color="muted.400" />
                             }

@@ -97,6 +97,7 @@ const LoginScreen: React.FC = () => {
                             InputLeftElement={
                                 <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
                             }
+                            keyboardType="email-address"
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
