@@ -22,7 +22,7 @@ const WorksheetListScreen: React.FC = () => {
     const { navigate } = useNavigation()
     const user = useLoggedUser()
 
-    const { data, isLoading, error, mutate } = useSWR('worksheetList', getWorksheetListUseCase, {})
+    const { data, isLoading, error, mutate } = useSWR('worksheetList', getWorksheetListUseCase)
 
     const handleRefresh = async () => {
         setRefreshing(true)
@@ -30,7 +30,7 @@ const WorksheetListScreen: React.FC = () => {
         setRefreshing(false)
     }
 
-    if (error) return <AlertBox type="error" title="Ocorreu um erro" text={getErrorMessage(error)} />
+    //if (error) return <AlertBox type="error" title="Ocorreu um erro" text={getErrorMessage(error)} />
 
     if (!data?.length && isLoading)
         return (
@@ -40,34 +40,36 @@ const WorksheetListScreen: React.FC = () => {
         )
 
     return (
-        <FlashList
-            data={data}
-            renderItem={({ item, index }) => (
-                <Box mb={4}>
-                    <WorksheetListItem
-                        onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
-                        item={item}
-                        current={index === 0}
+        <>
+            <FlashList
+                data={data}
+                renderItem={({ item, index }) => (
+                    <Box mb={4}>
+                        <WorksheetListItem
+                            onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
+                            item={item}
+                            current={index === 0}
+                        />
+                    </Box>
+                )}
+                ListHeaderComponent={() => {
+                    if (user) return null
+                    return <AlertBox type="info" text="Para ver qualquer planilha você precisa estar logado" />
+                }}
+                estimatedItemSize={93}
+                contentContainerStyle={{ padding: sizes[7] }}
+                showsHorizontalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        tintColor={colors.red[500]}
+                        colors={[colors.red[600]]}
+                        style={{ backgroundColor: colors.gray[900] }}
+                        onRefresh={handleRefresh}
+                        refreshing={refreshing}
                     />
-                </Box>
-            )}
-            ListHeaderComponent={() => {
-                if (user) return null
-                return <AlertBox type="info" text="Para ver qualquer planilha você precisa estar logado" />
-            }}
-            estimatedItemSize={93}
-            contentContainerStyle={{ padding: sizes[7] }}
-            showsHorizontalScrollIndicator={false}
-            refreshControl={
-                <RefreshControl
-                    tintColor={colors.red[500]}
-                    colors={[colors.red[600]]}
-                    style={{ backgroundColor: colors.gray[900] }}
-                    onRefresh={handleRefresh}
-                    refreshing={refreshing}
-                />
-            }
-        />
+                }
+            />
+        </>
     )
 }
 

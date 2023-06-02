@@ -19,7 +19,11 @@ type HttpsCallable<RequestData = unknown, ResponseData = unknown> = (data?: Requ
 }>
 
 class FirebaseProvider {
-    constructor(readonly options?: TFirebaseProviderOptions) {}
+    //private app!: ReactNativeFirebase.FirebaseApp
+
+    constructor(readonly options?: TFirebaseProviderOptions) {
+        firebase.setLogLevel('debug')
+    }
 
     getAuth() {
         if (this.options?.emulators?.auth) {
@@ -36,7 +40,7 @@ class FirebaseProvider {
             const { host, port } = this.options.emulators.functions
             functions().useEmulator(host, port)
         }
-        return firebase.functions()
+        return functions()
     }
 
     getFirestore() {
@@ -55,23 +59,33 @@ class FirebaseProvider {
     }
 }
 
-const useEmulator = __DEV__
+const useEmulator = false
 
-export const firebaseProvider = new FirebaseProvider({
-    emulators: useEmulator
-        ? {
-              functions: {
-                  host: '10.1.1.173',
-                  port: 5001,
-              },
-              firestore: {
-                  host: '10.1.1.173',
-                  port: 8080,
-              },
-              auth: {
-                  host: '801e-177-72-24-33.ngrok-free.app',
-                  port: 80,
-              },
-          }
-        : undefined,
-})
+export const firebaseProvider = {
+    firestore: firestore(),
+    auth: auth(),
+    functions: functions(),
+    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(
+        fnName: string
+    ): HttpsCallable<RequestData, ResponseData> {
+        return this.functions.httpsCallable(fnName)
+    },
+}
+// export const firebaseProvider = new FirebaseProvider({
+//     emulators: useEmulator
+//         ? {
+//               functions: {
+//                   host: '10.1.1.173',
+//                   port: 5001,
+//               },
+//               firestore: {
+//                   host: '10.1.1.173',
+//                   port: 8080,
+//               },
+//               auth: {
+//                   host: '10.1.1.173',
+//                   port: 9099,
+//               },
+//           }
+//         : undefined,
+// })
