@@ -1,17 +1,10 @@
-// import { getDocs } from 'firebase/firestore'
+import { firebaseProvider } from '@common/providers/firebase'
+import { IDayModel } from '@models/day'
 
-// import { firebaseProvider } from '@common/providers/firebase'
-// import { IDayModel } from '@models/day'
-// import { dayConverter } from '@utils/converters'
+export async function getWorksheetDaysUseCase(worksheetId: string): Promise<IDayModel[]> {
+    const collectionRef = firebaseProvider.getFirestore().collection<IDayModel>(`worksheets/${worksheetId}/days`)
 
-// export async function getWorksheetDaysUseCase(worksheetId: string): Promise<IDayModel[]> {
-//     const collectionRef = firebaseProvider
-//         .firestore()
-//         .collection(`worksheets/${worksheetId}/days`)
-//         .withConverter(dayConverter)
+    const daysSnapshot = await collectionRef.orderBy('date').get()
 
-//     const query = firebaseProvider.firestore().query(collectionRef, firebaseProvider.firestore().orderBy('date'))
-//     const daysDocs = await getDocs(query)
-
-//     return daysDocs.docs.map((doc) => doc.data())
-// }
+    return daysSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+}

@@ -30,7 +30,7 @@ const WorksheetListScreen: React.FC = () => {
         setRefreshing(false)
     }
 
-    //if (error) return <AlertBox type="error" title="Ocorreu um erro" text={getErrorMessage(error)} />
+    if (error) return <AlertBox type="error" title="Ocorreu um erro" text={getErrorMessage(error)} />
 
     if (!data?.length && isLoading)
         return (

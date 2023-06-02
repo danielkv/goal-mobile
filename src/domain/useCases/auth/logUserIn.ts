@@ -24,7 +24,7 @@ async function _loginRouter(credentials: Credentials): Promise<FirebaseAuthTypes
 }
 
 async function _emailLogin(credentials: EmailCredentials) {
-    const user = await firebaseProvider.auth.signInWithEmailAndPassword(credentials.email, credentials.password)
+    const user = await firebaseProvider.getAuth().signInWithEmailAndPassword(credentials.email, credentials.password)
 
     return user
 }

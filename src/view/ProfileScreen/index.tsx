@@ -3,7 +3,7 @@ import { Alert } from 'react-native'
 
 import { Button, Text, VStack, useTheme } from 'native-base'
 
-import { useLoggedUser } from '@contexts/user/userContext'
+import { setLoggedUser, useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
@@ -41,7 +41,7 @@ const ProfileScreen: React.FC = () => {
                 'Seus dados de acesso foram excluídos. O processo de remoção de seus dados pode levar até 30 dias.'
             )
 
-            await logUserOutUseCase()
+            setLoggedUser(null)
         } catch (err) {
             Alert.alert('Ocorreu um erro', getErrorMessage(err), [
                 { text: 'Tentar novamente', onPress: handleConfirmRemoveAccount },

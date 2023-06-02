@@ -19,8 +19,6 @@ type HttpsCallable<RequestData = unknown, ResponseData = unknown> = (data?: Requ
 }>
 
 class FirebaseProvider {
-    //private app!: ReactNativeFirebase.FirebaseApp
-
     constructor(readonly options?: TFirebaseProviderOptions) {
         firebase.setLogLevel('debug')
     }
@@ -59,33 +57,23 @@ class FirebaseProvider {
     }
 }
 
-const useEmulator = false
+const useEmulator = __DEV__
 
-export const firebaseProvider = {
-    firestore: firestore(),
-    auth: auth(),
-    functions: functions(),
-    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(
-        fnName: string
-    ): HttpsCallable<RequestData, ResponseData> {
-        return this.functions.httpsCallable(fnName)
-    },
-}
-// export const firebaseProvider = new FirebaseProvider({
-//     emulators: useEmulator
-//         ? {
-//               functions: {
-//                   host: '10.1.1.173',
-//                   port: 5001,
-//               },
-//               firestore: {
-//                   host: '10.1.1.173',
-//                   port: 8080,
-//               },
-//               auth: {
-//                   host: '10.1.1.173',
-//                   port: 9099,
-//               },
-//           }
-//         : undefined,
-// })
+export const firebaseProvider = new FirebaseProvider({
+    emulators: useEmulator
+        ? {
+              functions: {
+                  host: '10.1.1.173',
+                  port: 5001,
+              },
+              firestore: {
+                  host: '10.1.1.173',
+                  port: 8080,
+              },
+              auth: {
+                  host: '10.1.1.173',
+                  port: 9099,
+              },
+          }
+        : undefined,
+})

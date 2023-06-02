@@ -48,8 +48,10 @@ export default function App() {
     useEffect(() => {
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch(() => {})
 
-        const unsubscribe = firebaseProvider.auth.onAuthStateChanged((user) => {
-            if (!user) return setLoggedUser(null)
+        const unsubscribe = firebaseProvider.getAuth().onAuthStateChanged((user) => {
+            if (!user?.emailVerified) {
+                return setLoggedUser(null)
+            }
 
             setLoggedUser(extractUserCredential(user))
         })

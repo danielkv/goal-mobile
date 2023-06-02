@@ -1,11 +1,7 @@
 export function getErrorMessage(err: any): string {
     if (__DEV__) console.warn('MESSAGE CAUGHT', err)
 
-    // console.log(JSON.stringify(err, null, 2), err.message)
-
-    if (err.name === 'FirebaseError' && err.code) {
-        return getMessage(err.code, err.message)
-    }
+    if (err.code) return getMessage(err.code, err.message)
 
     if (err instanceof Error || err.message) return err.message
 
