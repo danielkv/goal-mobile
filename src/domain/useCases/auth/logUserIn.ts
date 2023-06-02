@@ -14,6 +14,11 @@ export async function logUserInUseCase(credentials: Credentials) {
     if (!credentialResult.user.email)
         throw createAppException('USER_WITH_NO_EMAIL', 'Email não cadastrado', credentialResult.user)
 
+    if (!credentialResult.user.emailVerified) {
+        await credentialResult.user.sendEmailVerification()
+        throw createAppException('EMAIL_NOT_VERIFIED', 'Email não verificado')
+    }
+
     setLoggedUser(extractUserCredential(credentialResult.user))
 }
 

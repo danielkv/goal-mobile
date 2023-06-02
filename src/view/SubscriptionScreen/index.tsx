@@ -5,6 +5,7 @@ import { Box, Button, Icon, Pressable, ScrollView, Stack, Text } from 'native-ba
 
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
+import SafeAreaView from '@components/SafeAreaView'
 import TextField from '@components/TextField'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
@@ -35,7 +36,7 @@ const SubscriptionScreen: React.FC = () => {
 
             Alert.alert(
                 'Sua conta criada com sucesso',
-                'No seu primeiro acesso será solicitado a verificação do seu email.',
+                'Verifique sua caixa de entrada ou lixo eletrônico para verificar seu email.',
                 [{ style: 'default', onPress: () => navigation.navigate(ERouteName.LoginScreen) }]
             )
         } catch (err) {
@@ -52,7 +53,7 @@ const SubscriptionScreen: React.FC = () => {
     })
 
     return (
-        <Box flex={1} safeAreaBottom>
+        <SafeAreaView>
             <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={LoginBg}>
                 <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <Box mt={50} mb={30}>
@@ -65,6 +66,7 @@ const SubscriptionScreen: React.FC = () => {
 
                     <Stack paddingX={5} space={4} w="100%" alignItems="center">
                         <TextField
+                            autoFocus
                             label="Nome"
                             onChangeText={handleChange('name')}
                             value={values.name}
@@ -138,7 +140,7 @@ const SubscriptionScreen: React.FC = () => {
                     </Stack>
                 </ScrollView>
             </ImageBackground>
-        </Box>
+        </SafeAreaView>
     )
 }
 

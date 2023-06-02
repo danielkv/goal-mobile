@@ -6,12 +6,12 @@ import { Box, Button, Heading, Icon, Link, Pressable, ScrollView, Stack, Text } 
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import ActivityIndicator from '@components/ActivityIndicator'
+import SafeAreaView from '@components/SafeAreaView'
 import TextField from '@components/TextField'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { logUserInUseCase } from '@useCases/auth/logUserIn'
-import { sendEmailVerificationUseCase } from '@useCases/auth/sendEmailVerification'
 import { sendResetPasswordEmailUseCase } from '@useCases/auth/sendResetPasswordEmail'
 import { isAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
@@ -36,14 +36,8 @@ const LoginScreen: React.FC = () => {
             if (isAppException(err) && err.type === 'EMAIL_NOT_VERIFIED') {
                 return Alert.alert(
                     'Seu email não foi verificado',
-                    'Verifique sua caixa de entrada ou lixo eletrônico para validar seu email',
+                    'Verifique sua caixa de entrada ou lixo eletrônico para verificar seu email',
                     [
-                        {
-                            text: 'Reenviar email de verificação',
-                            onPress() {
-                                sendEmailVerificationUseCase((err as any).extraInfo)
-                            },
-                        },
                         {
                             text: 'OK',
                             style: 'default',
@@ -82,7 +76,7 @@ const LoginScreen: React.FC = () => {
     }
 
     return (
-        <Box flex={1}>
+        <SafeAreaView>
             <ImageBackground style={{ flex: 1 }} source={LoginBg}>
                 <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <Box mt={50} mb={30}>
@@ -154,7 +148,7 @@ const LoginScreen: React.FC = () => {
                     </Stack>
                 </ScrollView>
             </ImageBackground>
-        </Box>
+        </SafeAreaView>
     )
 }
 

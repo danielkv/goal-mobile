@@ -1,12 +1,14 @@
 import { useState } from 'react'
 
-import { Box, Button, Center, ScrollView } from 'native-base'
+import { Button, Center, ScrollView } from 'native-base'
 
-import EmomDisplay from './timer'
 import EmomSvg from '@assets/svg/emom.svg'
+import SafeAreaView from '@components/SafeAreaView'
 import TimerForm from '@components/TimerForm'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+
+import EmomDisplay from './timer'
 
 const EmomTimerScreen: React.FC = () => {
     const { params } = useRoute<RouteProp<TReactNavigationStackParamList, 'EmomTimerScreen'>>()
@@ -18,7 +20,7 @@ const EmomTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(3)
 
     return (
-        <Box flex={1} safeAreaBottom>
+        <SafeAreaView>
             {state === 'form' ? (
                 <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <TimerForm
@@ -43,7 +45,7 @@ const EmomTimerScreen: React.FC = () => {
                     onPressReset={() => setState('form')}
                 />
             )}
-        </Box>
+        </SafeAreaView>
     )
 }
 

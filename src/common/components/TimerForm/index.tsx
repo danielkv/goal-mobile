@@ -4,11 +4,10 @@ import { SvgProps } from 'react-native-svg'
 
 import { AlertDialog, Box, Button, HStack, Pressable, Text, VStack, useTheme } from 'native-base'
 
-import { MaterialIcons } from '@expo/vector-icons'
-
 import { TTimerType } from '@common/interfaces/timers'
 import TextField from '@components/TextField'
 import TimeField from '@components/TimeField'
+import { MaterialIcons } from '@expo/vector-icons'
 
 export interface TabataFormProps {
     type: 'tabata'
