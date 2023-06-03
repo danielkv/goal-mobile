@@ -1,7 +1,6 @@
 import { IUser } from '@models/user'
 import { FirebaseAuthTypes } from '@react-native-firebase/auth'
 
-import { pick } from 'radash'
 import { create } from 'zustand'
 
 export interface UserContextCredentials {
@@ -31,12 +30,12 @@ export const useLoggedUser = (): IUser | null => {
 }
 
 export function extractUserCredential(user: FirebaseAuthTypes.User): IUser {
-    const credential = pick(user, ['uid', 'email', 'emailVerified', 'displayName', 'photoURL', 'phoneNumber'])
-
     return {
-        ...credential,
-        displayName: credential.displayName || '',
-        phoneNumber: credential.phoneNumber || '',
-        email: credential.email || '',
+        uid: user.uid,
+        email: user.email || '',
+        emailVerified: user.emailVerified,
+        photoURL: user.photoURL,
+        displayName: user.displayName || '',
+        phoneNumber: user.phoneNumber || '',
     }
 }

@@ -20,6 +20,7 @@
 		"@react-navigation/native": "^6.1.6",
 		"@react-navigation/native-stack": "^6.9.12",
 		"@shopify/flash-list": "1.4.0",
+		"chroma-js": "^2.4.2",
 		"clone-deep": "^4.0.1",
 		"dayjs": "^1.11.7",
 		"dotenv": "^16.0.3",
@@ -55,6 +56,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.20.0",
 		"@trivago/prettier-plugin-sort-imports": "^4.1.1",
+		"@types/chroma-js": "^2.4.0",
 		"@types/clone-deep": "^4.0.1",
 		"@types/react": "~18.0.14",
 		"prettier": "^2.8.7",

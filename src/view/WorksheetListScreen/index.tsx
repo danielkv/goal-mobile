@@ -43,15 +43,15 @@ const WorksheetListScreen: React.FC = () => {
         <>
             <FlashList
                 data={data}
-                renderItem={({ item, index }) => (
+                renderItem={({ item }) => (
                     <Box mb={4}>
                         <WorksheetListItem
                             onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
                             item={item}
-                            current={index === 0}
                         />
                     </Box>
                 )}
+                keyExtractor={(item) => item.id}
                 ListHeaderComponent={() => {
                     if (user) return null
                     return <AlertBox type="info" text="Para ver qualquer planilha você precisa estar logado" />

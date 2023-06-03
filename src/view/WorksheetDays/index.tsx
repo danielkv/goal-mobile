@@ -26,9 +26,8 @@ const WorksheetDays: React.FC = () => {
     const user = useLoggedUser()
 
     const { data, isLoading, error, mutate } = useSWR(
-        [worksheetId, 'worksheetDay'],
-        (args: string[]) => getWorksheetByIdUseCase(args[0]),
-        {}
+        () => (user ? [worksheetId, 'worksheetDay'] : null),
+        (args: string[]) => getWorksheetByIdUseCase(args[0])
     )
 
     useFocusEffect(

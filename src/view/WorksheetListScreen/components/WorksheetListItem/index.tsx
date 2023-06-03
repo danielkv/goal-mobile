@@ -3,18 +3,28 @@ import { Platform } from 'react-native'
 import { Avatar, HStack, Heading, Pressable, Text, VStack, useTheme } from 'native-base'
 
 import { FontAwesome5 } from '@expo/vector-icons'
-
 import { IWorksheetModel } from '@models/day'
+
 import dayjs from 'dayjs'
 
 export interface WorksheetListItemProps {
     item: IWorksheetModel
-    current?: boolean
+
     onPress?: (item: IWorksheetModel) => void
 }
 
-const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, current, onPress }) => {
+const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, onPress }) => {
     const { colors } = useTheme()
+
+    const isCurrent = item.startEndDate
+        ? dayjs().isBetween(item.startEndDate.start, item.startEndDate.end, 'day', '[]')
+        : false
+
+    const startEndDateDisplay = item.startEndDate
+        ? `${dayjs(item.startEndDate.start).format('DD/MM/YYYY')} - ${dayjs(item.startEndDate.end).format(
+              'DD/MM/YYYY'
+          )}`
+        : dayjs(item.startDate).format('DD/MM/YYYY')
 
     return (
         <Pressable
@@ -41,11 +51,11 @@ const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, current, on
                         {item.name}
                     </Heading>
                     <Text color="gray.300" fontSize="2xs">
-                        {dayjs(item.startDate).format('DD/MM/YYYY')}
+                        {startEndDateDisplay}
                     </Text>
                 </VStack>
             </HStack>
-            {current && <Avatar.Badge position="absolute" top={2} right={2} bg="red.500" borderWidth="0" size={2} />}
+            {isCurrent && <Avatar.Badge position="absolute" top={2} right={2} bg="red.500" borderWidth="0" size={2} />}
         </Pressable>
     )
 }
