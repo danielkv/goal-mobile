@@ -57,7 +57,11 @@ const SubscriptionScreen: React.FC = () => {
     return (
         <SafeAreaView>
             <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={LoginBg}>
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
+                <ScrollView
+                    flex={1}
+                    contentContainerStyle={{ paddingVertical: 35 }}
+                    keyboardShouldPersistTaps="handled"
+                >
                     <Stack mt="$8" mb="$8">
                         <Image source={LogoGoal} style={{ width: '100%', height: 60, resizeMode: 'contain' }} />
                     </Stack>

@@ -7,6 +7,7 @@ import { ERouteName } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
 
 import { Stack, getTokens } from 'tamagui'
+import { useTheme } from 'tamagui'
 
 import PeriodItem from './components/PeriodItem'
 
@@ -15,6 +16,7 @@ export interface PeriodsListView {
 }
 
 const PeriodsListView: React.FC<PeriodsListView> = ({ day }) => {
+    const theme = useTheme()
     const { size } = getTokens()
 
     const { dispatch } = useNavigation()
@@ -45,7 +47,7 @@ const PeriodsListView: React.FC<PeriodsListView> = ({ day }) => {
                     </Stack>
                 )
             }}
-            contentContainerStyle={{ paddingVertical: size[5].val, paddingHorizontal: size[3].val }}
+            contentContainerStyle={{ padding: size['2.5'].val, backgroundColor: theme.gray7.val }}
             showsHorizontalScrollIndicator={false}
             estimatedItemSize={640}
         />

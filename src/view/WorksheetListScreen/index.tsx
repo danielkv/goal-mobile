@@ -41,36 +41,34 @@ const WorksheetListScreen: React.FC = () => {
         )
 
     return (
-        <>
-            <FlashList
-                data={data}
-                renderItem={({ item }) => (
-                    <Stack mb="$3">
-                        <WorksheetListItem
-                            onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
-                            item={item}
-                        />
-                    </Stack>
-                )}
-                keyExtractor={(item) => item.id}
-                ListHeaderComponent={() => {
-                    if (user) return null
-                    return <AlertBox mb="$4" type="info" text="Para ver qualquer planilha você precisa estar logado" />
-                }}
-                estimatedItemSize={93}
-                contentContainerStyle={{ padding: sizes['2.5'].val }}
-                showsHorizontalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        tintColor={theme.red5.val}
-                        colors={[theme.red5.val]}
-                        style={{ backgroundColor: theme.gray9.val }}
-                        onRefresh={handleRefresh}
-                        refreshing={refreshing}
+        <FlashList
+            data={data}
+            renderItem={({ item }) => (
+                <Stack mb="$3">
+                    <WorksheetListItem
+                        onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
+                        item={item}
                     />
-                }
-            />
-        </>
+                </Stack>
+            )}
+            keyExtractor={(item) => item.id}
+            ListHeaderComponent={() => {
+                if (user) return null
+                return <AlertBox mb="$4" type="info" text="Para ver qualquer planilha você precisa estar logado" />
+            }}
+            estimatedItemSize={93}
+            contentContainerStyle={{ padding: sizes['2.5'].val, backgroundColor: theme.gray7.val }}
+            showsHorizontalScrollIndicator={false}
+            refreshControl={
+                <RefreshControl
+                    tintColor={theme.red5.val}
+                    colors={[theme.red5.val]}
+                    style={{ backgroundColor: theme.gray9.val }}
+                    onRefresh={handleRefresh}
+                    refreshing={refreshing}
+                />
+            }
+        />
     )
 }
 

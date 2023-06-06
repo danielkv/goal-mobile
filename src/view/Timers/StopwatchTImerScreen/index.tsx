@@ -20,9 +20,13 @@ const StopwatchTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(3)
 
     return (
-        <SafeAreaView>
+        <SafeAreaView keyboardVerticalOffset={70}>
             {state === 'form' ? (
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
+                <ScrollView
+                    flex={1}
+                    contentContainerStyle={{ paddingVertical: 35 }}
+                    keyboardShouldPersistTaps="handled"
+                >
                     <YStack gap="$4">
                         <TimerForm
                             countdown={countdown}

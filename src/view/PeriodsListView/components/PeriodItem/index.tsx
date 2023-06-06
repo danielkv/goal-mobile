@@ -31,7 +31,7 @@ const PeriodItem: React.FC<WorksheetDayItemProps> = ({ item, date, periodNumber 
                 {item.sections.map((group, index) => (
                     <YStack key={`${group.name}.${index}`} alignItems="center" mx="$2" my="$2">
                         <Stack>
-                            <Text textAlign="center" bg="red.500" px="$7" py="$3" fontWeight="bold">
+                            <Text textAlign="center" bg="$red5" px="$7" py="$3" fontWeight="bold">
                                 {group.name}
                             </Text>
                         </Stack>

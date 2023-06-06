@@ -1,6 +1,6 @@
-import Pressable from '@components/Pressable'
+import Button from '@components/Button'
 
-import { Text } from 'tamagui'
+import { Text, YStack } from 'tamagui'
 
 export interface MenuButtonProps {
     Icon: React.ElementType<any>
@@ -10,12 +10,14 @@ export interface MenuButtonProps {
 
 const MenuButton: React.FC<MenuButtonProps> = ({ Icon, label, onPress }) => {
     return (
-        <Pressable f={1} px="$4" ai="center" jc="center" onPress={onPress} effectColor="$gray7">
-            <Icon />
-            <Text fontSize={10} color="$gray5">
-                {label}
-            </Text>
-        </Pressable>
+        <Button variant="transparent" pressStyle={{ bg: '$gray7' }} h="auto" w="auto" px="$5" py="$1" onPress={onPress}>
+            <YStack ai="center" jc="center">
+                <Icon />
+                <Text fontSize={10} color="$gray5">
+                    {label}
+                </Text>
+            </YStack>
+        </Button>
     )
 }
 

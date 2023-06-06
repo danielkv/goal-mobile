@@ -70,7 +70,7 @@ const WorksheetDays: React.FC = () => {
                     />
                 </Stack>
             )}
-            contentContainerStyle={{ paddingVertical: sizes['2.5'].val, paddingHorizontal: sizes['2.5'].val }}
+            contentContainerStyle={{ padding: sizes['2.5'].val, backgroundColor: theme.gray7.val }}
             showsHorizontalScrollIndicator={false}
             estimatedItemSize={128}
             refreshControl={

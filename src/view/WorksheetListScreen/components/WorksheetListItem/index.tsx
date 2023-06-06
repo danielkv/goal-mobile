@@ -1,9 +1,9 @@
-import Pressable from '@components/Pressable'
+import Button from '@components/Button'
 import { MaterialIcons } from '@expo/vector-icons'
 import { IWorksheetModel } from '@models/day'
 
 import dayjs from 'dayjs'
-import { Circle, H5, Stack, Text, YStack, useTheme } from 'tamagui'
+import { Circle, H5, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
 
 export interface WorksheetListItemProps {
     item: IWorksheetModel
@@ -26,32 +26,20 @@ const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, onPress }) 
 
     return (
         <Stack>
-            <Pressable
-                f={1}
-                effectColor="$gray7"
-                bg="$gray6"
-                br="$4"
-                px="$3"
-                py="$3"
-                onPress={() => {
-                    onPress?.(item)
-                }}
-                flexDirection="row"
-                ai="center"
-                gap="$3"
-            >
-                <MaterialIcons name="file-copy" size={24} color={theme.gray4.val} />
-                <YStack>
-                    <H5 fontWeight="700" color="$gray1">
-                        {item.name}
-                    </H5>
-                    <Text color="$gray3" fontSize="$2">
-                        {startEndDateDisplay}
-                    </Text>
-                </YStack>
-
-                {isCurrent && <Circle position="absolute" top={2} right={2} bg="$red5" size={2} />}
-            </Pressable>
+            <Button br="$4" w="auto" h="auto" bg="$gray6" pressStyle={{ bg: '$gray8' }} onPress={() => onPress?.(item)}>
+                <XStack f={1} py="$4" ai="center" gap="$3">
+                    <MaterialIcons name="file-copy" size={24} color={theme.gray4.val} />
+                    <YStack>
+                        <H5 fontWeight="700" color="$gray1">
+                            {item.name}
+                        </H5>
+                        <Text color="$gray3" fontSize="$2">
+                            {startEndDateDisplay}
+                        </Text>
+                    </YStack>
+                    {isCurrent && <Circle position="absolute" top="$3" right={0} bg="$red5" size={7} />}
+                </XStack>
+            </Button>
         </Stack>
     )
 }
