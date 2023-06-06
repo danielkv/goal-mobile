@@ -80,23 +80,19 @@ const LoginScreen: React.FC = () => {
     return (
         <SafeAreaView>
             <ImageBackground style={{ flex: 1 }} source={LoginBg}>
-                <ScrollView
-                    flex={1}
-                    contentContainerStyle={{ paddingVertical: 35, paddingHorizontal: 30 }}
-                    keyboardShouldPersistTaps="always"
-                >
+                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <Stack mt="$8" mb="$8">
                         <Image source={LogoGoal} style={{ width: '100%', height: 60, resizeMode: 'contain' }} />
                     </Stack>
 
-                    <Stack mb={8}>
+                    <Stack mb="$6">
                         <H3 textAlign="center" fontWeight="900">
                             Bem vindo
                         </H3>
                         <Text textAlign="center">Faça seu login</Text>
                     </Stack>
 
-                    <YStack px={5} gap="$4" ai="center">
+                    <YStack px="$5" gap="$4" ai="center">
                         <TextField
                             label="Email"
                             autoFocus

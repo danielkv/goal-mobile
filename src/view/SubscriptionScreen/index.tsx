@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react'
 import { Alert, Image, ImageBackground } from 'react-native'
 
-import { Box, Button, Icon, Pressable, ScrollView, Stack, Text } from 'native-base'
-
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
+import Button from '@components/Button'
 import SafeAreaView from '@components/SafeAreaView'
 import TextField from '@components/TextField'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -16,12 +15,15 @@ import { createAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
 
 import { FormikConfig, useFormik } from 'formik'
+import { H3, ScrollView, Stack, useTheme } from 'tamagui'
 
 import { TLoginForm, initialValues, validationSchema } from './config'
 
 const SubscriptionScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigation = useNavigation()
+
+    const theme = useTheme()
 
     const inputRefs = useRef<Record<string, any>>({})
 
@@ -56,15 +58,17 @@ const SubscriptionScreen: React.FC = () => {
         <SafeAreaView>
             <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={LoginBg}>
                 <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
-                    <Box mt={50} mb={30}>
+                    <Stack mt="$8" mb="$8">
                         <Image source={LogoGoal} style={{ width: '100%', height: 60, resizeMode: 'contain' }} />
-                    </Box>
+                    </Stack>
 
-                    <Box mb={8}>
-                        <Text textAlign="center">Faça seu cadastro</Text>
-                    </Box>
+                    <Stack mb="$6">
+                        <H3 fontWeight="900" textAlign="center">
+                            Faça seu cadastro
+                        </H3>
+                    </Stack>
 
-                    <Stack paddingX={5} space={4} w="100%" alignItems="center">
+                    <Stack px="$5" gap="$4" alignItems="center">
                         <TextField
                             autoFocus
                             label="Nome"
@@ -72,22 +76,20 @@ const SubscriptionScreen: React.FC = () => {
                             value={values.name}
                             error={errors.name}
                             returnKeyType="next"
-                            innerRef={(ref) => (inputRefs.current['name'] = ref)}
+                            ref={(ref) => (inputRefs.current['name'] = ref)}
                             onSubmitEditing={() => {
                                 inputRefs.current?.email?.focus()
                             }}
                         />
                         <TextField
                             label="Email"
-                            InputLeftElement={
-                                <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
-                            }
+                            componentLeft={<MaterialIcons name="person" ml="2" color="$gray4" size={22} />}
                             keyboardType="email-address"
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
                             returnKeyType="next"
-                            innerRef={(ref) => (inputRefs.current['email'] = ref)}
+                            ref={(ref) => (inputRefs.current['email'] = ref)}
                             onSubmitEditing={() => {
                                 inputRefs.current?.phoneNumber?.focus()
                             }}
@@ -95,14 +97,12 @@ const SubscriptionScreen: React.FC = () => {
                         <TextField
                             label="Telefone"
                             keyboardType="phone-pad"
-                            InputLeftElement={
-                                <Icon as={<MaterialIcons name="phone" />} size={5} ml="2" color="muted.400" />
-                            }
+                            componentLeft={<MaterialIcons name="phone" ml="2" color="$gray4" size={22} />}
                             onChangeText={handleChange('phoneNumber')}
                             value={values.phoneNumber}
                             error={errors.phoneNumber}
                             returnKeyType="next"
-                            innerRef={(ref) => (inputRefs.current['phoneNumber'] = ref)}
+                            ref={(ref) => (inputRefs.current['phoneNumber'] = ref)}
                             onSubmitEditing={() => {
                                 inputRefs.current?.passwor?.focus()
                             }}
@@ -112,31 +112,30 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('password')}
                             value={values.password}
                             error={errors.password}
-                            type={showPassword ? 'text' : 'password'}
-                            InputRightElement={
-                                <Pressable onPress={() => setShowPassword(!showPassword)}>
-                                    <Icon
-                                        as={<MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} />}
-                                        size={5}
-                                        mr="2"
-                                        color="muted.400"
+                            secureTextEntry={!showPassword}
+                            componentRight={
+                                <Button
+                                    variant="transparent"
+                                    size="$3"
+                                    circular
+                                    onPress={() => setShowPassword(!showPassword)}
+                                >
+                                    <MaterialIcons
+                                        name={showPassword ? 'visibility' : 'visibility-off'}
+                                        size={22}
+                                        color={theme.gray5.val}
                                     />
-                                </Pressable>
+                                </Button>
                             }
                             returnKeyType="next"
-                            innerRef={(ref) => (inputRefs.current['password'] = ref)}
+                            ref={(ref) => (inputRefs.current['password'] = ref)}
                             onSubmitEditing={() => handleSubmit()}
                         />
 
-                        <Button isLoading={isSubmitting} width="full" onPress={() => handleSubmit()}>
+                        <Button variant="primary" loading={isSubmitting} onPress={() => handleSubmit()}>
                             Cadastrar
                         </Button>
-                        <Button
-                            disabled={isSubmitting}
-                            width="full"
-                            colorScheme="gray"
-                            onPress={() => navigation.navigate(ERouteName.LoginScreen)}
-                        >
+                        <Button disabled={isSubmitting} onPress={() => navigation.navigate(ERouteName.LoginScreen)}>
                             Login
                         </Button>
                     </Stack>
