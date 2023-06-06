@@ -35,7 +35,7 @@ const WorksheetListScreen: React.FC = () => {
     if (!data?.length && isLoading)
         return (
             <Flex flex={1} alignItems="center" justifyContent="center">
-                <ActivityIndicator size={30} />
+                <ActivityIndicator />
             </Flex>
         )
 

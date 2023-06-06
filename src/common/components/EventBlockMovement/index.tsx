@@ -1,12 +1,9 @@
-import { Platform } from 'react-native'
-
-import { Box, HStack, Pressable, Text, useTheme } from 'native-base'
-
-import { FontAwesome5 } from '@expo/vector-icons'
-
+import { MaterialIcons } from '@expo/vector-icons'
 import { IEventMovement } from '@models/block'
 import { movementTransformer } from '@utils/transformer/movement'
+
 import * as Linking from 'expo-linking'
+import { Button, Stack, Text, XStack, useTheme } from 'tamagui'
 
 export interface EventBlockMovementProps {
     movement: IEventMovement
@@ -15,7 +12,7 @@ export interface EventBlockMovementProps {
 }
 
 const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideReps, textAlign = 'center' }) => {
-    const { colors } = useTheme()
+    const theme = useTheme()
 
     const displayMovement = movementTransformer.display(movement, hideReps)
 
@@ -25,34 +22,22 @@ const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideR
     }
 
     return (
-        <Box>
+        <Stack>
             {movement.videoUrl ? (
-                <Pressable
-                    _pressed={Platform.select({
-                        ios: {
-                            bg: 'gray.700',
-                        },
-                    })}
-                    android_ripple={{ color: colors.gray[700] }}
-                    onPress={handleOnClickUrl}
-                >
-                    <HStack
-                        alignItems="center"
-                        justifyContent={textAlign === 'center' ? 'center' : 'flex-start'}
-                        space={2}
-                    >
-                        <Text color="gray.300" fontSize="sm" textAlign={textAlign}>
-                            {displayMovement}
-                        </Text>
-                        <FontAwesome5 name="external-link-alt" size={12} color={colors.gray[300]} />
-                    </HStack>
-                </Pressable>
+                <XStack ai="center" jc={textAlign === 'center' ? 'center' : 'flex-start'} gap="$2">
+                    <Text color="$gray3" fontSize="$5" textAlign={textAlign}>
+                        {displayMovement}
+                    </Text>
+                    <Button size="$1.5" br="$6" w="$1.5" bg="$gray9" onPress={handleOnClickUrl}>
+                        <MaterialIcons name="videocam" size={10} color={theme.gray3.val} />
+                    </Button>
+                </XStack>
             ) : (
-                <Text textBreakStrategy="balanced" fontSize="sm" color="gray.300" textAlign={textAlign}>
+                <Text textBreakStrategy="balanced" fontSize="$5" color="$gray3" textAlign={textAlign}>
                     {displayMovement}
                 </Text>
             )}
-        </Box>
+        </Stack>
     )
 }
 

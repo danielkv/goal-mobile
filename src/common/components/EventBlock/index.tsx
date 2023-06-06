@@ -1,14 +1,15 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
-import { AlertDialog, Button, HStack, Text, VStack, useTheme } from 'native-base'
-
-import { MaterialIcons } from '@expo/vector-icons'
-
+import Button from '@components/Button'
 import EventBlockRound from '@components/EventBlockRound'
 import OpenTimerButton, { OpenTimerButtonProps } from '@components/OpenTimerButton'
+import { MaterialIcons } from '@expo/vector-icons'
 import { IEventBlock } from '@models/block'
 import { TTimerTypes } from '@models/time'
 import { eventBlockTransformer } from '@utils/transformer/eventblock'
+
+import { AlertDialog, Text, YStack, useTheme } from 'tamagui'
+import { XStack } from 'tamagui'
 
 export interface PeriodEventBlock {
     block: IEventBlock
@@ -66,10 +67,9 @@ const getTimerType = (block: IEventBlock): Exclude<TTimerTypes, 'not_timed'> | n
 }
 
 const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' }) => {
-    const { colors } = useTheme()
+    const theme = useTheme()
     const blockTitle = eventBlockTransformer.displayTitle(block)
     const [infoOpen, setInfoOpen] = useState(false)
-    const ref = useRef()
 
     const timerType = getTimerType(block)
 
@@ -82,72 +82,91 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
 
     return (
         <>
-            {(!!block.name || !!blockTitle || !!block.info) && (
-                <HStack bg={'gray.900'} justifyContent="space-between" alignItems="flex-start">
-                    <VStack mt={1}>
+            {(!!block.name || !!blockTitle) && (
+                <XStack bg="$gray9" jc="space-between" ai="flex-start">
+                    <YStack mt="$1">
                         {!!block.name && (
-                            <Text fontSize="xs" textAlign={textAlign}>
+                            <Text fontSize="$3" textAlign={textAlign}>
                                 {block.name}
                             </Text>
                         )}
                         {!!blockTitle &&
                             (textAlign === 'center' ? (
-                                <Text px={5} py={1} mb={1} fontSize="sm" textAlign={textAlign}>
+                                <Text px={5} py={1} mb={1} fontSize="$4" textAlign={textAlign}>
                                     {blockTitle}
                                 </Text>
                             ) : (
-                                <Text fontWeight="bold" fontSize="md" ml={1} mb={1} textAlign={textAlign}>
+                                <Text fontWeight="900" fontSize="$4" ml={1} mb={1} textAlign={textAlign}>
                                     {blockTitle}
                                 </Text>
                             ))}
-                    </VStack>
-                </HStack>
+                    </YStack>
+                </XStack>
             )}
 
             {(!!timerType || !!block.info) && (
-                <HStack space={2} my={2}>
+                <XStack space="$2" my="$2">
                     {!!timerType && <OpenTimerButton type={timerType} settings={getTimerSettings(block)} />}
                     {!!block.info && (
                         <Button
                             flex={1}
-                            leftIcon={<MaterialIcons name="info-outline" size={26} color={colors.gray[300]} />}
-                            colorScheme="gray"
-                            size="sm"
+                            icon={<MaterialIcons name="info-outline" size={26} color={theme.gray3.val} />}
                             onPress={handleOpenInfo}
                         >
                             Informações
                         </Button>
                     )}
-                </HStack>
+                </XStack>
             )}
 
-            <VStack space={2}>
+            <YStack space="$2">
                 {block.rounds.map((round, index) => (
                     <EventBlockRound key={`${round.type}${index}`} round={round} textAlign={textAlign} />
                 ))}
-            </VStack>
+            </YStack>
 
-            <AlertDialog leastDestructiveRef={ref} isOpen={infoOpen} onClose={handleCloseInfo}>
-                <AlertDialog.Content bg="gray.600">
-                    <AlertDialog.Header bg="gray.600" borderColor="gray.900">
-                        <HStack alignItems="center" space={2}>
-                            <MaterialIcons name="info" size={18} color={colors.gray[500]} />
-                            <Text color="gray.100">Informações</Text>
-                        </HStack>
-                    </AlertDialog.Header>
-                    <AlertDialog.Body bg="gray.600">
-                        <Text fontSize="sm" color="gray.300">
-                            {block.info}
-                        </Text>
-                    </AlertDialog.Body>
-                    <AlertDialog.Footer bg="gray.600" borderColor="gray.900">
-                        <Button.Group space={2}>
-                            <Button colorScheme="red" onPress={handleCloseInfo}>
-                                OK
-                            </Button>
-                        </Button.Group>
-                    </AlertDialog.Footer>
-                </AlertDialog.Content>
+            <AlertDialog open={infoOpen}>
+                <AlertDialog.Portal>
+                    <AlertDialog.Overlay
+                        key="overlay"
+                        animation="quick"
+                        opacity={0.5}
+                        enterStyle={{ opacity: 0 }}
+                        exitStyle={{ opacity: 0 }}
+                    />
+                    <AlertDialog.Content
+                        bordered
+                        elevate
+                        key="content"
+                        animation={[
+                            'quick',
+                            {
+                                opacity: {
+                                    overshootClamping: true,
+                                },
+                            },
+                        ]}
+                        enterStyle={{ x: 0, y: -20, opacity: 0 }}
+                        exitStyle={{ x: 0, y: 10, opacity: 0 }}
+                        opacity={1}
+                        w="90%"
+                        x={0}
+                        y={0}
+                    >
+                        <YStack space>
+                            <AlertDialog.Title>Informações</AlertDialog.Title>
+                            <AlertDialog.Description>{block.info}</AlertDialog.Description>
+
+                            <XStack space="$3" justifyContent="flex-end">
+                                <AlertDialog.Action asChild>
+                                    <Button theme="active" onPress={handleCloseInfo}>
+                                        OK
+                                    </Button>
+                                </AlertDialog.Action>
+                            </XStack>
+                        </YStack>
+                    </AlertDialog.Content>
+                </AlertDialog.Portal>
             </AlertDialog>
         </>
     )

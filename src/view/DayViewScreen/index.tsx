@@ -92,7 +92,7 @@ const DayViewScreen: React.FC = () => {
     if ((!data && isLoading) || loading)
         return (
             <Flex flex={1} alignItems="center" justifyContent="center">
-                <ActivityIndicator size={30} />
+                <ActivityIndicator />
             </Flex>
         )
 

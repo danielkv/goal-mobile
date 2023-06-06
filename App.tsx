@@ -21,8 +21,10 @@ import 'expo-dev-client'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
+import { TamaguiProvider, Theme } from 'tamagui'
 
 import { theme } from './src/theme'
+import config from './tamagui.config'
 
 dayjs.locale('pt-br')
 dayjs.extend(isBetween)
@@ -67,12 +69,16 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <NativeBaseProvider theme={theme}>
-                <StatusBar style="light" />
-                <ErrorBoundary>
-                    <AppLayout />
-                </ErrorBoundary>
-            </NativeBaseProvider>
+            <TamaguiProvider config={config}>
+                <Theme name={'dark'}>
+                    <NativeBaseProvider theme={theme}>
+                        <StatusBar style="light" />
+                        <ErrorBoundary>
+                            <AppLayout />
+                        </ErrorBoundary>
+                    </NativeBaseProvider>
+                </Theme>
+            </TamaguiProvider>
         </NavigationContainer>
     )
 }

@@ -1,13 +1,14 @@
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 
-import { Button, IconButton, useTheme } from 'native-base'
-
 import EmomSvg from '@assets/svg/emom.svg'
 import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TabataSvg from '@assets/svg/tabata.svg'
+import Button from '@components/Button'
 import { IEMOMTimer, ITabataTimer, ITimecapTimer, TTimerTypes } from '@models/time'
 import { useNavigation } from '@react-navigation/native'
+
+import { useTheme } from 'tamagui'
 
 export interface OpenTimerButtonProps {
     variant?: 'button' | 'icon'
@@ -23,7 +24,7 @@ const icons: Record<Exclude<TTimerTypes, 'not_timed'>, React.FC<SvgProps>> = {
 }
 
 const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ type, settings, variant = 'button' }) => {
-    const { colors } = useTheme()
+    const theme = useTheme()
     const { navigate } = useNavigation()
 
     if (!['emom', 'for_time', 'amrap', 'tabata'].includes(type)) return null
@@ -51,22 +52,13 @@ const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ type, settings, varia
 
     if (variant === 'icon')
         return (
-            <IconButton
-                rounded="full"
-                p={2}
-                icon={<Icon width={22} height={22} fill={colors.gray[300]} />}
-                onPress={handleOnPress}
-            />
+            <Button size="$4" onPress={handleOnPress} circular>
+                <Icon width={22} height={22} fill={theme.gray3.val} />
+            </Button>
         )
 
     return (
-        <Button
-            flex={1}
-            leftIcon={<Icon width={24} height={24} fill={colors.gray[300]} />}
-            colorScheme="gray"
-            size="sm"
-            onPress={handleOnPress}
-        >
+        <Button flex={1} icon={<Icon width={24} height={24} fill={theme.gray3.val} />} onPress={handleOnPress}>
             Abrir Timer
         </Button>
     )

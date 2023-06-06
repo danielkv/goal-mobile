@@ -1,6 +1,6 @@
-import { Platform } from 'react-native'
+import Pressable from '@components/Pressable'
 
-import { Pressable, Text, useTheme } from 'native-base'
+import { Text } from 'tamagui'
 
 export interface MenuButtonProps {
     Icon: React.ElementType<any>
@@ -9,23 +9,10 @@ export interface MenuButtonProps {
 }
 
 const MenuButton: React.FC<MenuButtonProps> = ({ Icon, label, onPress }) => {
-    const { colors } = useTheme()
-
     return (
-        <Pressable
-            _pressed={Platform.select({
-                ios: {
-                    bg: 'gray.700',
-                },
-            })}
-            android_ripple={{ color: colors.gray[800] }}
-            alignItems="center"
-            onPress={onPress}
-            py={3}
-            px={6}
-        >
+        <Pressable f={1} px="$4" ai="center" jc="center" onPress={onPress} effectColor="$gray7">
             <Icon />
-            <Text fontSize={10} color="gray.500">
+            <Text fontSize={10} color="$gray5">
                 {label}
             </Text>
         </Pressable>
