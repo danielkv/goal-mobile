@@ -1,35 +1,73 @@
-import { Alert, Box, Center, HStack, Text, VStack } from 'native-base'
+import { MaterialIcons } from '@expo/vector-icons'
 
-export interface AlertBoxProps {
-    type: 'error' | 'success' | 'warning' | 'info'
+import { ColorTokens, Dialog, Stack, XStack, YStack } from 'tamagui'
+
+type TAlertType = 'error' | 'success' | 'warning' | 'info'
+type TAlertColor = {
+    bg: ColorTokens
+    color: ColorTokens
+    icon: JSX.Element
+}
+
+export interface IAlertBoxProps {
+    type: TAlertType
     title?: string
     text: string
 }
 
-const AlertBox: React.FC<AlertBoxProps> = ({ type, text, title }) => {
-    return (
-        <Center my={6}>
-            <Alert width="full" status={type} colorScheme="red">
-                <HStack flexShrink={1} space={2}>
-                    <Alert.Icon mt={2} alignSelf="flex-start" />
-                    <VStack flex={1}>
-                        {title && (
-                            <Text fontSize="md" fontWeight="medium" color="coolGray.800">
-                                {title}
-                            </Text>
-                        )}
-                        <Box
-                            _text={{
-                                color: 'coolGray.600',
-                            }}
-                        >
-                            {text}
-                        </Box>
-                    </VStack>
-                </HStack>
-            </Alert>
-        </Center>
-    )
+function getAlertType(type: TAlertType): TAlertColor {
+    switch (type) {
+        case 'warning':
+            return {
+                bg: '$yellow8Light',
+                color: 'white',
+                icon: <MaterialIcons name="warning" size={16} color="yellow" />,
+            }
+        case 'success':
+            return {
+                bg: '$green8Light',
+                color: 'white',
+                icon: <MaterialIcons name="check-circle" size={16} color="green" />,
+            }
+        case 'info':
+            return {
+                bg: '$blue8Light',
+                color: 'white',
+                icon: <MaterialIcons name="info" size={16} color="blue" />,
+            }
+        case 'error':
+            return {
+                bg: '$red2',
+                color: 'white',
+                icon: <MaterialIcons name="error" size={16} color="red" />,
+            }
+    }
 }
+
+const AlertBox = Stack.styleable<IAlertBoxProps>(({ type, text, title, ...props }, ref) => {
+    const typeObj = getAlertType(type)
+
+    return (
+        <Stack ref={ref} {...props}>
+            <Dialog modal={false}>
+                <Dialog.Content bg={typeObj.bg}>
+                    <XStack jc="flex-start" gap="$2">
+                        <Stack mt={title ? 11 : 5}>{typeObj.icon}</Stack>
+                        <YStack>
+                            {!!title && (
+                                <Dialog.Title fontSize="$6" fontWeight="600" color={typeObj.color}>
+                                    {title}
+                                </Dialog.Title>
+                            )}
+                            <Dialog.Description fontWeight="400" color={typeObj.color}>
+                                {text}
+                            </Dialog.Description>
+                        </YStack>
+                    </XStack>
+                </Dialog.Content>
+            </Dialog>
+        </Stack>
+    )
+})
 
 export default AlertBox

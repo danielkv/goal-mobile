@@ -22,6 +22,9 @@ const Button = styled(NButton, {
                 bg: 'transparent',
                 p: 0,
             },
+            icon: {
+                circular: true,
+            },
         },
     },
 })

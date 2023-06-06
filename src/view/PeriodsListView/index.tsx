@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 
-import { Box, useTheme } from 'native-base'
-
 import { useLoggedUser } from '@contexts/user/userContext'
 import { IDayModel } from '@models/day'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
+
+import { Stack, getTokens } from 'tamagui'
 
 import PeriodItem from './components/PeriodItem'
 
@@ -15,7 +15,8 @@ export interface PeriodsListView {
 }
 
 const PeriodsListView: React.FC<PeriodsListView> = ({ day }) => {
-    const { sizes } = useTheme()
+    const { size } = getTokens()
+
     const { dispatch } = useNavigation()
     const user = useLoggedUser()
 
@@ -34,17 +35,17 @@ const PeriodsListView: React.FC<PeriodsListView> = ({ day }) => {
             renderItem={({ item, index }) => {
                 indexSum += item.sections.length
                 return (
-                    <Box m={2} flex={1}>
+                    <Stack m="$2" f={1}>
                         <PeriodItem
                             periodNumber={index + 1}
                             item={item}
                             date={day.date}
                             indexSum={indexSum - item.sections.length}
                         />
-                    </Box>
+                    </Stack>
                 )
             }}
-            contentContainerStyle={{ paddingVertical: sizes[7], paddingHorizontal: sizes[3] }}
+            contentContainerStyle={{ paddingVertical: size[5].val, paddingHorizontal: size[3].val }}
             showsHorizontalScrollIndicator={false}
             estimatedItemSize={640}
         />

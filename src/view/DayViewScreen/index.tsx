@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
 
-import { Box, Fab, Flex, HStack, IconButton } from 'native-base'
-
 import { useStorage } from '@common/hooks/useStorage'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
+import Button from '@components/Button'
 import { MaterialIcons } from '@expo/vector-icons'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
@@ -17,6 +16,7 @@ import SectionCarouselView from '@view/SectionCarouselView'
 import dayjs from 'dayjs'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import useSWR from 'swr'
+import { Stack, XStack } from 'tamagui'
 
 const DayViewScreen: React.FC = () => {
     const {
@@ -70,10 +70,10 @@ const DayViewScreen: React.FC = () => {
 
         navigation.setOptions({
             headerRight: () => (
-                <HStack>
-                    <IconButton
-                        size={12}
-                        rounded="full"
+                <XStack>
+                    <Button
+                        variant="icon"
+                        bg="transparent"
                         onPress={() => setKeepAwake(keepAwake === 'enabled' ? 'disabled' : 'enabled')}
                     >
                         <MaterialIcons
@@ -81,8 +81,8 @@ const DayViewScreen: React.FC = () => {
                             size={16}
                             color="white"
                         />
-                    </IconButton>
-                </HStack>
+                    </Button>
+                </XStack>
             ),
         })
     }, [viewType, keepAwake, loadingKeepAwake])
@@ -91,26 +91,32 @@ const DayViewScreen: React.FC = () => {
 
     if ((!data && isLoading) || loading)
         return (
-            <Flex flex={1} alignItems="center" justifyContent="center">
+            <Stack flex={1} ai="center" jc="center">
                 <ActivityIndicator />
-            </Flex>
+            </Stack>
         )
 
     if (!data) return <AlertBox type="info" text="Nenhum resultado encontrato" />
 
     return (
-        <Box flex={1}>
+        <Stack flex={1}>
             {viewType === 'carousel' ? <SectionCarouselView day={data} /> : <PeriodsListView day={data} />}
 
-            <Fab
+            <Button
+                size="$5"
+                variant="icon"
+                bg="$gray6"
+                elevate
+                elevation="$4"
                 onPress={() => setViewType(viewType === 'list' ? 'carousel' : 'list')}
                 icon={
-                    <MaterialIcons name={viewType === 'list' ? 'view-carousel' : 'view-list'} size={16} color="white" />
+                    <MaterialIcons name={viewType === 'list' ? 'view-carousel' : 'view-list'} size={18} color="white" />
                 }
-                colorScheme="trueGray"
-                mb={20}
+                position="absolute"
+                bottom="$4"
+                right="$3"
             />
-        </Box>
+        </Stack>
     )
 }
 

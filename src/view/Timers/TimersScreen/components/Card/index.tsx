@@ -1,40 +1,27 @@
-import { Platform } from 'react-native'
+import { PressableProps } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 
-import { Center, IPressableProps, Pressable, Text, useTheme } from 'native-base'
+import Pressable from '@components/Pressable'
 
-interface TimerCardProps extends IPressableProps {
+import { Stack, Text } from 'tamagui'
+
+interface TimerCardProps {
+    onPress: PressableProps['onPress']
     title?: string
     Icon: React.FC<SvgProps>
 }
 
 const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
-    const { colors } = useTheme()
-
     return (
-        <Pressable
-            flex={1}
-            minH={192}
-            bg="gray.600"
-            _pressed={Platform.select({
-                ios: {
-                    bg: 'gray.700',
-                },
-            })}
-            android_ripple={{ color: colors.gray[700] }}
-            alignItems="center"
-            justifyContent="center"
-            rounded="md"
-            {...rest}
-        >
-            <Center>
-                <Icon fill={colors.white} />
+        <Stack flex={1} ac="center" jc="center">
+            <Pressable br="$4" py="$7" bg="$gray6" effectColor="$gray7" ac="center" ai="center" {...rest}>
+                <Icon fill="white" />
 
-                <Text mt={22} fontSize={'xs'} color={'gray.200'} fontWeight={'medium'} lineHeight={'sm'}>
+                <Text mt="$5" fontSize="$3" color="$gray2" fontWeight="600">
                     {description}
                 </Text>
-            </Center>
-        </Pressable>
+            </Pressable>
+        </Stack>
     )
 }
 

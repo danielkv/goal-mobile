@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
+import { TouchableOpacity } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-
-import { Box, Flex, HStack, Pressable, Text, useTheme } from 'native-base'
-
-import { MaterialIcons } from '@expo/vector-icons'
 
 import { useOrientation } from '@common/hooks/useOrientation'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
+import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+
 import { useKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import { Stack, Text, XStack, YStack, useTheme } from 'tamagui'
 
 export interface TimerDisplayProps {
     time: string
@@ -38,6 +38,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
 }) => {
     const orientation = useOrientation()
     const isPortrait = orientation === 'portrait'
+    const theme = useTheme()
 
     const navigation = useNavigation()
 
@@ -52,138 +53,96 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     }, [])
 
     useEffect(() => {
-        navigation.setOptions({ headerStyle: { backgroundColor: isPortrait ? colors.gray[900] : colors.gray[700] } })
+        navigation.setOptions({ headerStyle: { backgroundColor: isPortrait ? theme.gray9.val : theme.gray7.val } })
     }, [isPortrait])
-
-    const { colors, sizes } = useTheme()
 
     if (watchProgressStatus === 'initial')
         return (
-            <Box flex={1} alignItems="center" justifyContent="center">
-                <Pressable onPress={onPressPlayButton}>
-                    {({ isPressed }) => (
-                        <MaterialIcons
-                            name="play-circle-filled"
-                            color={isPressed ? colors.red[600] : colors.red[500]}
-                            size={100}
-                        />
-                    )}
-                </Pressable>
-            </Box>
+            <Stack flex={1} alignItems="center" justifyContent="center">
+                <TouchableOpacity onPress={onPressPlayButton}>
+                    <MaterialIcons name="play-circle-filled" color={theme.red5.val} size={100} />
+                </TouchableOpacity>
+            </Stack>
         )
 
     return (
-        <Box flex={1} alignItems="center" justifyContent="center">
+        <YStack flex={1} alignItems="center" justifyContent="center" gap="$4">
             {activityStatus !== undefined && (
-                <Box
-                    bg={activityStatus === 'work' ? 'red.500' : 'gray.900'}
-                    mb={5}
-                    px={2}
-                    py={1}
-                    rounded={4}
-                    _text={{
-                        fontSize: 'md',
-                        fontWeight: 700,
-                    }}
-                >
-                    {activityStatus.toLocaleUpperCase()}
-                </Box>
+                <Stack bg={activityStatus === 'work' ? '$red5' : '$gray9'} mb="$4" px="$2" py="$1" br="$4">
+                    <Text fontSize="$5" fontWeight="700">
+                        {activityStatus.toLocaleUpperCase()}
+                    </Text>
+                </Stack>
             )}
 
-            <Flex
-                style={{ gap: isPortrait ? sizes[3] : sizes[10] }}
-                direction={isPortrait ? 'column' : 'row'}
-                alignItems="center"
-            >
-                <Flex direction={isPortrait ? 'column' : 'row'} alignItems="center" style={{ gap: sizes[3] }}>
-                    <Box>
-                        <Icon fill={colors.gray[500]} width={isPortrait ? 60 : 48} />
-                    </Box>
+            <Stack gap={isPortrait ? '$4' : '$8'} flexDirection={isPortrait ? 'column' : 'row'} alignItems="center">
+                <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap={isPortrait ? '$4' : '$3'}>
+                    <Stack>
+                        <Icon fill={theme.gray5.val} width={isPortrait ? 60 : 48} />
+                    </Stack>
 
                     {initialCountdown ? (
-                        <Text
-                            color={colors.red[200]}
-                            fontWeight={700}
-                            fontSize={isPortrait ? '8xl' : '9xl'}
-                            lineHeight={isPortrait ? '9xl' : '9xl'}
-                        >
+                        <Text color={theme.red2.val} fontWeight="700" fontSize={isPortrait ? '$14' : '$15'}>
                             {initialCountdown}
                         </Text>
                     ) : (
-                        <Text
-                            color={colors.gray[200]}
-                            fontWeight={700}
-                            fontSize={isPortrait ? '7xl' : '8xl'}
-                            lineHeight={isPortrait ? '8xl' : '8xl'}
-                        >
+                        <Text color={theme.gray2.val} fontWeight="700" fontSize={isPortrait ? '$13' : '$14'}>
                             {time}
                         </Text>
                     )}
-                </Flex>
+                </Stack>
 
                 {initialCountdown === undefined && round !== undefined && (
-                    <Flex direction={isPortrait ? 'column' : 'row'} alignItems="center" style={{ gap: sizes[3] }}>
-                        <Text fontSize="md" fontWeight={400} lineHeight="2xl" color="gray.400">
+                    <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap="$3">
+                        <Text fontSize="$5" fontWeight="400" color="$gray4">
                             Round
                         </Text>
 
-                        <Text fontSize="6xl" fontWeight={700} lineHeight="6xl" color="gray.200">
+                        <Text fontSize="$8" fontWeight="700" color="$gray2">
                             {round}
                         </Text>
-                    </Flex>
+                    </Stack>
                 )}
-            </Flex>
+            </Stack>
 
             {initialCountdown === undefined && (
-                <HStack mt={isPortrait ? 10 : 0} alignItems={'center'} space={5}>
+                <XStack mt={isPortrait ? 10 : 0} alignItems="center" gap="$5">
                     {watchProgressStatus === 'running' ? (
                         <>
-                            <Pressable onPress={onPressPauseButton}>
-                                {({ isPressed }) => (
-                                    <MaterialIcons
-                                        name="pause-circle-filled"
-                                        color={isPressed ? 'black' : colors.gray[500]}
-                                        size={isPortrait ? 75 : 65}
-                                    />
-                                )}
-                            </Pressable>
+                            <TouchableOpacity onPress={onPressPauseButton}>
+                                <MaterialIcons
+                                    name="pause-circle-filled"
+                                    color={theme.gray5.val}
+                                    size={isPortrait ? 75 : 65}
+                                />
+                            </TouchableOpacity>
                         </>
                     ) : (
                         <>
                             {watchProgressStatus !== 'finished' && (
-                                <Pressable onPress={onPressPlayButton}>
-                                    {({ isPressed }) => (
-                                        <MaterialIcons
-                                            name="play-circle-filled"
-                                            color={isPressed ? colors.red[600] : colors.red[500]}
-                                            size={isPortrait ? 75 : 65}
-                                        />
-                                    )}
-                                </Pressable>
-                            )}
-                            <Pressable onPress={onPressResetButton}>
-                                {({ isPressed }) => (
+                                <TouchableOpacity onPress={onPressPlayButton}>
                                     <MaterialIcons
-                                        name="replay-circle-filled"
-                                        color={isPressed ? 'black' : colors.gray[500]}
+                                        name="play-circle-filled"
+                                        color={theme.red5.val}
                                         size={isPortrait ? 75 : 65}
                                     />
-                                )}
-                            </Pressable>
-                            <Pressable onPress={onPressEditButton}>
-                                {({ isPressed }) => (
-                                    <MaterialIcons
-                                        name="edit"
-                                        color={isPressed ? 'black' : colors.gray[500]}
-                                        size={isPortrait ? 50 : 40}
-                                    />
-                                )}
-                            </Pressable>
+                                </TouchableOpacity>
+                            )}
+                            <TouchableOpacity onPress={onPressResetButton}>
+                                <MaterialIcons
+                                    name="replay-circle-filled"
+                                    color={theme.gray5.val}
+                                    size={isPortrait ? 75 : 65}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={onPressEditButton}>
+                                <MaterialIcons name="edit" color={theme.gray5.val} size={isPortrait ? 50 : 40} />
+                            </TouchableOpacity>
                         </>
                     )}
-                </HStack>
+                </XStack>
             )}
-        </Box>
+        </YStack>
     )
 }
 

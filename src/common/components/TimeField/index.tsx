@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { TextInput } from 'react-native'
-
-import { HStack, Text, useTheme } from 'native-base'
 
 import dayjs from 'dayjs'
+import { Input, InputProps, Text, XStack } from 'tamagui'
 
 export interface TimeFieldProps {
     value: number
@@ -29,7 +27,6 @@ export function stringTimeToSeconds(string: string): number {
 }
 
 const TimeField: React.FC<TimeFieldProps> = ({ value, onChange }) => {
-    const { colors, fontConfig } = useTheme()
     const splittedTime = splitTime(value)
 
     const [minutes, setMinutes] = useState(() => splittedTime[0])
@@ -49,18 +46,19 @@ const TimeField: React.FC<TimeFieldProps> = ({ value, onChange }) => {
         onChange(secondsFinal)
     }
 
+    const style: InputProps = {
+        unstyled: true,
+        color: '$gray2',
+        fontSize: 60,
+        ta: 'center',
+        fontWeight: '700',
+        w: 100,
+    }
+
     return (
-        <HStack alignItems="center" bg="gray.800" rounded="md" p={1}>
-            <TextInput
+        <XStack alignItems="center" bg="$gray8" br="$4" p="$1">
+            <Input
                 keyboardType="number-pad"
-                style={{
-                    textAlign: 'center',
-                    fontSize: 60,
-                    fontFamily: fontConfig.Inter[700].normal,
-                    color: colors.gray[200],
-                    lineHeight: 70,
-                    width: 100,
-                }}
                 onBlur={() => {
                     setMinutes((prev) => dayjs.duration(Number(prev), 'minute').format('mm'))
                     setSeconds((prev) => dayjs.duration(Number(prev), 'seconds').format('ss'))
@@ -68,28 +66,22 @@ const TimeField: React.FC<TimeFieldProps> = ({ value, onChange }) => {
                 maxLength={2}
                 value={minutes}
                 onChangeText={handleChange('minutes')}
+                {...style}
             />
-            <Text fontWeight="bold" fontSize="5xl" lineHeight="5xl">
+            <Text fontWeight="bold" fontSize="$8">
                 :
             </Text>
-            <TextInput
+            <Input
                 keyboardType="number-pad"
                 onBlur={() => {
                     setSeconds((prev) => dayjs.duration(Number(prev), 'seconds').format('ss'))
                 }}
-                style={{
-                    textAlign: 'center',
-                    fontSize: 60,
-                    fontFamily: fontConfig.Inter[700].normal,
-                    color: colors.gray[200],
-                    lineHeight: 70,
-                    width: 100,
-                }}
                 maxLength={2}
                 value={seconds}
                 onChangeText={handleChange('seconds')}
+                {...style}
             />
-        </HStack>
+        </XStack>
     )
 }
 

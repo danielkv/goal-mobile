@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
-import { Button, Center, ScrollView } from 'native-base'
-
 import TabataSvg from '@assets/svg/tabata.svg'
+import Button from '@components/Button'
 import SafeAreaView from '@components/SafeAreaView'
 import TimerForm from '@components/TimerForm'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+
+import { ScrollView, Stack, YStack } from 'tamagui'
 
 import TabataDisplay from './timer'
 
@@ -24,21 +25,25 @@ const TabataTimerScreen: React.FC = () => {
         <SafeAreaView>
             {state === 'form' ? (
                 <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
-                    <TimerForm
-                        type="tabata"
-                        rounds={rounds}
-                        onChangeRounds={setRounds}
-                        countdown={countdown}
-                        onChangeCountdown={setupCountdown}
-                        Icon={TabataSvg}
-                        time1={work}
-                        onChangeTime1={setWork}
-                        time2={rest}
-                        onChangeTime2={setRest}
-                    />
-                    <Center mt={5}>
-                        <Button onPress={() => setState('timer')}>Aplicar</Button>
-                    </Center>
+                    <YStack gap="$4">
+                        <TimerForm
+                            type="tabata"
+                            rounds={rounds}
+                            onChangeRounds={setRounds}
+                            countdown={countdown}
+                            onChangeCountdown={setupCountdown}
+                            Icon={TabataSvg}
+                            time1={work}
+                            onChangeTime1={setWork}
+                            time2={rest}
+                            onChangeTime2={setRest}
+                        />
+                        <Stack px="$13">
+                            <Button variant="primary" onPress={() => setState('timer')}>
+                                Aplicar
+                            </Button>
+                        </Stack>
+                    </YStack>
                 </ScrollView>
             ) : (
                 <TabataDisplay

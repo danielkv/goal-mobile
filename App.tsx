@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Alert } from 'react-native'
 
-import { NativeBaseProvider } from 'native-base'
-
 import { firebaseProvider } from '@common/providers/firebase'
 import ErrorBoundary from '@components/ErrorBoundary'
 import { extractUserCredential, setLoggedUser } from '@contexts/user/userContext'
@@ -23,7 +21,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { TamaguiProvider, Theme } from 'tamagui'
 
-import { theme } from './src/theme'
 import config from './tamagui.config'
 
 dayjs.locale('pt-br')
@@ -71,12 +68,10 @@ export default function App() {
         <NavigationContainer>
             <TamaguiProvider config={config}>
                 <Theme name={'dark'}>
-                    <NativeBaseProvider theme={theme}>
-                        <StatusBar style="light" />
-                        <ErrorBoundary>
-                            <AppLayout />
-                        </ErrorBoundary>
-                    </NativeBaseProvider>
+                    <StatusBar style="light" />
+                    <ErrorBoundary>
+                        <AppLayout />
+                    </ErrorBoundary>
                 </Theme>
             </TamaguiProvider>
         </NavigationContainer>

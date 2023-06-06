@@ -1,5 +1,4 @@
-import { IconButton, useTheme } from 'native-base'
-
+import Button from '@components/Button'
 import { useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -17,32 +16,34 @@ import TimersScreen from '@view/Timers/TimersScreen'
 import WorksheetDays from '@view/WorksheetDays'
 import WorksheetListScreen from '@view/WorksheetListScreen'
 
+import { useTheme } from 'tamagui'
+
 import { ERouteName } from './types'
 
 const Stack = createNativeStackNavigator()
 
 function Router() {
-    const { colors } = useTheme()
+    const theme = useTheme()
     const { navigate } = useNavigation()
 
     return (
         <Stack.Navigator
             screenOptions={{
                 title: 'Goal',
-                contentStyle: { backgroundColor: colors.gray[700] },
-                headerStyle: { backgroundColor: colors.gray[900] },
-                headerTitleStyle: { color: colors.white },
+                contentStyle: { backgroundColor: theme.gray7.val },
+                headerStyle: { backgroundColor: theme.gray9.val },
+                headerTitleStyle: { color: 'white' },
                 headerBackTitleVisible: false,
-                headerTintColor: colors.gray[300],
+                headerTintColor: theme.gray3.val,
                 headerTitleAlign: 'left',
                 headerRight: () => {
                     const user = useLoggedUser()
 
                     if (!user) return null
                     return (
-                        <IconButton onPress={() => navigate(ERouteName.Profile)}>
-                            <MaterialIcons name="person" size={22} color={colors.gray[100]} />
-                        </IconButton>
+                        <Button variant="icon" bg="transparent" onPress={() => navigate(ERouteName.Profile)}>
+                            <MaterialIcons name="person" size={22} color={theme.gray1.val} />
+                        </Button>
                     )
                 },
             }}

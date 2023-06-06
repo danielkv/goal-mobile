@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react'
 import { RefreshControl } from 'react-native'
 
-import { Box, Flex, useTheme } from 'native-base'
-
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
 import { useLoggedUser } from '@contexts/user/userContext'
@@ -13,11 +11,14 @@ import { getWorksheetByIdUseCase } from '@useCases/worksheet/getWorksheetById'
 import { getErrorMessage } from '@utils/getErrorMessage'
 
 import useSWR from 'swr'
+import { Stack, getTokens, useTheme } from 'tamagui'
 
 import WorksheetDayItem from './components/WorksheetDayItem'
 
 const WorksheetDays: React.FC = () => {
-    const { sizes, colors } = useTheme()
+    const theme = useTheme()
+    const { size: sizes } = getTokens()
+
     const [refreshing, setRefreshing] = useState(false)
     const {
         params: { id: worksheetId },
@@ -46,9 +47,9 @@ const WorksheetDays: React.FC = () => {
 
     if (!data && isLoading)
         return (
-            <Flex flex={1} alignItems="center" justifyContent="center">
+            <Stack flex={1} alignItems="center" justifyContent="center">
                 <ActivityIndicator />
-            </Flex>
+            </Stack>
         )
 
     return (
@@ -57,7 +58,7 @@ const WorksheetDays: React.FC = () => {
             numColumns={2}
             horizontal={false}
             renderItem={({ item }) => (
-                <Box m={2} flex={1}>
+                <Stack m="$2" f={1}>
                     <WorksheetDayItem
                         item={item}
                         onPress={(item) =>
@@ -67,16 +68,16 @@ const WorksheetDays: React.FC = () => {
                             })
                         }
                     />
-                </Box>
+                </Stack>
             )}
-            contentContainerStyle={{ paddingVertical: sizes[7], paddingHorizontal: sizes[5] }}
+            contentContainerStyle={{ paddingVertical: sizes['2.5'].val, paddingHorizontal: sizes['2.5'].val }}
             showsHorizontalScrollIndicator={false}
             estimatedItemSize={128}
             refreshControl={
                 <RefreshControl
-                    tintColor={colors.red[500]}
-                    colors={[colors.red[600]]}
-                    style={{ backgroundColor: colors.gray[900] }}
+                    tintColor={theme.red5.val}
+                    colors={[theme.red5.val]}
+                    style={{ backgroundColor: theme.gray9.val }}
                     onRefresh={handleRefresh}
                     refreshing={refreshing}
                 />

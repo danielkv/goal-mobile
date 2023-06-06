@@ -1,9 +1,9 @@
-import { Platform, Pressable as RNPressable } from 'react-native'
+import { Platform, PressableProps, Pressable as RNPressable } from 'react-native'
 
 import { ColorTokens, Stack, useTheme } from 'tamagui'
 
 export interface IPressableProps {
-    onPress?: () => void
+    onPress: PressableProps['onPress']
     effectColor?: ColorTokens
 }
 
@@ -16,7 +16,7 @@ const Pressable = Stack.styleable<IPressableProps>(({ onPress, effectColor, ...p
     return (
         <RNPressable onPress={onPress} android_ripple={color ? { color } : undefined}>
             {({ pressed }) => (
-                <Stack ref={ref} {...props} bg={isIos && pressed ? color : undefined}>
+                <Stack ref={ref} {...props} bg={isIos && pressed ? color : props.bg || props.backgroundColor}>
                     {props.children}
                 </Stack>
             )}

@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
-import { Button, Center, ScrollView } from 'native-base'
-
 import EmomSvg from '@assets/svg/emom.svg'
+import Button from '@components/Button'
 import SafeAreaView from '@components/SafeAreaView'
 import TimerForm from '@components/TimerForm'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+
+import { ScrollView, Stack, YStack } from 'tamagui'
 
 import EmomDisplay from './timer'
 
@@ -22,20 +23,24 @@ const EmomTimerScreen: React.FC = () => {
     return (
         <SafeAreaView>
             {state === 'form' ? (
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
-                    <TimerForm
-                        type="emom"
-                        rounds={rounds}
-                        onChangeRounds={setRounds}
-                        countdown={countdown}
-                        onChangeCountdown={setupCountdown}
-                        Icon={EmomSvg}
-                        time1={each}
-                        onChangeTime1={setEach}
-                    />
-                    <Center mt={5}>
-                        <Button onPress={() => setState('timer')}>Aplicar</Button>
-                    </Center>
+                <ScrollView f={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
+                    <YStack gap="$4">
+                        <TimerForm
+                            type="emom"
+                            rounds={rounds}
+                            onChangeRounds={setRounds}
+                            countdown={countdown}
+                            onChangeCountdown={setupCountdown}
+                            Icon={EmomSvg}
+                            time1={each}
+                            onChangeTime1={setEach}
+                        />
+                        <Stack px="$13">
+                            <Button variant="primary" onPress={() => setState('timer')}>
+                                Aplicar
+                            </Button>
+                        </Stack>
+                    </YStack>
                 </ScrollView>
             ) : (
                 <EmomDisplay

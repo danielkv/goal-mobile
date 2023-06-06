@@ -1,7 +1,7 @@
-import { Box, HStack, Text, VStack } from 'native-base'
-
 import { IFlatSection } from '@common/interfaces/worksheet'
 import BlockItem from '@components/BlockItem'
+
+import { Stack, Text, XStack, YStack } from 'tamagui'
 
 export interface SectionItemProps {
     item: IFlatSection
@@ -11,32 +11,41 @@ export interface SectionItemProps {
 const SectionItem: React.FC<SectionItemProps> = ({ item, width }) => {
     const sectionNumber = `${item.period}.${item.sectionNumber}`
     return (
-        <VStack width={width} bg="gray.800" rounded="sm">
-            <HStack alignItems="center">
-                <Box roundedTopLeft={4} bg="red.500" w="55px" h="55px" alignItems="center" justifyContent="center">
-                    <Text color="white" fontWeight="bold" fontSize="lg">
+        <YStack width={width} bg="$gray8" br="$4">
+            <XStack alignItems="center">
+                <Stack btlr="$4" bg="$red5" w={55} h={55} ai="center" jc="center">
+                    <Text color="white" fontWeight="800" fontSize="$6">
                         {sectionNumber}
                     </Text>
-                </Box>
+                </Stack>
 
-                <Text ml={5} fontSize="sm" fontWeight="bold">
+                <Text ml={5} fontWeight="bold">
                     {item.name}
                 </Text>
-            </HStack>
+            </XStack>
 
-            <VStack my={5} space={4} px={2}>
+            <YStack my="$5" space="$4" px="$2">
                 {item.blocks.map((block, index) => (
-                    <Box key={`${block.type}.${index}`} bg="gray.900" rounded="md" p={2}>
-                        <Box mb={2}>
+                    <Stack key={`${block.type}.${index}`} bg="$gray9" br="$4" p="$2">
+                        <Stack mb="$2">
                             <BlockItem block={block} textAlign="left" />
-                        </Box>
-                        <Box px={1} roundedTop="sm" bg="gray.500" position="absolute" bottom={0} right={3}>
-                            <Text fontSize="2xs">{`${sectionNumber}.${index + 1}`}</Text>
-                        </Box>
-                    </Box>
+                        </Stack>
+                        <Stack
+                            px="$2"
+                            py="$1"
+                            btlr="$2"
+                            btrr="$2"
+                            bg="$gray5"
+                            position="absolute"
+                            bottom={0}
+                            right="$3"
+                        >
+                            <Text fontSize="$3">{`${sectionNumber}.${index + 1}`}</Text>
+                        </Stack>
+                    </Stack>
                 ))}
-            </VStack>
-        </VStack>
+            </YStack>
+        </YStack>
     )
 }
 
