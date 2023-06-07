@@ -1,54 +1,79 @@
-import { Alert } from 'react-native'
+import firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import functions from '@react-native-firebase/functions'
 
-import Constants from 'expo-constants'
-import { FirebaseApp, initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+type TEmulatorConfig = {
+    host: string
+    port: number
+}
+
+type TEmulators = 'firestore' | 'functions' | 'auth'
+
+type TFirebaseProviderOptions = {
+    emulators?: Partial<Record<TEmulators, TEmulatorConfig>>
+}
+
+type HttpsCallable<RequestData = unknown, ResponseData = unknown> = (data?: RequestData) => Promise<{
+    data: ResponseData
+}>
 
 class FirebaseProvider {
-    private app: FirebaseApp | null = null
-
-    getApp() {
-        try {
-            if (this.app) return this.app
-
-            this.app = initializeApp({
-                apiKey: Constants.expoConfig?.extra?.APIKEY,
-                authDomain: Constants.expoConfig?.extra?.AUTHDOMAIN,
-                projectId: Constants.expoConfig?.extra?.PROJECTID,
-                storageBucket: Constants.expoConfig?.extra?.STORAGEBUCKET,
-                messagingSenderId: Constants.expoConfig?.extra?.MESSAGINGSENDERID,
-                appId: Constants.expoConfig?.extra?.APPID,
-                measurementId: Constants.expoConfig?.extra?.MEASUREMENTID,
-            })
-
-            return this.app
-        } catch (err) {
-            Alert.alert('Ocorreu um erro ao inicialiar a conexão com o Banco de dados')
-        }
+    constructor(readonly options?: TFirebaseProviderOptions) {
+        firebase.setLogLevel('debug')
     }
 
     getAuth() {
-        const app = this.getApp()
-        if (!app) throw new Error('Provedor de requisições não conectado')
+        if (this.options?.emulators?.auth) {
+            const { host, port } = this.options.emulators.auth
+            const url = `http://${host}:${port}`
+            auth().useEmulator(url)
+        }
 
-        return getAuth(app)
+        return auth()
     }
 
     getFunctions() {
-        const app = this.getApp()
-        if (!app) throw new Error('Provedor de requisições não conectado')
-
-        return getFunctions(app)
+        if (this.options?.emulators?.functions) {
+            const { host, port } = this.options.emulators.functions
+            functions().useEmulator(host, port)
+        }
+        return functions()
     }
 
-    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(fnName: string) {
-        const functions = this.getFunctions()
-        if (!functions) throw new Error('Provedor de requisições não conectado')
+    getFirestore() {
+        if (this.options?.emulators?.firestore) {
+            const { host, port } = this.options.emulators.firestore
+            firestore().useEmulator(host, port)
+        }
 
-        return httpsCallable<RequestData, ResponseData>(functions, fnName)
+        return firestore()
     }
-    //
+
+    FUNCTION_CALL<RequestData = unknown, ResponseData = unknown>(
+        fnName: string
+    ): HttpsCallable<RequestData, ResponseData> {
+        return this.getFunctions().httpsCallable(fnName)
+    }
 }
 
-export const firebaseProvider = new FirebaseProvider()
+const useEmulator = __DEV__
+
+export const firebaseProvider = new FirebaseProvider({
+    emulators: useEmulator
+        ? {
+              functions: {
+                  host: '10.1.1.173',
+                  port: 5001,
+              },
+              firestore: {
+                  host: '10.1.1.173',
+                  port: 8080,
+              },
+              auth: {
+                  host: '10.1.1.173',
+                  port: 9099,
+              },
+          }
+        : undefined,
+})

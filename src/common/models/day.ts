@@ -5,6 +5,11 @@ export interface ISection {
     blocks: IBlock[]
 }
 
+type IStartEndDate = {
+    start: string
+    end: string
+}
+
 export interface IPeriod {
     name?: string
     sections: ISection[]
@@ -23,4 +28,7 @@ export interface IWorksheetModel {
     info?: string
     startDate: string // YYYY-MM-DD
     days: IDayModel[]
+    isCurrent?: boolean
+    published?: boolean
+    startEndDate: IStartEndDate
 }

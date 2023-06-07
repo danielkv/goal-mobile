@@ -1,12 +1,13 @@
 import { firebaseProvider } from '@common/providers/firebase'
 import { IDayModel } from '@models/day'
 
-type GetWorksheetDayByIdData = { worksheetId: string; dayId: string }
-
-const getWorksheetDayByIdFn = firebaseProvider.FUNCTION_CALL<GetWorksheetDayByIdData, IDayModel>('getWorksheetDayById')
-
 export async function getWorksheetDayByIdFnUseCase(worksheetId: string, dayId: string): Promise<IDayModel> {
-    const response = await getWorksheetDayByIdFn({ worksheetId, dayId })
+    const fs = firebaseProvider.getFirestore()
 
-    return response.data
+    const docSnapshot = await fs.collection<IDayModel>(`worksheets/${worksheetId}/days`).doc(dayId).get()
+
+    const dayData = docSnapshot.data()
+    if (!docSnapshot.exists || !dayData) throw new Error('Planilha não encontrada')
+
+    return { ...dayData, id: docSnapshot.id }
 }

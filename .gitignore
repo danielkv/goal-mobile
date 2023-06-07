@@ -11,6 +11,9 @@ npm-debug.*
 web-build/
 api-android.json
 
+google-services.json
+GoogleService-Info.plist
+
 .env
 
 # macOS

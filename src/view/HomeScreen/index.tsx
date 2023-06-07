@@ -4,13 +4,13 @@ import { Box, Button, Flex, Image, VStack } from 'native-base'
 
 import HomeBG from '@assets/images/home-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 
 const HomeScreen: React.FC = () => {
     const { navigate } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
 
     return (
         <ImageBackground style={{ flex: 1 }} source={HomeBG}>
@@ -23,7 +23,7 @@ const HomeScreen: React.FC = () => {
                     />
                 </Box>
                 <VStack space={6} mb={81}>
-                    {user.credentials ? (
+                    {user ? (
                         <Button onPress={() => navigate(ERouteName.WorksheetListScreen)}>Planilhas</Button>
                     ) : (
                         <>

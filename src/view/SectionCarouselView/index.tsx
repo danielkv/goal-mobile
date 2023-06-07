@@ -1,16 +1,23 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Dimensions } from 'react-native'
 import PagerView from 'react-native-pager-view'
-import Animated, { Easing, useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+    useAnimatedStyle,
+    useDerivedValue,
+    useEvent,
+    useHandler,
+    useSharedValue,
+} from 'react-native-reanimated'
 
 import { Box, HStack, ScrollView } from 'native-base'
 
-import SectionItem from './components/SectionItem'
 import { IFlatSection } from '@common/interfaces/worksheet'
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { IDayModel } from '@models/day'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
+
+import SectionItem from './components/SectionItem'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SECTION_CARD_WIDTH = SCREEN_WIDTH * 0.9
@@ -20,15 +27,49 @@ export interface SectionCarouselView {
     day: IDayModel
 }
 
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
+
+function usePageScrollHandler(handlers: any, dependencies?: any) {
+    const { context, doDependenciesDiffer } = useHandler(handlers, dependencies)
+    const subscribeForEvents = ['onPageScroll']
+
+    return useEvent(
+        (event: any) => {
+            'worklet'
+            const { onPageScroll } = handlers
+            if (onPageScroll && event.eventName.endsWith('onPageScroll')) {
+                onPageScroll(event, context)
+            }
+        },
+        subscribeForEvents,
+        doDependenciesDiffer
+    )
+}
+
+const DOT_MIN = 0.4
+const DOT_MAX = 1.4
+const DOT_DIFF = DOT_MAX - DOT_MIN
+
 const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
-    const initialSection = 0
-    const [activeSlide, setActiveSlide] = useState(initialSection)
     const { dispatch } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
+
+    const offset = useSharedValue(0)
+    const previous = useSharedValue(0)
+    const next = useSharedValue(1)
+
+    const scrollHandler = usePageScrollHandler({
+        onPageScroll: (e: any) => {
+            'worklet'
+            offset.value = e.offset
+            previous.value = e.position
+            next.value = e.position + 1
+        },
+    })
 
     useFocusEffect(
         useCallback(() => {
-            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+            if (!user) dispatch(StackActions.replace(ERouteName.LoginScreen))
         }, [user])
     )
 
@@ -48,11 +89,12 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
         <Box flexGrow={1} pt={6}>
             <HStack justifyContent="center" mb={6}>
                 {sections.map((item, index) => {
-                    const selected = index === activeSlide
-
                     const animatedValue = useDerivedValue(() => {
-                        return withTiming(selected ? 1 : 0.4, { duration: 100, easing: Easing.ease })
-                    }, [selected])
+                        const realOffset =
+                            index === previous.value ? 1 - offset.value : index === next.value ? offset.value : 0
+
+                        return DOT_MIN + DOT_DIFF * realOffset
+                    }, [previous, next, offset])
 
                     const handlerStyle = useAnimatedStyle(() => {
                         return {
@@ -72,7 +114,7 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
                     )
                 })}
             </HStack>
-            <PagerView style={{ flex: 1 }} onPageSelected={({ nativeEvent: { position } }) => setActiveSlide(position)}>
+            <AnimatedPagerView style={{ flex: 1 }} onPageScroll={scrollHandler}>
                 {sections.map((item, index) => (
                     <Box key={`${item.name}.${index}`}>
                         <ScrollView
@@ -82,7 +124,7 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
                         </ScrollView>
                     </Box>
                 ))}
-            </PagerView>
+            </AnimatedPagerView>
         </Box>
     )
 }

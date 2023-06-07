@@ -3,24 +3,26 @@ import { RefreshControl } from 'react-native'
 
 import { Box, Flex, useTheme } from 'native-base'
 
-import WorksheetListItem from './components/WorksheetListItem'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
 import { getWorksheetListUseCase } from '@useCases/worksheet/getWorksheetList'
 import { getErrorMessage } from '@utils/getErrorMessage'
+
 import useSWR from 'swr'
+
+import WorksheetListItem from './components/WorksheetListItem'
 
 const WorksheetListScreen: React.FC = () => {
     const { sizes, colors } = useTheme()
     const [refreshing, setRefreshing] = useState(false)
     const { navigate } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
 
-    const { data, isLoading, error, mutate } = useSWR('worksheetList', getWorksheetListUseCase, {})
+    const { data, isLoading, error, mutate } = useSWR('worksheetList', getWorksheetListUseCase)
 
     const handleRefresh = async () => {
         setRefreshing(true)
@@ -38,34 +40,36 @@ const WorksheetListScreen: React.FC = () => {
         )
 
     return (
-        <FlashList
-            data={data}
-            renderItem={({ item, index }) => (
-                <Box mb={4}>
-                    <WorksheetListItem
-                        onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
-                        item={item}
-                        current={index === 0}
+        <>
+            <FlashList
+                data={data}
+                renderItem={({ item }) => (
+                    <Box mb={4}>
+                        <WorksheetListItem
+                            onPress={(item) => navigate(ERouteName.WorksheetDays, { id: item.id })}
+                            item={item}
+                        />
+                    </Box>
+                )}
+                keyExtractor={(item) => item.id}
+                ListHeaderComponent={() => {
+                    if (user) return null
+                    return <AlertBox type="info" text="Para ver qualquer planilha você precisa estar logado" />
+                }}
+                estimatedItemSize={93}
+                contentContainerStyle={{ padding: sizes[7] }}
+                showsHorizontalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        tintColor={colors.red[500]}
+                        colors={[colors.red[600]]}
+                        style={{ backgroundColor: colors.gray[900] }}
+                        onRefresh={handleRefresh}
+                        refreshing={refreshing}
                     />
-                </Box>
-            )}
-            ListHeaderComponent={() => {
-                if (user.credentials) return null
-                return <AlertBox type="info" text="Para ver qualquer planilha você precisa estar logado" />
-            }}
-            estimatedItemSize={93}
-            contentContainerStyle={{ padding: sizes[7] }}
-            showsHorizontalScrollIndicator={false}
-            refreshControl={
-                <RefreshControl
-                    tintColor={colors.red[500]}
-                    colors={[colors.red[600]]}
-                    style={{ backgroundColor: colors.gray[900] }}
-                    onRefresh={handleRefresh}
-                    refreshing={refreshing}
-                />
-            }
-        />
+                }
+            />
+        </>
     )
 }
 

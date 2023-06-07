@@ -1,26 +1,27 @@
 import { useCallback, useState } from 'react'
 import { Alert } from 'react-native'
 
-import { Button, Text, VStack, useTheme } from 'native-base'
+import { Avatar, Button, Text, VStack, useTheme } from 'native-base'
 
-import { useUserContext } from '@contexts/user/userContext'
+import { setLoggedUser, useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import { removeUserUseCase } from '@useCases/auth/removeUser'
 import { getErrorMessage } from '@utils/getErrorMessage'
+import { getContrastColor, stringToColor, userInitials } from '@utils/strings'
 
 const ProfileScreen: React.FC = () => {
     const { colors } = useTheme()
     const { dispatch } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
 
     const [loading, setLoading] = useState(false)
 
     useFocusEffect(
         useCallback(() => {
-            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+            if (!user) dispatch(StackActions.replace(ERouteName.LoginScreen))
         }, [user])
     )
 
@@ -41,7 +42,7 @@ const ProfileScreen: React.FC = () => {
                 'Seus dados de acesso foram excluídos. O processo de remoção de seus dados pode levar até 30 dias.'
             )
 
-            await logUserOutUseCase()
+            setLoggedUser(null)
         } catch (err) {
             Alert.alert('Ocorreu um erro', getErrorMessage(err), [
                 { text: 'Tentar novamente', onPress: handleConfirmRemoveAccount },
@@ -52,15 +53,35 @@ const ProfileScreen: React.FC = () => {
         }
     }
 
+    const handlePressLogout = () => {
+        Alert.alert('Confirmação', 'Tem certeza que deseja sair?', [
+            { text: 'Sim', onPress: logUserOutUseCase },
+            { text: 'Não', isPreferred: true },
+        ])
+    }
+
+    if (!user) return null
+
+    const avatarColor = stringToColor(user.displayName)
+    const textAvatarColor = getContrastColor(avatarColor)
+
     return (
         <VStack alignItems="stretch" p={6} space={4}>
             <VStack alignItems="center" space={4}>
-                <MaterialIcons name="person-pin" size={100} color={colors.gray[100]} />
-                <Text fontSize={16}>{user.credentials?.email}</Text>
+                <Avatar bg={avatarColor} size="xl" source={user.photoURL ? { uri: user.photoURL } : undefined}>
+                    <Text lineHeight={42} fontSize={36} fontWeight="bold" color={textAvatarColor}>
+                        {userInitials(user.displayName)}
+                    </Text>
+                </Avatar>
+                <Text fontWeight="bold" fontSize={18}>
+                    {user.displayName}
+                </Text>
+                <Text fontSize={16}>{user.email}</Text>
+                {user.phoneNumber && <Text fontSize={14}>{user.phoneNumber}</Text>}
             </VStack>
             <Button
                 leftIcon={<MaterialIcons name="logout" size={20} color={colors.white} />}
-                onPress={logUserOutUseCase}
+                onPress={handlePressLogout}
             >
                 Logout
             </Button>

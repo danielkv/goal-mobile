@@ -1,12 +1,14 @@
 import { useState } from 'react'
 
-import { Box, Button, Center, ScrollView } from 'native-base'
+import { Button, Center, ScrollView } from 'native-base'
 
-import RegressiveDisplay from './timer'
 import RegressiveSvg from '@assets/svg/regressive.svg'
+import SafeAreaView from '@components/SafeAreaView'
 import TimerForm from '@components/TimerForm'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+
+import RegressiveDisplay from './timer'
 
 const RegressiveTimerScreen: React.FC = () => {
     const { params } = useRoute<RouteProp<TReactNavigationStackParamList, 'RegressiveTimerScreen'>>()
@@ -17,7 +19,7 @@ const RegressiveTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(3)
 
     return (
-        <Box flex={1} safeAreaBottom>
+        <SafeAreaView>
             {state === 'form' ? (
                 <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
                     <TimerForm
@@ -39,7 +41,7 @@ const RegressiveTimerScreen: React.FC = () => {
                     onPressReset={() => setState('form')}
                 />
             )}
-        </Box>
+        </SafeAreaView>
     )
 }
 

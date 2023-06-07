@@ -2,12 +2,13 @@ import { useCallback } from 'react'
 
 import { Box, useTheme } from 'native-base'
 
-import PeriodItem from './components/PeriodItem'
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { IDayModel } from '@models/day'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
+
+import PeriodItem from './components/PeriodItem'
 
 export interface PeriodsListView {
     day: IDayModel
@@ -16,11 +17,11 @@ export interface PeriodsListView {
 const PeriodsListView: React.FC<PeriodsListView> = ({ day }) => {
     const { sizes } = useTheme()
     const { dispatch } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
 
     useFocusEffect(
         useCallback(() => {
-            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+            if (!user) dispatch(StackActions.replace(ERouteName.LoginScreen))
         }, [user])
     )
 

@@ -3,16 +3,18 @@ import { RefreshControl } from 'react-native'
 
 import { Box, Flex, useTheme } from 'native-base'
 
-import WorksheetDayItem from './components/WorksheetDayItem'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
-import { useUserContext } from '@contexts/user/userContext'
+import { useLoggedUser } from '@contexts/user/userContext'
 import { RouteProp, StackActions, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import { ERouteName, TReactNavigationStackParamList } from '@router/types'
 import { FlashList } from '@shopify/flash-list'
 import { getWorksheetByIdUseCase } from '@useCases/worksheet/getWorksheetById'
 import { getErrorMessage } from '@utils/getErrorMessage'
+
 import useSWR from 'swr'
+
+import WorksheetDayItem from './components/WorksheetDayItem'
 
 const WorksheetDays: React.FC = () => {
     const { sizes, colors } = useTheme()
@@ -21,17 +23,16 @@ const WorksheetDays: React.FC = () => {
         params: { id: worksheetId },
     } = useRoute<RouteProp<TReactNavigationStackParamList, 'WorksheetDays'>>()
     const { navigate, dispatch } = useNavigation()
-    const user = useUserContext()
+    const user = useLoggedUser()
 
     const { data, isLoading, error, mutate } = useSWR(
-        [worksheetId, 'worksheetDay'],
-        (args: string[]) => getWorksheetByIdUseCase(args[0]),
-        {}
+        () => (user ? [worksheetId, 'worksheetDay'] : null),
+        (args: string[]) => getWorksheetByIdUseCase(args[0])
     )
 
     useFocusEffect(
         useCallback(() => {
-            if (!user.credentials) dispatch(StackActions.replace(ERouteName.LoginScreen))
+            if (!user) dispatch(StackActions.replace(ERouteName.LoginScreen))
         }, [user])
     )
 
