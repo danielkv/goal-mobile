@@ -1,6 +1,6 @@
-import { Text } from 'native-base'
-
 import { ITextBlock } from '@models/block'
+
+import { Text } from 'tamagui'
 
 export interface TextBlockProps {
     block: ITextBlock

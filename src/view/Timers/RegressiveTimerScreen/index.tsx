@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
-import { Button, Center, ScrollView } from 'native-base'
-
 import RegressiveSvg from '@assets/svg/regressive.svg'
+import Button from '@components/Button'
 import SafeAreaView from '@components/SafeAreaView'
 import TimerForm from '@components/TimerForm'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+
+import { ScrollView, Stack, YStack } from 'tamagui'
 
 import RegressiveDisplay from './timer'
 
@@ -19,20 +20,28 @@ const RegressiveTimerScreen: React.FC = () => {
     const [countdown, setupCountdown] = useState(3)
 
     return (
-        <SafeAreaView>
+        <SafeAreaView keyboardVerticalOffset={70}>
             {state === 'form' ? (
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
-                    <TimerForm
-                        countdown={countdown}
-                        onChangeCountdown={setupCountdown}
-                        type="regressive"
-                        Icon={RegressiveSvg}
-                        time1={time1}
-                        onChangeTime1={setTime1}
-                    />
-                    <Center mt={5}>
-                        <Button onPress={() => setState('timer')}>Aplicar</Button>
-                    </Center>
+                <ScrollView
+                    flex={1}
+                    contentContainerStyle={{ paddingVertical: 35 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <YStack gap="$4">
+                        <TimerForm
+                            countdown={countdown}
+                            onChangeCountdown={setupCountdown}
+                            type="regressive"
+                            Icon={RegressiveSvg}
+                            time1={time1}
+                            onChangeTime1={setTime1}
+                        />
+                        <Stack px="$13">
+                            <Button variant="primary" onPress={() => setState('timer')}>
+                                Aplicar
+                            </Button>
+                        </Stack>
+                    </YStack>
                 </ScrollView>
             ) : (
                 <RegressiveDisplay

@@ -1,11 +1,10 @@
 import { useRef, useState } from 'react'
 import { Alert, Image, ImageBackground } from 'react-native'
 
-import { Box, Button, Heading, Icon, Link, Pressable, ScrollView, Stack, Text } from 'native-base'
-
 import LoginBg from '@assets/images/login-bg.png'
 import LogoGoal from '@assets/images/logo-goal.png'
 import ActivityIndicator from '@components/ActivityIndicator'
+import Button from '@components/Button'
 import SafeAreaView from '@components/SafeAreaView'
 import TextField from '@components/TextField'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -17,6 +16,8 @@ import { isAppException } from '@utils/exceptions/AppException'
 import { getErrorMessage } from '@utils/getErrorMessage'
 
 import { FormikConfig, useFormik } from 'formik'
+import { H3, ScrollView, Stack, Text, YStack } from 'tamagui'
+import { useTheme } from 'tamagui'
 
 import { TLoginForm, initialValues, validationSchema } from './config'
 
@@ -24,6 +25,7 @@ const LoginScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigation = useNavigation()
     const [loadingResetPassword, setLoadingResetPassword] = useState(false)
+    const theme = useTheme()
 
     const inputRefs = useRef<Record<string, any>>({})
 
@@ -78,37 +80,39 @@ const LoginScreen: React.FC = () => {
     return (
         <SafeAreaView>
             <ImageBackground style={{ flex: 1 }} source={LoginBg}>
-                <ScrollView flex={1} contentContainerStyle={{ paddingVertical: 35 }} keyboardShouldPersistTaps="always">
-                    <Box mt={50} mb={30}>
+                <ScrollView
+                    flex={1}
+                    contentContainerStyle={{ paddingVertical: 35 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Stack mt="$8" mb="$8">
                         <Image source={LogoGoal} style={{ width: '100%', height: 60, resizeMode: 'contain' }} />
-                    </Box>
+                    </Stack>
 
-                    <Box mb={8}>
-                        <Heading mb={2} lineHeight="2xl" textAlign="center">
+                    <Stack mb="$6">
+                        <H3 textAlign="center" fontWeight="900">
                             Bem vindo
-                        </Heading>
+                        </H3>
                         <Text textAlign="center">Faça seu login</Text>
-                    </Box>
+                    </Stack>
 
-                    <Stack paddingX={5} space={4} w="100%" alignItems="center">
+                    <YStack px="$5" gap="$4" ai="center">
                         <TextField
                             label="Email"
                             autoFocus
-                            InputLeftElement={
-                                <Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />
-                            }
+                            componentLeft={<MaterialIcons name="person" size={22} color={theme.gray5.val} />}
                             keyboardType="email-address"
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
                             returnKeyType="next"
-                            innerRef={(ref: any) => (inputRefs.current['email'] = ref)}
+                            ref={(ref: any) => (inputRefs.current['email'] = ref)}
                             onSubmitEditing={() => {
                                 inputRefs.current['password']?.focus()
                             }}
                         />
                         <TextField
-                            innerRef={(ref) => {
+                            ref={(ref) => {
                                 inputRefs.current['password'] = ref
                             }}
                             label="Senha"
@@ -116,27 +120,29 @@ const LoginScreen: React.FC = () => {
                             value={values.password}
                             error={errors.password}
                             returnKeyType="join"
-                            type={showPassword ? 'text' : 'password'}
-                            InputRightElement={
-                                <Pressable onPress={() => setShowPassword(!showPassword)}>
-                                    <Icon
-                                        as={<MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} />}
-                                        size={5}
-                                        mr="2"
-                                        color="muted.400"
+                            secureTextEntry={showPassword}
+                            componentRight={
+                                <Button
+                                    variant="transparent"
+                                    size="$3"
+                                    circular
+                                    onPress={() => setShowPassword(!showPassword)}
+                                >
+                                    <MaterialIcons
+                                        name={showPassword ? 'visibility' : 'visibility-off'}
+                                        size={22}
+                                        color={theme.gray5.val}
                                     />
-                                </Pressable>
+                                </Button>
                             }
                             onSubmitEditing={() => handleSubmit()}
                         />
 
-                        <Button isLoading={isSubmitting} width="full" onPress={() => handleSubmit()}>
+                        <Button variant="primary" loading={isSubmitting} onPress={() => handleSubmit()}>
                             Login
                         </Button>
                         <Button
                             disabled={isSubmitting}
-                            colorScheme="gray"
-                            width="full"
                             onPress={() => navigation.navigate(ERouteName.SubscriptionScreen)}
                         >
                             Novo cadastro
@@ -144,9 +150,11 @@ const LoginScreen: React.FC = () => {
                         {loadingResetPassword ? (
                             <ActivityIndicator />
                         ) : (
-                            <Link onPress={handleResetPassword}>Esqueci a senha</Link>
+                            <Button variant="link" onPress={handleResetPassword}>
+                                Esqueci a senha
+                            </Button>
                         )}
-                    </Stack>
+                    </YStack>
                 </ScrollView>
             </ImageBackground>
         </SafeAreaView>

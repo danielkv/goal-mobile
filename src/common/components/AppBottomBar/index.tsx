@@ -1,44 +1,36 @@
-import { HStack, useTheme } from 'native-base'
-
-import { MaterialIcons } from '@expo/vector-icons'
-
 import { useOrientation } from '@common/hooks/useOrientation'
 import MenuButton from '@components/MenuButton'
+import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 
+import { XStack, useTheme } from 'tamagui'
+
 const AppBottomBar: React.FC = () => {
-    const { colors } = useTheme()
+    const theme = useTheme()
     const { navigate } = useNavigation()
     const orientation = useOrientation()
 
     if (orientation === 'landscape') return null
 
     return (
-        <HStack
-            space={5}
-            justifyContent="center"
-            bg="gray.900"
-            borderTopColor="red.500"
-            borderTopWidth={2}
-            style={{ height: 70 }}
-        >
+        <XStack gap={5} jc="center" bg="$gray9" btc="$red5" btw="$1" h={70}>
             <MenuButton
                 label="Home"
-                Icon={() => <MaterialIcons name="home" size={22} color={colors.gray[500]} />}
+                Icon={() => <MaterialIcons name="home" size={22} color={theme.gray4.val} />}
                 onPress={() => navigate(ERouteName.HomeScreen)}
             />
             <MenuButton
                 label="Planilhas"
-                Icon={() => <MaterialIcons name="featured-play-list" size={22} color={colors.gray[500]} />}
+                Icon={() => <MaterialIcons name="featured-play-list" size={22} color={theme.gray4.val} />}
                 onPress={() => navigate(ERouteName.WorksheetList)}
             />
             <MenuButton
                 label="Timers"
-                Icon={() => <MaterialIcons name="timer" size={22} color={colors.gray[500]} />}
+                Icon={() => <MaterialIcons name="timer" size={22} color={theme.gray4.val} />}
                 onPress={() => navigate(ERouteName.TimersScreen)}
             />
-        </HStack>
+        </XStack>
     )
 }
 

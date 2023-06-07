@@ -1,19 +1,20 @@
-import { PropsWithChildren } from 'react'
-import { Platform } from 'react-native'
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    KeyboardAvoidingViewProps,
+    Platform,
+    TouchableWithoutFeedback,
+} from 'react-native'
 
-import { Box, KeyboardAvoidingView } from 'native-base'
+import { Stack } from 'tamagui'
 
-const SafeAreaView: React.FC<PropsWithChildren> = (props) => {
+const SafeAreaView: React.FC<KeyboardAvoidingViewProps> = ({ children, ...props }) => {
     return (
-        <Box flex={1}>
-            <KeyboardAvoidingView
-                flex={1}
-                enabled={Platform.OS === 'ios'}
-                behavior="padding"
-                keyboardVerticalOffset={70}
-                {...props}
-            />
-        </Box>
+        <Stack flex={1}>
+            <KeyboardAvoidingView style={{ flex: 1 }} enabled={Platform.OS === 'ios'} behavior="padding" {...props}>
+                <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </Stack>
     )
 }
 

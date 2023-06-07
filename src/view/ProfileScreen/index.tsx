@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Alert } from 'react-native'
 
-import { Avatar, Button, Text, VStack, useTheme } from 'native-base'
-
+import Button from '@components/Button'
 import { setLoggedUser, useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -12,8 +11,9 @@ import { removeUserUseCase } from '@useCases/auth/removeUser'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import { getContrastColor, stringToColor, userInitials } from '@utils/strings'
 
+import { Avatar, Text, YStack } from 'tamagui'
+
 const ProfileScreen: React.FC = () => {
-    const { colors } = useTheme()
     const { dispatch } = useNavigation()
     const user = useLoggedUser()
 
@@ -66,29 +66,29 @@ const ProfileScreen: React.FC = () => {
     const textAvatarColor = getContrastColor(avatarColor)
 
     return (
-        <VStack alignItems="stretch" p={6} space={4}>
-            <VStack alignItems="center" space={4}>
-                <Avatar bg={avatarColor} size="xl" source={user.photoURL ? { uri: user.photoURL } : undefined}>
-                    <Text lineHeight={42} fontSize={36} fontWeight="bold" color={textAvatarColor}>
-                        {userInitials(user.displayName)}
-                    </Text>
+        <YStack alignItems="stretch" p="$6" gap="$4">
+            <YStack alignItems="center" gap="$4">
+                <Avatar bg={avatarColor} circular size="$10">
+                    {user.photoURL && <Avatar.Image source={{ uri: user.photoURL }} />}
+                    <Avatar.Fallback bg={avatarColor} ai="center" jc="center">
+                        <Text fontSize="$10" fontWeight="800" color={textAvatarColor}>
+                            {userInitials(user.displayName)}
+                        </Text>
+                    </Avatar.Fallback>
                 </Avatar>
                 <Text fontWeight="bold" fontSize={18}>
                     {user.displayName}
                 </Text>
                 <Text fontSize={16}>{user.email}</Text>
                 {user.phoneNumber && <Text fontSize={14}>{user.phoneNumber}</Text>}
-            </VStack>
-            <Button
-                leftIcon={<MaterialIcons name="logout" size={20} color={colors.white} />}
-                onPress={handlePressLogout}
-            >
+            </YStack>
+            <Button icon={<MaterialIcons name="logout" size={20} color="white" />} onPress={handlePressLogout}>
                 Logout
             </Button>
-            <Button colorScheme="dark" isLoading={loading} variant="link" onPress={handlePressRemoveAccount}>
+            <Button loading={loading} variant="link" onPress={handlePressRemoveAccount}>
                 <Text color="white">Excluir conta</Text>
             </Button>
-        </VStack>
+        </YStack>
     )
 }
 

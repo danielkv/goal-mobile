@@ -1,30 +1,32 @@
-import React from 'react'
+import { Input, InputProps, Text, XStack, YStack } from 'tamagui'
 
-import { FormControl, IInputProps, Input, Text, VStack } from 'native-base'
-
-export interface TextFieldProps extends Omit<IInputProps, 'ref'> {
-    innerRef?: React.MutableRefObject<any> | React.RefCallback<any>
+interface TextFieldProps {
     label?: string
     error?: string
+    componentLeft?: JSX.Element
+    componentRight?: JSX.Element
 }
-const TextField: React.FC<TextFieldProps> = ({ label, error, innerRef, ...props }) => {
+
+const TextField = Input.styleable<TextFieldProps>(({ label, error, componentLeft, componentRight, ...props }, ref) => {
     return (
-        <FormControl>
-            <VStack space={2}>
-                {label && (
-                    <Text fontSize={12} color="gray.100">
-                        {label}
-                    </Text>
-                )}
-                <Input variant="unstyled" width="full" {...props} ref={innerRef} />
-                {error && (
-                    <Text color="red.400" fontSize={12} fontWeight="light">
-                        {error}
-                    </Text>
-                )}
-            </VStack>
-        </FormControl>
+        <YStack space={2} w="100%">
+            {label && (
+                <Text fontSize="$3" color="$gray1">
+                    {label}
+                </Text>
+            )}
+            <XStack ai="center" gap="$1" h="$4" bg="white" br="$4" px="$2" py="$1">
+                {componentLeft}
+                <Input ref={ref} color="$gray6" px="$3" f={1} {...(props as InputProps)} unstyled />
+                {componentRight}
+            </XStack>
+            {error && (
+                <Text color="$red8Light" fontSize="$3" fontWeight="300">
+                    {error}
+                </Text>
+            )}
+        </YStack>
     )
-}
+})
 
 export default TextField

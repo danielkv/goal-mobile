@@ -1,40 +1,28 @@
-import { Platform } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 
-import { Center, IPressableProps, Pressable, Text, useTheme } from 'native-base'
+import Button from '@components/Button'
 
-interface TimerCardProps extends IPressableProps {
+import { Stack, Text, YStack } from 'tamagui'
+
+interface TimerCardProps {
+    onPress: () => void
     title?: string
     Icon: React.FC<SvgProps>
 }
 
 const TimerCard: React.FC<TimerCardProps> = ({ title: description, Icon, ...rest }) => {
-    const { colors } = useTheme()
-
     return (
-        <Pressable
-            flex={1}
-            minH={192}
-            bg="gray.600"
-            _pressed={Platform.select({
-                ios: {
-                    bg: 'gray.700',
-                },
-            })}
-            android_ripple={{ color: colors.gray[700] }}
-            alignItems="center"
-            justifyContent="center"
-            rounded="md"
-            {...rest}
-        >
-            <Center>
-                <Icon fill={colors.white} />
+        <Stack flex={1} ac="center" jc="center">
+            <Button br="$4" w="auto" h="auto" bg="$gray6" pressStyle={{ bg: '$gray8' }} py="$7" {...rest}>
+                <YStack ac="center" ai="center">
+                    <Icon fill="white" />
 
-                <Text mt={22} fontSize={'xs'} color={'gray.200'} fontWeight={'medium'} lineHeight={'sm'}>
-                    {description}
-                </Text>
-            </Center>
-        </Pressable>
+                    <Text mt="$5" fontSize="$3" color="$gray2" fontWeight="700">
+                        {description}
+                    </Text>
+                </YStack>
+            </Button>
+        </Stack>
     )
 }
 

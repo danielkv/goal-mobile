@@ -1,14 +1,14 @@
-import { Box } from 'native-base'
-
 import AppBottomBar from '@components/AppBottomBar'
 import Router from '@router/index'
 
+import { Stack } from 'tamagui'
+
 const AppLayout: React.FC = () => {
     return (
-        <Box flex={1}>
+        <Stack f={1}>
             <Router />
             <AppBottomBar />
-        </Box>
+        </Stack>
     )
 }
 

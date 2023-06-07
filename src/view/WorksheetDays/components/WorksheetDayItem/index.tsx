@@ -1,12 +1,10 @@
-import { Platform } from 'react-native'
-
-import { Avatar, Box, Heading, Pressable, Text, VStack, useTheme } from 'native-base'
-
-import { FontAwesome5 } from '@expo/vector-icons'
-
+import Button from '@components/Button'
+import { MaterialIcons } from '@expo/vector-icons'
 import { IDayModel } from '@models/day'
 import { pluralize } from '@utils/strings'
+
 import dayjs from 'dayjs'
+import { Circle, H3, Stack, Text, YStack, useTheme } from 'tamagui'
 
 export interface WorksheetDayItemProps {
     item: IDayModel
@@ -15,48 +13,45 @@ export interface WorksheetDayItemProps {
 }
 
 const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) => {
-    const { colors } = useTheme()
+    const theme = useTheme()
 
     const date = dayjs(item.date)
 
     const periodsDisplay = `${item.periods.length} ${pluralize(item.periods.length, 'período')}`
 
     return (
-        <Pressable
-            _pressed={Platform.select({
-                ios: {
-                    bg: 'gray.700',
-                },
-            })}
-            px={5}
-            py={4}
-            flex={1}
-            android_ripple={{ color: colors.gray[700] }}
-            backgroundColor={colors.gray[600]}
-            borderRadius="md"
-            onPress={() => {
-                onPress?.(item)
-            }}
-        >
-            <VStack space={0} alignItems="center">
-                <Box mb={3}>
-                    <FontAwesome5 name="calendar-day" size={24} color={colors.gray[400]} />
-                </Box>
+        <Stack>
+            <Button
+                br="$4"
+                p={0}
+                w="auto"
+                h="auto"
+                bg="$gray6"
+                pressStyle={{ bg: '$gray8' }}
+                onPress={() => onPress?.(item)}
+            >
+                <YStack py="$4" f={1} ai="center" jc="center">
+                    <Stack mb="$2">
+                        <MaterialIcons name="calendar-today" size={24} color={theme.gray4.val} />
+                    </Stack>
 
-                <Heading color="gray.100" fontSize="sm">
-                    {date.format('dddd')}
-                </Heading>
-                <Text color="gray.300" fontSize="2xs">
-                    {date.format('DD/MM/YYYY')}
-                </Text>
-                <Text color="gray.300" fontSize="2xs">
-                    {periodsDisplay}
-                </Text>
-            </VStack>
-            {date.isSame(dayjs(), 'date') && (
-                <Avatar.Badge position="absolute" top={2} right={2} bg="red.500" borderWidth="0" size={2} />
-            )}
-        </Pressable>
+                    <H3 color="$gray1" fontWeight="700" fontSize="$3">
+                        {date.format('dddd')}
+                    </H3>
+
+                    <Text color="$gray3" fontSize="$2">
+                        {date.format('DD/MM/YYYY')}
+                    </Text>
+                    <Text color="$gray3" fontSize="$2">
+                        {periodsDisplay}
+                    </Text>
+
+                    {date.isSame(dayjs(), 'date') && (
+                        <Circle position="absolute" top="$3" right="$3" bg="$red5" size={7} />
+                    )}
+                </YStack>
+            </Button>
+        </Stack>
     )
 }
 

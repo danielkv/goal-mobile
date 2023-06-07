@@ -9,13 +9,13 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated'
 
-import { Box, HStack, ScrollView } from 'native-base'
-
 import { IFlatSection } from '@common/interfaces/worksheet'
 import { useLoggedUser } from '@contexts/user/userContext'
 import { IDayModel } from '@models/day'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
+
+import { ScrollView, Stack, XStack } from 'tamagui'
 
 import SectionItem from './components/SectionItem'
 
@@ -86,8 +86,8 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
     )
 
     return (
-        <Box flexGrow={1} pt={6}>
-            <HStack justifyContent="center" mb={6}>
+        <Stack fg={1} pt="$6">
+            <XStack jc="center" mb="$6">
                 {sections.map((item, index) => {
                     const animatedValue = useDerivedValue(() => {
                         const realOffset =
@@ -113,19 +113,19 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
                         />
                     )
                 })}
-            </HStack>
+            </XStack>
             <AnimatedPagerView style={{ flex: 1 }} onPageScroll={scrollHandler}>
                 {sections.map((item, index) => (
-                    <Box key={`${item.name}.${index}`}>
+                    <Stack key={`${item.name}.${index}`}>
                         <ScrollView
                             contentContainerStyle={{ alignItems: 'center', paddingHorizontal: SECTION_CARD_MARGIN }}
                         >
                             <SectionItem width={SECTION_CARD_WIDTH} item={item} />
                         </ScrollView>
-                    </Box>
+                    </Stack>
                 ))}
             </AnimatedPagerView>
-        </Box>
+        </Stack>
     )
 }
 

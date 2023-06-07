@@ -1,10 +1,9 @@
-import { Spinner } from 'native-base'
-import { InterfaceSpinnerProps } from 'native-base/lib/typescript/components/primitives/Spinner/types'
+import { Spinner, SpinnerProps } from 'tamagui'
 
-export interface ActivityIndicatorProps extends InterfaceSpinnerProps {}
+export interface ActivityIndicatorProps extends SpinnerProps {}
 
 const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {
-    return <Spinner color="red.500" {...props} />
+    return <Spinner color="$red5" {...props} />
 }
 
 export default ActivityIndicator

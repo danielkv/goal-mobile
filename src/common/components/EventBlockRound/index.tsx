@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 
-import { Box, Text, VStack } from 'native-base'
-
 import EventBlockMovement from '@components/EventBlockMovement'
 import OpenTimerButton, { OpenTimerButtonProps } from '@components/OpenTimerButton'
 import { IRound } from '@models/block'
 import { TTimerTypes } from '@models/time'
 import { roundTransformer } from '@utils/transformer/round'
+
+import { Stack, Text, YStack } from 'tamagui'
 
 export interface EventBlockRoundProps {
     round: IRound
@@ -69,36 +69,39 @@ const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'c
     const timerType = getTimerType(round)
 
     return (
-        <Box bg="gray.800" rounded="md" p={2}>
+        <Stack bg="$gray8" br="$2" p="$2">
             {!!roundTitle && (
-                <Text textAlign={textAlign} fontWeight="bold" fontSize="sm">
+                <Text textAlign={textAlign} fontWeight="bold" fontSize="$4">
                     {roundTitle}
                 </Text>
             )}
 
             {!!timerType && (
-                <Box position="absolute" top={1} right={1}>
+                <Stack position="absolute" top={1} right={1}>
                     <OpenTimerButton variant="icon" type={timerType} settings={getTimerSettings(round)} />
-                </Box>
+                </Stack>
             )}
             {!['complex', 'rest'].includes(round.type) ? (
-                <VStack alignItems={textAlign === 'center' ? 'center' : 'flex-start'}>
+                <YStack ai={textAlign === 'center' ? 'center' : 'flex-start'}>
                     {round.movements.map((movement, index) => (
-                        <Box key={`${movement.name}.${index}`}>
-                            <EventBlockMovement hideReps={!!sequenceReps} movement={movement} textAlign={textAlign} />
-                        </Box>
+                        <EventBlockMovement
+                            key={`${movement.name}.${index}`}
+                            hideReps={!!sequenceReps}
+                            movement={movement}
+                            textAlign={textAlign}
+                        />
                     ))}
-                </VStack>
+                </YStack>
             ) : round.type === 'complex' ? (
-                <Text textBreakStrategy="balanced" fontSize="sm" color="gray.300" textAlign={textAlign}>
+                <Text textBreakStrategy="balanced" fontSize="$4" color="$gray3" ta={textAlign}>
                     {roundTransformer.displayComplex(round)}
                 </Text>
             ) : (
-                <Text textBreakStrategy="balanced" fontSize="sm" color="gray.300" textAlign={textAlign}>
+                <Text textBreakStrategy="balanced" fontSize="$4" color="$gray3" ta={textAlign}>
                     {roundTransformer.displayRestRound(round)}
                 </Text>
             )}
-        </Box>
+        </Stack>
     )
 }
 
