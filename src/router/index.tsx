@@ -1,4 +1,5 @@
 import Button from '@components/Button'
+import WodTimer from '@components/WodTimer'
 import { useLoggedUser } from '@contexts/user/userContext'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -104,6 +105,7 @@ function Router() {
             <Stack.Screen name={ERouteName.WorksheetDays} options={{ title: 'Dias' }} component={WorksheetDays} />
             <Stack.Screen name={ERouteName.DayView} options={{ title: 'Dia' }} component={DayViewScreen} />
             <Stack.Screen name={ERouteName.Profile} options={{ title: 'Meu Perfil' }} component={ProfileScreen} />
+            <Stack.Screen name={ERouteName.WodTimer} options={{ title: 'Wod Timer' }} component={WodTimer} />
         </Stack.Navigator>
     )
 }

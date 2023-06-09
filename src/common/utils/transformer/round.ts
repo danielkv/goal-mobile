@@ -1,8 +1,10 @@
-import cloneDeep from 'clone-deep'
-
 import { IEventMovement, IRound, IRoundEMOM, IRoundTabata, IRoundTimecap } from '@models/block'
 import { TTimerTypes } from '@models/time'
+import { pluralize } from '@utils/strings'
+import { getTimeFromSeconds } from '@utils/time'
 import { roundTypes } from '@utils/worksheetInitials'
+
+import cloneDeep from 'clone-deep'
 
 import { BaseTransformer } from './base'
 import { MovementTransformer, movementTransformer } from './movement'
@@ -266,6 +268,28 @@ export class RoundTransformer extends BaseTransformer {
         return this.displayArray([numberOfRounds, type, time])
     }
 
+    displayShortTitle(round: IRound): string {
+        if (round.type === 'rest') return ''
+        if (round.type === 'complex') return ''
+
+        if (round.type === 'emom') {
+            const roundsText = pluralize(round.numberOfRounds, 'round')
+            if (round.each > 60 && round.each % 60 === 0)
+                return `E${round.each / 60}M ${round.numberOfRounds} ${roundsText}`
+            const each = getTimeFromSeconds(round.each)
+            return `EMOM ${round.numberOfRounds}x ${each}`
+        }
+
+        const time =
+            round.type === 'amrap' || round.type === 'for_time' || round.type === 'tabata'
+                ? this.displayShortRoundTimer(round) || ''
+                : ''
+
+        const type = round.type && round.type != 'not_timed' ? roundTypes[round.type] : ''
+
+        return this.displayArray([type, time])
+    }
+
     private roundTimerToString(obj: IRound): string | null {
         switch (obj.type) {
             case 'tabata':
@@ -291,6 +315,17 @@ export class RoundTransformer extends BaseTransformer {
                 return super.displayTimer('tabata', round.numberOfRounds, round.work, round.rest)
             default:
                 return super.displayTimer(round.type, round.numberOfRounds, round.timecap)
+        }
+    }
+
+    private displayShortRoundTimer(round: IRoundTimecap | IRoundEMOM | IRoundTabata): string {
+        switch (round.type) {
+            case 'emom':
+                return super.displayShortTimer('emom', round.numberOfRounds, round.each)
+            case 'tabata':
+                return super.displayShortTimer('tabata', round.numberOfRounds, round.work, round.rest)
+            default:
+                return super.displayShortTimer(round.type, round.numberOfRounds, round.timecap)
         }
     }
 }

@@ -1,8 +1,8 @@
-import dayjs from 'dayjs'
-
 import { TTimerTypes } from '@models/time'
 import { pluralize } from '@utils/strings'
 import { getTimeFromSeconds } from '@utils/time'
+
+import dayjs from 'dayjs'
 
 import { RegexHelper } from './RegexHelper'
 
@@ -129,6 +129,38 @@ export abstract class BaseTransformer extends RegexHelper {
         const roundsDisplay = rounds > 1 ? this.displayNumberOfRounds(rounds) : ''
 
         return this.displayArray([timecap.trim(), roundsDisplay.trim()], ' - ')
+    }
+
+    protected displayShortTimer(type: 'emom', rounds: number, each: number): string
+    protected displayShortTimer(type: 'tabata', rounds: number, work: number, rest: number): string
+    protected displayShortTimer(type: 'for_time' | 'amrap', rounds: number, timecap: number): string
+    protected displayShortTimer(type: 'not_timed'): null
+    protected displayShortTimer(
+        type: TTimerTypes,
+        rounds?: number | never,
+        t1?: number | never,
+        t2?: never | number
+    ): string | null {
+        if (!rounds) return null
+
+        if (type === 'emom') {
+            if (!t1) return null
+            const each = getTimeFromSeconds(t1)
+            return `${rounds}x ${each}`
+        }
+
+        if (type === 'tabata') {
+            if (!t1 || !t2) return null
+            const work = getTimeFromSeconds(t1)
+            const rest = getTimeFromSeconds(t2)
+            return `${rounds}x ${work}/${rest}`
+        }
+
+        if (t1 === undefined) return null
+
+        const timecap = t1 === 0 ? '' : getTimeFromSeconds(t1)
+
+        return this.displayArray([timecap.trim()])
     }
 
     protected displayNumberOfRounds(rounds?: number, suffix = 'rounds', prefix?: string): string {

@@ -6,7 +6,7 @@ import { RegressiveTimer, StopwatchTimer } from '@utils/timer'
 
 interface Args {
     initialCurrentTime?: number
-    initialCountdown: number
+    initialCountdown?: number
     clockRef: RefObject<StopwatchTimer | undefined>
     onSetupTimer?: (clockRef: RefObject<StopwatchTimer | undefined>, sounds: UseTimerSounds) => void
 }
@@ -14,7 +14,9 @@ interface Args {
 export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetupTimer, initialCurrentTime }: Args) {
     const [currentTime, setCurrentTime] = useState(initialCurrentTime || 0)
     const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
-    const [initialCountdown, setInitialCountdown] = useState<number | null>(_initialCountdown)
+    const [currentCountdown, setCurrentCountdown] = useState<number | null>(_initialCountdown || null)
+
+    const countdownRef = useRef(_initialCountdown ?? null)
 
     const initialCountdownRef = useRef<RegressiveTimer>()
     const sounds = useTimerSounds()
@@ -28,14 +30,14 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
     const handlePressPlayButton = () => {
         if (currentStatus === 'initial') setupTimer()
 
-        if (initialCountdown && currentStatus === 'initial') {
+        if (countdownRef.current && currentStatus === 'initial') {
             setCurrentStatus('running')
 
-            const countdownTimer = setupCountdown()
+            const countdownTimer = setupCountdown(countdownRef.current)
             countdownTimer.start()
 
             countdownTimer.once('end', () => {
-                setInitialCountdown(null)
+                setCurrentCountdown(null)
                 clockRef.current?.start()
             })
             return
@@ -44,9 +46,11 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
         clockRef.current?.start()
     }
 
-    const handlePressResetButton = () => {
-        setInitialCountdown(_initialCountdown)
-        setCurrentTime(0)
+    const handlePressResetButton = (opts?: Pick<Args, 'initialCountdown' | 'initialCurrentTime'>) => {
+        countdownRef.current = opts?.initialCountdown ?? _initialCountdown ?? null
+
+        setCurrentTime(opts?.initialCurrentTime || 0)
+        setCurrentStatus('initial')
         clockRef.current?.reset()
     }
 
@@ -60,6 +64,8 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
         })
 
         clockRef.current?.on('tick', (duration: number) => {
+            if (duration <= 3) sounds.playBeep()
+
             setCurrentTime(duration)
         })
 
@@ -70,7 +76,7 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
         clockRef.current?.on('reset', () => {
             setCurrentTime(0)
             setCurrentStatus('initial')
-            setInitialCountdown(_initialCountdown)
+            setCurrentCountdown(_initialCountdown || null)
         })
 
         onSetupTimer?.(clockRef, sounds)
@@ -78,15 +84,17 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
         return clockRef.current
     }
 
-    const setupCountdown = () => {
-        initialCountdownRef.current = new RegressiveTimer(_initialCountdown)
+    const setupCountdown = (countdown: number) => {
+        setCurrentCountdown(() => countdown)
+
+        initialCountdownRef.current = new RegressiveTimer(countdown)
 
         initialCountdownRef.current.once('start', () => {
             sounds.playBeep()
         })
 
         initialCountdownRef.current.on('tick', (displayTime: number) => {
-            setInitialCountdown((prev) => {
+            setCurrentCountdown((prev) => {
                 if (displayTime > 0 && displayTime != prev) sounds.playBeep()
 
                 return displayTime
@@ -99,7 +107,7 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
     return {
         currentTime,
         currentStatus,
-        initialCountdown,
+        initialCountdown: currentCountdown,
 
         sounds,
 

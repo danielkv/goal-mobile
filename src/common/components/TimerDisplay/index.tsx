@@ -13,13 +13,14 @@ import { Stack, Text, XStack, YStack, useTheme } from 'tamagui'
 
 export interface TimerDisplayProps {
     time: string
-    Icon: React.FC<SvgProps>
-    round?: number
-    activityStatus?: TActivityStatus
+    Icon?: React.FC<SvgProps>
+    round?: number | null
+    totalRounds?: number | null
+    activityStatus?: TActivityStatus | null
     watchProgressStatus: TTimerStatus
-    initialCountdown?: string
-    onPressPlayButton: () => void
-    onPressEditButton: () => void
+    initialCountdown?: string | null
+    onPressPlayButton: (countdown?: number) => void
+    onPressEditButton?: () => void
     onPressPauseButton: () => void
     onPressResetButton: () => void
 }
@@ -28,6 +29,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     time,
     Icon,
     round,
+    totalRounds,
     activityStatus,
     watchProgressStatus,
     initialCountdown,
@@ -59,15 +61,15 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     if (watchProgressStatus === 'initial')
         return (
             <Stack flex={1} alignItems="center" justifyContent="center">
-                <TouchableOpacity onPress={onPressPlayButton}>
+                <TouchableOpacity onPress={() => onPressPlayButton()}>
                     <MaterialIcons name="play-circle-filled" color={theme.red5.val} size={100} />
                 </TouchableOpacity>
             </Stack>
         )
 
     return (
-        <YStack flex={1} alignItems="center" justifyContent="center" gap="$4">
-            {activityStatus !== undefined && (
+        <YStack flex={1} alignItems="center" justifyContent="center" gap="$3">
+            {activityStatus && (
                 <Stack bg={activityStatus === 'work' ? '$red5' : '$gray9'} mb="$4" px="$2" py="$1" br="$4">
                     <Text fontSize="$5" fontWeight="700">
                         {activityStatus.toLocaleUpperCase()}
@@ -75,11 +77,13 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                 </Stack>
             )}
 
-            <Stack gap={isPortrait ? '$4' : '$8'} flexDirection={isPortrait ? 'column' : 'row'} alignItems="center">
+            <Stack gap={isPortrait ? '$4' : '$4'} flexDirection={isPortrait ? 'column' : 'row'} alignItems="center">
                 <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap={isPortrait ? '$4' : '$3'}>
-                    <Stack>
-                        <Icon fill={theme.gray5.val} width={isPortrait ? 60 : 48} />
-                    </Stack>
+                    {Icon && (
+                        <Stack>
+                            <Icon fill={theme.gray5.val} width={isPortrait ? 60 : 48} />
+                        </Stack>
+                    )}
 
                     {initialCountdown ? (
                         <Text color={theme.red2.val} fontWeight="700" fontSize={isPortrait ? '$14' : '$15'}>
@@ -92,20 +96,21 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     )}
                 </Stack>
 
-                {initialCountdown === undefined && round !== undefined && (
+                {(initialCountdown === undefined || initialCountdown === null) && round && (
                     <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap="$3">
                         <Text fontSize="$5" fontWeight="400" color="$gray4">
                             Round
                         </Text>
 
-                        <Text fontSize="$8" fontWeight="700" color="$gray2">
+                        <Text fontSize="$10" fontWeight="700" color="$gray2">
                             {round}
+                            {totalRounds ? ` / ${totalRounds}` : ''}
                         </Text>
                     </Stack>
                 )}
             </Stack>
 
-            {initialCountdown === undefined && (
+            {(initialCountdown === undefined || initialCountdown === null) && (
                 <XStack mt={isPortrait ? 10 : 0} alignItems="center" gap="$5">
                     {watchProgressStatus === 'running' ? (
                         <>
@@ -120,7 +125,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     ) : (
                         <>
                             {watchProgressStatus !== 'finished' && (
-                                <TouchableOpacity onPress={onPressPlayButton}>
+                                <TouchableOpacity onPress={() => onPressPlayButton()}>
                                     <MaterialIcons
                                         name="play-circle-filled"
                                         color={theme.red5.val}
@@ -128,16 +133,18 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                                     />
                                 </TouchableOpacity>
                             )}
-                            <TouchableOpacity onPress={onPressResetButton}>
+                            <TouchableOpacity onPress={() => onPressResetButton()}>
                                 <MaterialIcons
                                     name="replay-circle-filled"
                                     color={theme.gray5.val}
                                     size={isPortrait ? 75 : 65}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={onPressEditButton}>
-                                <MaterialIcons name="edit" color={theme.gray5.val} size={isPortrait ? 50 : 40} />
-                            </TouchableOpacity>
+                            {onPressEditButton && (
+                                <TouchableOpacity onPress={onPressEditButton}>
+                                    <MaterialIcons name="edit" color={theme.gray5.val} size={isPortrait ? 50 : 40} />
+                                </TouchableOpacity>
+                            )}
                         </>
                     )}
                 </XStack>

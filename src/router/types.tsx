@@ -26,6 +26,8 @@ export type TReactNavigationStackParamList = {
     DayView: { worksheetId: string; dayId: string }
 
     Profile: undefined
+
+    WodTimer: undefined
 }
 
 export enum ERouteName {
@@ -56,4 +58,6 @@ export enum ERouteName {
     SectionCarousel = 'SectionCarousel',
 
     Profile = 'Profile',
+
+    WodTimer = 'WodTimer',
 }

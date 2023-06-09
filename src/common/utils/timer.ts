@@ -1,4 +1,5 @@
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
+
 import { EventEmitter } from 'events'
 
 export interface ITimer {
@@ -117,7 +118,7 @@ export class RegressiveTimer extends StopwatchTimer {
     }
 
     protected checkEnded() {
-        return this.getElapsedTime() <= 0
+        return this.getElapsedTime() < 0
     }
 
     public getElapsedTime(): number {

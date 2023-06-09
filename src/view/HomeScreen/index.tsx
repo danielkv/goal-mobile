@@ -39,6 +39,10 @@ const HomeScreen: React.FC = () => {
                     <Button variant="primary" onPress={() => navigate(ERouteName.TimersScreen)}>
                         Timers
                     </Button>
+
+                    <Button variant="primary" onPress={() => navigate(ERouteName.WodTimer)}>
+                        Wod Timers
+                    </Button>
                 </YStack>
             </YStack>
         </ImageBackground>
