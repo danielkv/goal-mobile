@@ -9,20 +9,31 @@ import { useNavigation } from '@react-navigation/native'
 
 import { useKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
-import { Stack, Text, XStack, YStack, useTheme } from 'tamagui'
+import { AnimatePresence, ColorTokens, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
 
 export interface TimerDisplayProps {
     time: string
     Icon?: React.FC<SvgProps>
     round?: number | null
     totalRounds?: number | null
-    activityStatus?: TActivityStatus | null
+    activityStatus?: TActivityStatus | 'countdown' | null
     watchProgressStatus: TTimerStatus
     initialCountdown?: string | null
-    onPressPlayButton: (countdown?: number) => void
+    onPressPlayButton: () => void
     onPressEditButton?: () => void
     onPressPauseButton: () => void
     onPressResetButton: () => void
+}
+
+function getActivityColor(type: TActivityStatus | 'countdown'): ColorTokens {
+    switch (type) {
+        case 'countdown':
+            return '$blue10Light'
+        case 'rest':
+            return '$red5'
+        case 'work':
+            return '$green10'
+    }
 }
 
 const TimerDisplay: React.FC<TimerDisplayProps> = ({
@@ -69,44 +80,54 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
 
     return (
         <YStack flex={1} alignItems="center" justifyContent="center" gap="$3">
-            {activityStatus && (
-                <Stack bg={activityStatus === 'work' ? '$red5' : '$gray9'} mb="$4" px="$2" py="$1" br="$4">
-                    <Text fontSize="$5" fontWeight="700">
-                        {activityStatus.toLocaleUpperCase()}
-                    </Text>
-                </Stack>
-            )}
-
-            <Stack gap={isPortrait ? '$4' : '$4'} flexDirection={isPortrait ? 'column' : 'row'} alignItems="center">
-                <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap={isPortrait ? '$4' : '$3'}>
-                    {Icon && (
-                        <Stack>
-                            <Icon fill={theme.gray5.val} width={isPortrait ? 60 : 48} />
-                        </Stack>
-                    )}
-
-                    {initialCountdown ? (
-                        <Text color={theme.red2.val} fontWeight="700" fontSize={isPortrait ? '$14' : '$15'}>
-                            {initialCountdown}
-                        </Text>
-                    ) : (
-                        <Text color={theme.gray2.val} fontWeight="700" fontSize={isPortrait ? '$13' : '$14'}>
-                            {time}
-                        </Text>
-                    )}
-                </Stack>
-
-                {(initialCountdown === undefined || initialCountdown === null) && round && (
-                    <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap="$3">
-                        <Text fontSize="$5" fontWeight="400" color="$gray4">
-                            Round
-                        </Text>
-
-                        <Text fontSize="$10" fontWeight="700" color="$gray2">
-                            {round}
-                            {totalRounds ? ` / ${totalRounds}` : ''}
+            <Stack gap="$6" flexDirection="row" alignItems="center" mb="$2">
+                {activityStatus && (
+                    <Stack animation="quick" bg={getActivityColor(activityStatus)} px="$2" py="$1" br="$3">
+                        <Text fontSize="$5" fontWeight="700">
+                            {activityStatus.toLocaleUpperCase()}
                         </Text>
                     </Stack>
+                )}
+                <AnimatePresence>
+                    {(initialCountdown === undefined || initialCountdown === null) && round && (
+                        <Stack
+                            animation="quick"
+                            key="round"
+                            opacity={1}
+                            exitStyle={{ opacity: 0 }}
+                            enterStyle={{ opacity: 1 }}
+                            flexDirection="row"
+                            alignItems="center"
+                            gap="$3"
+                        >
+                            <Text fontSize="$5" fontWeight="400" color="$gray4">
+                                Round
+                            </Text>
+
+                            <Text fontSize="$10" fontWeight="700" color="$gray2">
+                                {round}
+                                {totalRounds ? ` / ${totalRounds}` : ''}
+                            </Text>
+                        </Stack>
+                    )}
+                </AnimatePresence>
+            </Stack>
+
+            <Stack flexDirection={isPortrait ? 'column' : 'row'} alignItems="center" gap={isPortrait ? '$4' : '$3'}>
+                {Icon && (
+                    <Stack>
+                        <Icon fill={theme.gray5.val} width={isPortrait ? 60 : 48} />
+                    </Stack>
+                )}
+
+                {initialCountdown ? (
+                    <Text color={theme.red2.val} fontWeight="700" fontSize={isPortrait ? '$14' : '$15'}>
+                        {initialCountdown}
+                    </Text>
+                ) : (
+                    <Text color={theme.gray2.val} fontWeight="700" fontSize={isPortrait ? '$13' : '$14'}>
+                        {time}
+                    </Text>
                 )}
             </Stack>
 

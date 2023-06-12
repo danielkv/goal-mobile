@@ -3,15 +3,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useOrientation } from '@common/hooks/useOrientation'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import Button from '@components/Button'
+import EventBlockRound from '@components/EventBlockRound'
 import TimerDisplay from '@components/TimerDisplay'
-import { useTimer } from '@contexts/timers/useTimer'
+import { useTimerSounds } from '@contexts/timers/useTimerSounds'
 import { MaterialIcons } from '@expo/vector-icons'
 import { IEventBlock, IRound } from '@models/block'
 import { useNavigation } from '@react-navigation/native'
 import { EmomTimer, RegressiveTimer, StopwatchTimer, TabataTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
-import { Stack, YStack } from 'tamagui'
+import { Dialog, Stack, YStack } from 'tamagui'
 import { useTheme } from 'tamagui'
 
 import RoundDisplay from './RoundDisplay'
@@ -20,10 +21,10 @@ export interface IWodTimerProps {}
 
 const block: IEventBlock = {
     event_type: 'not_timed',
-    numberOfRounds: 2,
+    numberOfRounds: 1,
     rounds: [
         {
-            numberOfRounds: 2,
+            numberOfRounds: 1,
             each: 5,
             movements: [
                 {
@@ -43,33 +44,31 @@ const block: IEventBlock = {
             type: 'emom',
         },
         {
-            time: 5,
+            type: 'amrap',
+            timecap: 5,
             movements: [],
-            type: 'rest',
+            numberOfRounds: 1,
         },
         {
-            numberOfRounds: 1,
+            type: 'tabata',
+            numberOfRounds: 2,
+            work: 5,
+            rest: 5,
             movements: [
                 {
-                    name: 'DB hang clean e jerk',
+                    name: 'DB snatch',
                     reps: '10',
                 },
                 {
                     reps: '10',
-                    name: 'box step over',
+                    name: 'Box jump over',
                 },
                 {
-                    name: 'Pull Up',
+                    name: 'T2B',
+
                     reps: '10',
                 },
             ],
-            timecap: 5,
-            type: 'amrap',
-        },
-        {
-            time: 5,
-            movements: [],
-            type: 'rest',
         },
     ],
     type: 'event',
@@ -89,104 +88,174 @@ function flattenRounds(block: IEventBlock): IRound[] {
     return flattened
 }
 
+const COUNTDOWN = 3
+
 const WodTimer: React.FC<IWodTimerProps> = () => {
     const orientation = useOrientation()
     const isPortrait = orientation === 'portrait'
     const navigation = useNavigation()
     const theme = useTheme()
+    const sounds = useTimerSounds()
+    const [roundOpen, setRoundOpen] = useState(false)
 
-    const [currentRound, setCurrentRound] = useState<number | null>(null)
+    const [currentRoundDisplay, setCurrentRoundDisplay] = useState<number | null>(null)
     const [totalRounds, setTotalRounds] = useState<number | null>(null)
-    const [activityStatus, setActivityStatus] = useState<'work' | 'rest' | null>(null)
+    const [activityStatus, setActivityStatus] = useState<'work' | 'rest' | 'countdown' | null>(null)
+    const [currentStatus, setCurrentStatus] = useState<TTimerStatus>('initial')
+    const [currentCountdown, setCurrentCountdown] = useState<number | null>(null)
+    const [currentTime, setCurrentTime] = useState<number>(0)
 
     const rounds = useMemo(() => flattenRounds(block), [])
 
     const [selectedRound, setSelectedRound] = useState(0)
 
     const clockRef = useRef<StopwatchTimer>()
+    const countdownTimerRef = useRef<StopwatchTimer>()
 
-    const { currentStatus, currentTime, handlePressPlayButton, handlePressResetButton, initialCountdown, sounds } =
-        useTimer({
-            clockRef,
-            initialCountdown: 3,
+    function startClock(round?: number) {
+        if (currentStatus === 'initial') setupTimer()
+
+        if (round === 0 && currentStatus === 'initial') {
+            setCurrentStatus('running')
+            setActivityStatus('countdown')
+
+            const countdownTimer = setupCountdown(COUNTDOWN)
+            countdownTimer.start()
+
+            countdownTimer.on('tick', (time: number) => {
+                if (time === 0) {
+                    countdownTimer.stop()
+                    setCurrentCountdown(null)
+                    clockRef.current?.start()
+                    sounds.playStart()
+                    setActivityStatus('work')
+                }
+            })
+            return
+        }
+
+        clockRef.current?.start()
+    }
+
+    function setupTimer() {
+        clockRef.current?.on('changeStatus', (status) => {
+            setCurrentStatus(status)
         })
 
-    const nextTimer = useCallback(
-        (currRound: number) => {
-            clockRef.current?.stop()
-
-            const nextRound = currRound + 1
-
-            if (nextRound >= rounds.length) return
-
-            setSelectedRound(nextRound)
-
-            setupNewTimer(nextRound)
-
-            handlePressPlayButton()
-        },
-        [clockRef, setSelectedRound]
-    )
-
-    const setupNewTimer = useCallback(
-        (currRound: number) => {
-            const round = rounds[currRound]
-
-            const countdown = currRound === 0 ? 3 : 0
-            setCurrentRound(null)
-
-            setActivityStatus('work')
-
-            switch (round.type) {
-                case 'amrap':
-                    clockRef.current = new RegressiveTimer(round.timecap)
-                    handlePressResetButton({ initialCountdown: countdown, initialCurrentTime: round.timecap })
-                    break
-                case 'for_time':
-                    clockRef.current = new StopwatchTimer(round.timecap)
-                    break
-                case 'rest':
-                    clockRef.current = new RegressiveTimer(round.time)
-                    handlePressResetButton({ initialCountdown: countdown, initialCurrentTime: round.time })
-                    setActivityStatus('rest')
-                    break
-                case 'emom':
-                    clockRef.current = new EmomTimer(round.each, round.numberOfRounds)
-                    if (round.numberOfRounds > 1) {
-                        clockRef.current?.on('changeRound', (current: number) => {
-                            if (currentStatus === 'running') sounds.playRoundChange()
-                            setCurrentRound(current)
-                        })
-                        setCurrentRound(1)
-                        setTotalRounds(round.numberOfRounds)
-                    }
-                    handlePressResetButton({ initialCountdown: countdown, initialCurrentTime: round.each })
-                    break
-                case 'tabata':
-                    clockRef.current = new TabataTimer(round.work, round.rest, round.numberOfRounds)
-                    if (round.numberOfRounds > 1) {
-                        clockRef.current?.on('changeRound', (current: number) => {
-                            if (currentStatus === 'running') sounds.playRoundChange()
-                            setCurrentRound(current)
-                        })
-                        setCurrentRound(1)
-                        setTotalRounds(round.numberOfRounds)
-                    }
-
-                    clockRef.current?.on('changeActivityStatus', (current: TActivityStatus, status: TTimerStatus) => {
-                        if (status === 'running') sounds.playRoundChange()
-                        setActivityStatus(current)
-                    })
-                    handlePressResetButton({ initialCountdown: countdown, initialCurrentTime: round.work })
-                    break
+        clockRef.current?.on('tick', (duration: number) => {
+            if (duration <= 3) {
+                if (duration > 0) sounds.playBeep()
+                else if (duration === 0) sounds.playStart()
             }
 
-            clockRef.current?.on('end', () => {
-                nextTimer(currRound)
+            setCurrentTime(duration)
+        })
+
+        clockRef.current?.on('start', (duration: number) => {
+            setCurrentTime(duration)
+        })
+
+        clockRef.current?.on('reset', () => {
+            setCurrentStatus('initial')
+        })
+
+        return clockRef.current
+    }
+
+    function setupCountdown(countdown: number) {
+        setCurrentCountdown(() => countdown)
+
+        countdownTimerRef.current = new RegressiveTimer(countdown)
+
+        countdownTimerRef.current.once('start', () => {
+            sounds.playBeep()
+        })
+
+        countdownTimerRef.current.on('tick', (displayTime: number) => {
+            setCurrentCountdown((prev) => {
+                if (displayTime > 0 && displayTime != prev) sounds.playBeep()
+
+                return displayTime
             })
-        },
-        [clockRef, nextTimer, rounds]
-    )
+        })
+
+        return countdownTimerRef.current
+    }
+
+    function endAllRounds() {
+        setCurrentTime(0)
+        sounds.playFinish()
+    }
+
+    function nextTimer(currRound: number) {
+        clockRef.current?.stop()
+
+        const nextRound = currRound + 1
+
+        if (nextRound >= rounds.length) {
+            endAllRounds()
+            return
+        }
+
+        setSelectedRound(nextRound)
+
+        setupNewTimer(nextRound)
+
+        startClock(nextRound)
+    }
+
+    function setupNewTimer(currRound: number) {
+        const round = rounds[currRound]
+
+        setCurrentRoundDisplay(null)
+
+        setActivityStatus('work')
+
+        switch (round.type) {
+            case 'amrap':
+                clockRef.current = new RegressiveTimer(round.timecap)
+
+                break
+            case 'for_time':
+                clockRef.current = new StopwatchTimer(round.timecap)
+                break
+            case 'rest':
+                clockRef.current = new RegressiveTimer(round.time)
+
+                setActivityStatus('rest')
+                break
+            case 'emom':
+                clockRef.current = new EmomTimer(round.each, round.numberOfRounds)
+                if (round.numberOfRounds > 1) {
+                    clockRef.current?.on('changeRound', (current: number) => {
+                        setCurrentRoundDisplay(current)
+                    })
+                    setCurrentRoundDisplay(1)
+                    setTotalRounds(round.numberOfRounds)
+                }
+
+                break
+            case 'tabata':
+                clockRef.current = new TabataTimer(round.work, round.rest, round.numberOfRounds)
+                if (round.numberOfRounds > 1) {
+                    clockRef.current?.on('changeRound', (current: number) => {
+                        setCurrentRoundDisplay(current)
+                    })
+                    setCurrentRoundDisplay(1)
+                    setTotalRounds(round.numberOfRounds)
+                }
+
+                clockRef.current?.on('changeActivityStatus', (current: TActivityStatus, status: TTimerStatus) => {
+                    setActivityStatus(current)
+                })
+
+                break
+        }
+
+        clockRef.current?.on('end', () => {
+            nextTimer(currRound)
+        })
+    }
 
     const handleResetWodTimer = useCallback(() => {
         clockRef.current?.stop()
@@ -194,7 +263,7 @@ const WodTimer: React.FC<IWodTimerProps> = () => {
         setupNewTimer(0)
         setSelectedRound(0)
 
-        handlePressResetButton()
+        setCurrentStatus('initial')
     }, [])
 
     useEffect(() => {
@@ -220,6 +289,7 @@ const WodTimer: React.FC<IWodTimerProps> = () => {
                             transparent
                             mt="$2"
                             icon={<MaterialIcons name="chevron-left" size={40} color={theme.gray2.val} />}
+                            onPress={() => navigation.goBack()}
                         />
                     </Stack>
                 )}
@@ -230,16 +300,60 @@ const WodTimer: React.FC<IWodTimerProps> = () => {
             <Stack bg="$gray9" f={1} btlr="$6" bblr={!isPortrait ? '$6' : 0} btrr={isPortrait ? '$6' : 0}>
                 <TimerDisplay
                     time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
-                    round={currentRound}
+                    round={currentRoundDisplay}
                     totalRounds={totalRounds}
                     activityStatus={activityStatus}
-                    initialCountdown={initialCountdown ? String(initialCountdown) : null}
+                    initialCountdown={currentCountdown ? String(currentCountdown) : null}
                     watchProgressStatus={currentStatus}
-                    onPressPlayButton={handlePressPlayButton}
+                    onPressPlayButton={() => startClock(0)}
                     onPressResetButton={handleResetWodTimer}
                     onPressPauseButton={() => {
                         clockRef.current?.stop()
                     }}
+                />
+            </Stack>
+
+            <Dialog open={roundOpen} onOpenChange={setRoundOpen}>
+                <Dialog.Portal>
+                    <Dialog.Overlay
+                        onPressOut={() => setRoundOpen(false)}
+                        key="overlay"
+                        animation="quick"
+                        opacity={0.5}
+                        enterStyle={{ opacity: 0 }}
+                        exitStyle={{ opacity: 0 }}
+                    />
+                    <Dialog.Content
+                        key="content"
+                        animation={[
+                            'quick',
+                            {
+                                opacity: {
+                                    overshootClamping: true,
+                                },
+                            },
+                        ]}
+                        enterStyle={{ opacity: 0, scale: 0.9 }}
+                        exitStyle={{ opacity: 0, scale: 0.95 }}
+                        w="100%"
+                        maxWidth={380}
+                    >
+                        <EventBlockRound round={rounds[selectedRound]} textAlign="left" />
+                    </Dialog.Content>
+                </Dialog.Portal>
+            </Dialog>
+
+            <Stack>
+                <Button
+                    position="absolute"
+                    b="$3"
+                    right="$3"
+                    size="$6"
+                    onPressIn={() => setRoundOpen(true)}
+                    onPressOut={() => setRoundOpen(false)}
+                    variant="icon"
+                    bg="$gray5"
+                    icon={<MaterialIcons name="remove-red-eye" size={22} />}
                 />
             </Stack>
         </Stack>

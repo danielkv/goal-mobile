@@ -121,6 +121,19 @@ export class RegressiveTimer extends StopwatchTimer {
         return this.getElapsedTime() < 0
     }
 
+    protected tick() {
+        if (this.status !== 'running') return
+
+        this.setCurrentTime()
+
+        if (this.checkEnded()) {
+            this.endTimer()
+            return
+        }
+
+        this.emitTick()
+    }
+
     public getElapsedTime(): number {
         return this.from - Math.floor(this.getCurrentTime())
     }
@@ -136,6 +149,8 @@ export class EmomTimer extends StopwatchTimer {
         this.clock = new RegressiveTimer(this.each)
 
         this.clock.on('end', () => this.nextRound())
+        this.clock.on('tick', (...args) => this.emit('tick', ...args))
+        this.clock.on('start', (...args) => this.emit('start', ...args))
     }
 
     protected nextRound() {
@@ -148,6 +163,8 @@ export class EmomTimer extends StopwatchTimer {
 
         this.setCurrentRound(this.currentRound + 1)
 
+        this.emit('tick', this.each)
+
         this.clock.reset()
         this.clock.start()
     }
@@ -157,8 +174,12 @@ export class EmomTimer extends StopwatchTimer {
     }
 
     start() {
+        if (this.status === 'running') return
         this.clock.start()
-        super.start()
+
+        this.status = 'running'
+
+        this.emitChangeStatus()
     }
 
     stop() {
@@ -214,6 +235,11 @@ export class TabataTimer extends StopwatchTimer {
 
         this.clockWork.on('end', () => this.next())
         this.clockRest.on('end', () => this.next())
+
+        this.clockWork.on('tick', (...args) => this.emit('tick', ...args))
+        this.clockRest.on('tick', (...args) => this.emit('tick', ...args))
+        this.clockWork.on('start', (...args) => this.emit('start', ...args))
+        this.clockRest.on('start', (...args) => this.emit('start', ...args))
     }
 
     private next() {
@@ -250,9 +276,14 @@ export class TabataTimer extends StopwatchTimer {
     }
 
     start() {
+        if (this.status === 'running') return
+
         if (this.activityStatus === 'work') this.clockWork.start()
         else this.clockRest.start()
-        super.start()
+
+        this.status = 'running'
+
+        this.emitChangeStatus()
     }
 
     stop() {
