@@ -1,3 +1,4 @@
+import { IEventBlock } from '@models/block'
 import { IEMOMTimer, ITabataTimer, ITimecapTimer } from '@models/time'
 
 export type TReactNavigationStackParamList = {
@@ -27,7 +28,9 @@ export type TReactNavigationStackParamList = {
 
     Profile: undefined
 
-    WodTimer: undefined
+    WodTimer: {
+        block: IEventBlock
+    }
 }
 
 export enum ERouteName {

@@ -11,6 +11,7 @@ import { Stack, Text, YStack } from 'tamagui'
 export interface EventBlockRoundProps {
     round: IRound
     textAlign?: 'center' | 'left'
+    showTimerButton?: boolean
 }
 
 const getTimerSettings = (round: IRound): OpenTimerButtonProps['settings'] => {
@@ -61,7 +62,7 @@ const getTimerType = (round: IRound): Exclude<TTimerTypes, 'not_timed'> | null =
     return null
 }
 
-const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'center' }) => {
+const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'center', showTimerButton = false }) => {
     const sequenceReps = useMemo(() => roundTransformer.findSequenceReps(round.movements), [])
 
     const roundTitle = roundTransformer.displayTitle(round, sequenceReps?.join('-'))
@@ -76,7 +77,7 @@ const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'c
                 </Text>
             )}
 
-            {!!timerType && (
+            {showTimerButton && !!timerType && (
                 <Stack position="absolute" top={1} right={1}>
                     <OpenTimerButton variant="icon" type={timerType} settings={getTimerSettings(round)} />
                 </Stack>

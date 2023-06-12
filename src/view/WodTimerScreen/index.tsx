@@ -8,7 +8,8 @@ import TimerDisplay from '@components/TimerDisplay'
 import { useTimerSounds } from '@contexts/timers/useTimerSounds'
 import { MaterialIcons } from '@expo/vector-icons'
 import { IEventBlock, IRound } from '@models/block'
-import { useNavigation } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { TReactNavigationStackParamList } from '@router/types'
 import { EmomTimer, RegressiveTimer, StopwatchTimer, TabataTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
@@ -16,63 +17,6 @@ import { Dialog, Stack, YStack } from 'tamagui'
 import { useTheme } from 'tamagui'
 
 import RoundDisplay from './RoundDisplay'
-
-export interface IWodTimerProps {}
-
-const block: IEventBlock = {
-    event_type: 'not_timed',
-    numberOfRounds: 1,
-    rounds: [
-        {
-            numberOfRounds: 1,
-            each: 5,
-            movements: [
-                {
-                    name: 'DB snatch',
-                    reps: '10',
-                },
-                {
-                    reps: '10',
-                    name: 'Box jump over',
-                },
-                {
-                    name: 'T2B',
-
-                    reps: '10',
-                },
-            ],
-            type: 'emom',
-        },
-        {
-            type: 'amrap',
-            timecap: 5,
-            movements: [],
-            numberOfRounds: 1,
-        },
-        {
-            type: 'tabata',
-            numberOfRounds: 2,
-            work: 5,
-            rest: 5,
-            movements: [
-                {
-                    name: 'DB snatch',
-                    reps: '10',
-                },
-                {
-                    reps: '10',
-                    name: 'Box jump over',
-                },
-                {
-                    name: 'T2B',
-
-                    reps: '10',
-                },
-            ],
-        },
-    ],
-    type: 'event',
-}
 
 function flattenRounds(block: IEventBlock): IRound[] {
     const flattened = Array.from({ length: block.numberOfRounds || 1 }).flatMap(() =>
@@ -90,7 +34,11 @@ function flattenRounds(block: IEventBlock): IRound[] {
 
 const COUNTDOWN = 3
 
-const WodTimer: React.FC<IWodTimerProps> = () => {
+const WodTimerScreen: React.FC = () => {
+    const {
+        params: { block },
+    } = useRoute<RouteProp<TReactNavigationStackParamList, 'WodTimer'>>()
+
     const orientation = useOrientation()
     const isPortrait = orientation === 'portrait'
     const navigation = useNavigation()
@@ -360,4 +308,4 @@ const WodTimer: React.FC<IWodTimerProps> = () => {
     )
 }
 
-export default WodTimer
+export default WodTimerScreen

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Button from '@components/Button'
 import EventBlockRound from '@components/EventBlockRound'
@@ -6,6 +6,8 @@ import OpenTimerButton, { OpenTimerButtonProps } from '@components/OpenTimerButt
 import { MaterialIcons } from '@expo/vector-icons'
 import { IEventBlock } from '@models/block'
 import { TTimerTypes } from '@models/time'
+import { useNavigation } from '@react-navigation/native'
+import { ERouteName } from '@router/types'
 import { eventBlockTransformer } from '@utils/transformer/eventblock'
 
 import { AlertDialog, Text, YStack, useTheme } from 'tamagui'
@@ -66,12 +68,19 @@ const getTimerType = (block: IEventBlock): Exclude<TTimerTypes, 'not_timed'> | n
     return null
 }
 
+const checkIsTimedWorkout = (block: IEventBlock): boolean => {
+    return block.rounds.every((round) => ['for_time', 'emom', 'amrap', 'tabata', 'rest'].includes(round.type))
+}
+
 const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' }) => {
+    const { navigate } = useNavigation()
+
     const theme = useTheme()
     const blockTitle = eventBlockTransformer.displayTitle(block)
     const [infoOpen, setInfoOpen] = useState(false)
 
-    const timerType = getTimerType(block)
+    const isTimedWorkout = useMemo(() => checkIsTimedWorkout(block), [])
+    const blockTimerType = getTimerType(block)
 
     const handleCloseInfo = () => {
         setInfoOpen(false)
@@ -104,9 +113,18 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
                 </XStack>
             )}
 
-            {(!!timerType || !!block.info) && (
+            {(!!isTimedWorkout || blockTimerType || !!block.info) && (
                 <XStack space="$2" my="$2">
-                    {!!timerType && <OpenTimerButton type={timerType} settings={getTimerSettings(block)} />}
+                    {isTimedWorkout ? (
+                        <Button
+                            onPress={() => navigate(ERouteName.WodTimer, { block })}
+                            icon={<MaterialIcons name="timer" size={18} />}
+                        >
+                            Abrir Timer
+                        </Button>
+                    ) : (
+                        !!blockTimerType && <OpenTimerButton type={blockTimerType} settings={getTimerSettings(block)} />
+                    )}
                     {!!block.info && (
                         <Button
                             flex={1}
@@ -121,7 +139,12 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
 
             <YStack space="$2">
                 {block.rounds.map((round, index) => (
-                    <EventBlockRound key={`${round.type}${index}`} round={round} textAlign={textAlign} />
+                    <EventBlockRound
+                        key={`${round.type}${index}`}
+                        round={round}
+                        textAlign={textAlign}
+                        showTimerButton={!isTimedWorkout}
+                    />
                 ))}
             </YStack>
 
