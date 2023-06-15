@@ -10,7 +10,7 @@ export interface ITimer {
 }
 
 export class StopwatchTimer extends EventEmitter {
-    protected _startTime: number = 0
+    protected _startTime!: number
     protected _currentTime: number = 0
     protected tickInterval: NodeJS.Timer | undefined
     protected _intervalTimeout: number = 1000
@@ -19,6 +19,7 @@ export class StopwatchTimer extends EventEmitter {
 
     constructor(private readonly end?: number) {
         super()
+        this._startTime = 0
     }
 
     public getElapsedTime(): number {
@@ -42,6 +43,10 @@ export class StopwatchTimer extends EventEmitter {
 
         this.setCurrentTime()
 
+        if (this.checkZero()) {
+            this.emit('zero')
+        }
+
         if (this.checkEnded()) {
             this.endTimer()
             return
@@ -61,6 +66,19 @@ export class StopwatchTimer extends EventEmitter {
 
         return this.getElapsedTime() >= this.end
     }
+
+    protected checkZero(): boolean {
+        if (!this.end || this.end <= 0) return false
+
+        return this.getElapsedTime() === this.end
+    }
+
+    getRemaining() {
+        if (!this.end || this.end < 0) return 0
+
+        return this.end - this.getElapsedTime()
+    }
+
     protected endTimer() {
         this.stop('finished')
 
@@ -91,7 +109,6 @@ export class StopwatchTimer extends EventEmitter {
         if (this.tickInterval) clearInterval(this.tickInterval)
         this.status = 'initial'
         this._currentTime = 0
-        this._startTime = 0
         this.emitReset()
     }
 
@@ -108,23 +125,36 @@ export class StopwatchTimer extends EventEmitter {
         this.emit('start', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime())
     }
     protected emitTick() {
-        this.emit('tick', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime())
+        this.emit('tick', this.getElapsedTime(), this.getStartTime(), this.getCurrentTime(), this.getRemaining())
     }
 }
 
 export class RegressiveTimer extends StopwatchTimer {
     constructor(private readonly from: number) {
         super()
+        this._startTime = from
     }
 
     protected checkEnded() {
         return this.getElapsedTime() < 0
     }
 
+    protected checkZero(): boolean {
+        return this.getElapsedTime() === 0
+    }
+
+    getRemaining() {
+        return this.getElapsedTime()
+    }
+
     protected tick() {
         if (this.status !== 'running') return
 
         this.setCurrentTime()
+
+        if (this.checkZero()) {
+            this.emit('zero')
+        }
 
         if (this.checkEnded()) {
             this.endTimer()
@@ -151,6 +181,7 @@ export class EmomTimer extends StopwatchTimer {
         this.clock.on('end', () => this.nextRound())
         this.clock.on('tick', (...args) => this.emit('tick', ...args))
         this.clock.on('start', (...args) => this.emit('start', ...args))
+        this.clock.on('zero', () => this.emit('zero', this.getCurrentRound(), this.rounds))
     }
 
     protected nextRound() {
@@ -208,7 +239,6 @@ export class EmomTimer extends StopwatchTimer {
         if (this.tickInterval) clearInterval(this.tickInterval)
         this.status = 'initial'
         this._currentTime = 0
-        this._startTime = 0
         this.setCurrentRound(1)
         this.clock.reset()
 
@@ -237,9 +267,12 @@ export class TabataTimer extends StopwatchTimer {
         this.clockRest.on('end', () => this.next())
 
         this.clockWork.on('tick', (...args) => this.emit('tick', ...args))
-        this.clockRest.on('tick', (...args) => this.emit('tick', ...args))
         this.clockWork.on('start', (...args) => this.emit('start', ...args))
+        this.clockWork.on('zero', () => this.emit('zero', this.getCurrentRound(), this.rounds, this.activityStatus))
+
+        this.clockRest.on('tick', (...args) => this.emit('tick', ...args))
         this.clockRest.on('start', (...args) => this.emit('start', ...args))
+        this.clockRest.on('zero', () => this.emit('zero', this.getCurrentRound(), this.rounds, this.activityStatus))
     }
 
     private next() {
@@ -311,7 +344,6 @@ export class TabataTimer extends StopwatchTimer {
         if (this.tickInterval) clearInterval(this.tickInterval)
         this.status = 'initial'
         this._currentTime = 0
-        this._startTime = 0
         this.setCurrentRound(1)
         this.clockWork.reset()
         this.clockRest.reset()

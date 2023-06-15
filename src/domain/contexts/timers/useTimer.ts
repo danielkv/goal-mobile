@@ -8,7 +8,11 @@ interface Args {
     initialCurrentTime?: number
     initialCountdown?: number
     clockRef: RefObject<StopwatchTimer | undefined>
-    onSetupTimer?: (clockRef: RefObject<StopwatchTimer | undefined>, sounds: UseTimerSounds) => void
+    onSetupTimer?: (
+        clockRef: RefObject<StopwatchTimer | undefined>,
+        sounds: UseTimerSounds,
+        setCurrentTime: React.Dispatch<React.SetStateAction<number>>
+    ) => void
 }
 
 export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetupTimer, initialCurrentTime }: Args) {
@@ -36,7 +40,7 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
             const countdownTimer = setupCountdown(countdownRef.current)
             countdownTimer.start()
 
-            countdownTimer.once('end', () => {
+            countdownTimer.once('zero', () => {
                 setCurrentCountdown(null)
                 clockRef.current?.start()
             })
@@ -59,12 +63,8 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
             setCurrentStatus(status)
         })
 
-        clockRef.current?.on('end', () => {
-            sounds.playFinish()
-        })
-
-        clockRef.current?.on('tick', (duration: number) => {
-            if (duration <= 3) sounds.playBeep()
+        clockRef.current?.on('tick', (duration: number, _, __, remaining: number) => {
+            if (remaining > 0 && remaining <= 3) sounds.playBeep()
 
             setCurrentTime(duration)
         })
@@ -73,13 +73,17 @@ export function useTimer({ initialCountdown: _initialCountdown, clockRef, onSetu
             sounds.playStart()
         })
 
+        clockRef.current?.on('start', (elapsed: number, start: number) => {
+            setCurrentTime(start)
+        })
+
         clockRef.current?.on('reset', () => {
             setCurrentTime(0)
             setCurrentStatus('initial')
             setCurrentCountdown(_initialCountdown || null)
         })
 
-        onSetupTimer?.(clockRef, sounds)
+        onSetupTimer?.(clockRef, sounds, setCurrentTime)
 
         return clockRef.current
     }

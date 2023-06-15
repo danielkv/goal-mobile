@@ -4,6 +4,7 @@ import EmomSvg from '@assets/svg/emom.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
 import { EmomTimer } from '@utils/timer'
+
 import dayjs from 'dayjs'
 
 export interface EmomDisplayProps {
@@ -37,8 +38,11 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
         initialCurrentTime: each,
         onSetupTimer: (clockRef, sounds) => {
             clockRef.current?.on('changeRound', (current: number) => {
-                if (currentStatus === 'running') sounds.playRoundChange()
                 setCurrentRound(current)
+            })
+            clockRef.current?.on('zero', (current: number, rounds: number) => {
+                if (current < rounds) sounds.playStart()
+                else sounds.playFinish()
             })
         },
     })

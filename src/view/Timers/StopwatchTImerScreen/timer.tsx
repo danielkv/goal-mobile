@@ -4,6 +4,7 @@ import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
 import { StopwatchTimer } from '@utils/timer'
+
 import dayjs from 'dayjs'
 
 export interface StopwatchDisplayProps {
@@ -29,6 +30,12 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
     const { currentStatus, currentTime, handlePressPlayButton, handlePressResetButton, initialCountdown } = useTimer({
         clockRef,
         initialCountdown: _initialCountdown,
+        onSetupTimer: (clockRef, sounds, setCurrentTime) => {
+            clockRef.current?.on('zero', () => {
+                setCurrentTime(finalTime)
+                sounds.playFinish()
+            })
+        },
     })
 
     return (

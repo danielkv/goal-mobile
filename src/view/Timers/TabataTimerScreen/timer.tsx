@@ -5,6 +5,7 @@ import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
 import { TabataTimer } from '@utils/timer'
+
 import dayjs from 'dayjs'
 
 export interface TabataDisplayProps {
@@ -41,11 +42,14 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
         initialCurrentTime: work,
         onSetupTimer: (clockRef, sounds) => {
             clockRef.current?.on('changeActivityStatus', (current: TActivityStatus, status: TTimerStatus) => {
-                if (status === 'running') sounds.playRoundChange()
                 setCurrentActivityStatus(current)
             })
             clockRef.current?.on('changeRound', (current: number) => {
                 setCurrentRound(current)
+            })
+            clockRef.current?.on('zero', (current: number, rounds: number, activityStatus: TActivityStatus) => {
+                if (current < rounds || activityStatus === 'work') sounds.playStart()
+                else sounds.playFinish()
             })
         },
     })
@@ -54,7 +58,7 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
             Icon={TabataSvg}
-            activityStatus={currentActivityStatus}
+            activityStatus={initialCountdown ? 'countdown' : currentActivityStatus}
             round={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}

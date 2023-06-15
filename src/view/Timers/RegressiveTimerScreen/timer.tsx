@@ -4,6 +4,7 @@ import RegressiveSvg from '@assets/svg/regressive.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
 import { RegressiveTimer } from '@utils/timer'
+
 import dayjs from 'dayjs'
 
 export interface RegressiveDisplayProps {
@@ -29,6 +30,11 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     const { currentStatus, currentTime, handlePressPlayButton, handlePressResetButton, initialCountdown } = useTimer({
         clockRef,
         initialCountdown: _initialCountdown,
+        onSetupTimer: (clockRef, sounds) => {
+            clockRef.current?.on('zero', () => {
+                sounds.playFinish()
+            })
+        },
     })
 
     return (

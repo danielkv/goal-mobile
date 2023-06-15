@@ -90,10 +90,10 @@ const WodTimerScreen: React.FC = () => {
             setCurrentStatus(status)
         })
 
-        clockRef.current?.on('tick', (duration: number) => {
-            if (duration <= 3) {
-                if (duration > 0) sounds.playBeep()
-                else if (duration === 0) sounds.playStart()
+        clockRef.current?.on('tick', (duration: number, _, __, remaining: number) => {
+            if (remaining <= 3) {
+                if (remaining > 0) sounds.playBeep()
+                else if (remaining === 0) sounds.playStart()
             }
 
             setCurrentTime(duration)
@@ -286,7 +286,7 @@ const WodTimerScreen: React.FC = () => {
                         w="100%"
                         maxWidth={380}
                     >
-                        <EventBlockRound round={rounds[selectedRound]} textAlign="left" />
+                        <EventBlockRound round={rounds[selectedRound]} />
                     </Dialog.Content>
                 </Dialog.Portal>
             </Dialog>
