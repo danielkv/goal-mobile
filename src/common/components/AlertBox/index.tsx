@@ -1,4 +1,4 @@
-import { MaterialIcons } from '@expo/vector-icons'
+import { AlertTriangle, CheckCircle, Info, XCircle } from '@tamagui/lucide-icons'
 
 import { ColorTokens, Dialog, Stack, XStack, YStack } from 'tamagui'
 
@@ -21,25 +21,25 @@ function getAlertType(type: TAlertType): TAlertColor {
             return {
                 bg: '$yellow8Light',
                 color: 'white',
-                icon: <MaterialIcons name="warning" size={16} color="yellow" />,
+                icon: <AlertTriangle size={16} color="yellow" />,
             }
         case 'success':
             return {
                 bg: '$green8Light',
                 color: 'white',
-                icon: <MaterialIcons name="check-circle" size={16} color="green" />,
+                icon: <CheckCircle size={16} color="green" />,
             }
         case 'info':
             return {
                 bg: '$blue8Light',
                 color: 'white',
-                icon: <MaterialIcons name="info" size={16} color="blue" />,
+                icon: <Info size={16} color="blue" />,
             }
         case 'error':
             return {
                 bg: '$red2',
                 color: 'white',
-                icon: <MaterialIcons name="error" size={16} color="red" />,
+                icon: <XCircle size={16} color="red" />,
             }
     }
 }

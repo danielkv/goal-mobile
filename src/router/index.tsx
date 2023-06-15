@@ -1,8 +1,8 @@
 import Button from '@components/Button'
 import { useLoggedUser } from '@contexts/user/userContext'
-import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { User } from '@tamagui/lucide-icons'
 import DayViewScreen from '@view/DayViewScreen'
 import HomeScreen from '@view/HomeScreen'
 import LoginScreen from '@view/LoginScreen'
@@ -43,7 +43,7 @@ function Router() {
                     if (!user) return null
                     return (
                         <Button variant="icon" bg="transparent" onPress={() => navigate(ERouteName.Profile)}>
-                            <MaterialIcons name="person" size={22} color={theme.gray1.val} />
+                            <User color="$gray1" />
                         </Button>
                     )
                 },

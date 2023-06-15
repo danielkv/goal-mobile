@@ -3,9 +3,9 @@ import { Alert } from 'react-native'
 
 import Button from '@components/Button'
 import { setLoggedUser, useLoggedUser } from '@contexts/user/userContext'
-import { MaterialIcons } from '@expo/vector-icons'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
+import { LogOut } from '@tamagui/lucide-icons'
 import { logUserOutUseCase } from '@useCases/auth/logUserOut'
 import { removeUserUseCase } from '@useCases/auth/removeUser'
 import { getErrorMessage } from '@utils/getErrorMessage'
@@ -82,7 +82,7 @@ const ProfileScreen: React.FC = () => {
                 <Text fontSize={16}>{user.email}</Text>
                 {user.phoneNumber && <Text fontSize={14}>{user.phoneNumber}</Text>}
             </YStack>
-            <Button icon={<MaterialIcons name="logout" size={20} color="white" />} onPress={handlePressLogout}>
+            <Button icon={<LogOut size={20} color="white" />} onPress={handlePressLogout}>
                 Logout
             </Button>
             <Button loading={loading} variant="link" onPress={handlePressRemoveAccount}>

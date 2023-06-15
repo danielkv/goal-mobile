@@ -6,15 +6,14 @@ import Button from '@components/Button'
 import EventBlockRound from '@components/EventBlockRound'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimerSounds } from '@contexts/timers/useTimerSounds'
-import { MaterialIcons } from '@expo/vector-icons'
 import { IEventBlock, IRound } from '@models/block'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+import { ChevronLeft, Eye } from '@tamagui/lucide-icons'
 import { EmomTimer, RegressiveTimer, StopwatchTimer, TabataTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
 import { Dialog, Stack, YStack } from 'tamagui'
-import { useTheme } from 'tamagui'
 
 import RoundDisplay from './RoundDisplay'
 
@@ -42,7 +41,7 @@ const WodTimerScreen: React.FC = () => {
     const orientation = useOrientation()
     const isPortrait = orientation === 'portrait'
     const navigation = useNavigation()
-    const theme = useTheme()
+
     const sounds = useTimerSounds()
     const [roundOpen, setRoundOpen] = useState(false)
 
@@ -236,7 +235,7 @@ const WodTimerScreen: React.FC = () => {
                             circular
                             transparent
                             mt="$2"
-                            icon={<MaterialIcons name="chevron-left" size={40} color={theme.gray2.val} />}
+                            icon={<ChevronLeft size={40} color="$gray2" />}
                             onPress={() => navigation.goBack()}
                         />
                     </Stack>
@@ -301,7 +300,7 @@ const WodTimerScreen: React.FC = () => {
                     onPressOut={() => setRoundOpen(false)}
                     variant="icon"
                     bg="$gray5"
-                    icon={<MaterialIcons name="remove-red-eye" size={22} />}
+                    icon={<Eye size={28} />}
                 />
             </Stack>
         </Stack>

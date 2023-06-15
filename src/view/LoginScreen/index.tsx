@@ -7,9 +7,9 @@ import ActivityIndicator from '@components/ActivityIndicator'
 import Button from '@components/Button'
 import SafeAreaView from '@components/SafeAreaView'
 import TextField from '@components/TextField'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
+import { Eye, EyeOff, User } from '@tamagui/lucide-icons'
 import { logUserInUseCase } from '@useCases/auth/logUserIn'
 import { sendResetPasswordEmailUseCase } from '@useCases/auth/sendResetPasswordEmail'
 import { isAppException } from '@utils/exceptions/AppException'
@@ -17,7 +17,6 @@ import { getErrorMessage } from '@utils/getErrorMessage'
 
 import { FormikConfig, useFormik } from 'formik'
 import { H3, ScrollView, Stack, Text, YStack } from 'tamagui'
-import { useTheme } from 'tamagui'
 
 import { TLoginForm, initialValues, validationSchema } from './config'
 
@@ -25,7 +24,6 @@ const LoginScreen: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigation = useNavigation()
     const [loadingResetPassword, setLoadingResetPassword] = useState(false)
-    const theme = useTheme()
 
     const inputRefs = useRef<Record<string, any>>({})
 
@@ -100,7 +98,7 @@ const LoginScreen: React.FC = () => {
                         <TextField
                             label="Email"
                             autoFocus
-                            componentLeft={<MaterialIcons name="person" size={22} color={theme.gray5.val} />}
+                            componentLeft={<User size={22} color="$gray5" />}
                             keyboardType="email-address"
                             onChangeText={handleChange('email')}
                             value={values.email}
@@ -127,13 +125,14 @@ const LoginScreen: React.FC = () => {
                                     size="$3"
                                     circular
                                     onPress={() => setShowPassword(!showPassword)}
-                                >
-                                    <MaterialIcons
-                                        name={showPassword ? 'visibility' : 'visibility-off'}
-                                        size={22}
-                                        color={theme.gray5.val}
-                                    />
-                                </Button>
+                                    icon={
+                                        showPassword ? (
+                                            <Eye size={22} color="$gray5" />
+                                        ) : (
+                                            <EyeOff size={22} color="$gray5" />
+                                        )
+                                    }
+                                />
                             }
                             onSubmitEditing={() => handleSubmit()}
                         />

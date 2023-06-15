@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 
 import EventBlockMovement from '@components/EventBlockMovement'
 import OpenTimerButton from '@components/OpenTimerButton'
-import { MaterialIcons } from '@expo/vector-icons'
 import { IRound } from '@models/block'
+import { Timer } from '@tamagui/lucide-icons'
 import { roundTimerType } from '@utils/timer-display'
 import { roundTransformer } from '@utils/transformer/round'
 
@@ -29,7 +29,7 @@ const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, showTimerButto
                         <Text fontWeight="bold" fontSize="$4">
                             {roundTitle}
                         </Text>
-                        {showTimerButton && timerType && <MaterialIcons name="timer" size={14} color="white" />}
+                        {showTimerButton && timerType && <Timer size={14} color="white" />}
                     </XStack>
                 )}
 

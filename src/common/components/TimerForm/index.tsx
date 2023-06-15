@@ -5,7 +5,7 @@ import { TTimerType } from '@common/interfaces/timers'
 import Button from '@components/Button'
 import TextField from '@components/TextField'
 import TimeField from '@components/TimeField'
-import { MaterialIcons } from '@expo/vector-icons'
+import { Edit2 } from '@tamagui/lucide-icons'
 
 import { H2, Input, Sheet, Stack, Text, XStack, YStack } from 'tamagui'
 import { useTheme } from 'tamagui'
@@ -69,7 +69,7 @@ const TimerForm: React.FC<TimerFormProps> = (props) => {
                     {props.countdown > 0 ? `Countdown ${props.countdown}s` : 'Sem countdown'}
                 </Text>
                 <Button circular onPress={() => setupCountdownDialogOpen(true)}>
-                    <MaterialIcons name="edit" color={theme.gray2.val} size={22} />
+                    <Edit2 color="$gray2" size={20} />
                 </Button>
             </XStack>
             <YStack ai="center">

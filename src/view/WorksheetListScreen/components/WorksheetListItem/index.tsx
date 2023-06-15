@@ -1,9 +1,9 @@
 import Button from '@components/Button'
-import { MaterialIcons } from '@expo/vector-icons'
 import { IWorksheetModel } from '@models/day'
+import { FileSpreadsheet } from '@tamagui/lucide-icons'
 
 import dayjs from 'dayjs'
-import { Circle, H5, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Circle, H5, Stack, Text, XStack, YStack } from 'tamagui'
 
 export interface WorksheetListItemProps {
     item: IWorksheetModel
@@ -12,8 +12,6 @@ export interface WorksheetListItemProps {
 }
 
 const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, onPress }) => {
-    const theme = useTheme()
-
     const isCurrent = item.startEndDate
         ? dayjs().isBetween(item.startEndDate.start, item.startEndDate.end, 'day', '[]')
         : false
@@ -28,7 +26,7 @@ const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, onPress }) 
         <Stack>
             <Button br="$4" w="auto" h="auto" bg="$gray6" pressStyle={{ bg: '$gray8' }} onPress={() => onPress?.(item)}>
                 <XStack f={1} py="$4" ai="center" gap="$3">
-                    <MaterialIcons name="file-copy" size={24} color={theme.gray4.val} />
+                    <FileSpreadsheet size={24} color="$gray4" />
                     <YStack>
                         <H5 fontWeight="700" color="$gray1">
                             {item.name}

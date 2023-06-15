@@ -1,13 +1,12 @@
 import { useOrientation } from '@common/hooks/useOrientation'
 import MenuButton from '@components/MenuButton'
-import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
+import { FileSpreadsheet, Home, Timer } from '@tamagui/lucide-icons'
 
-import { XStack, useTheme } from 'tamagui'
+import { XStack } from 'tamagui'
 
 const AppBottomBar: React.FC = () => {
-    const theme = useTheme()
     const { navigate } = useNavigation()
     const orientation = useOrientation()
 
@@ -17,17 +16,17 @@ const AppBottomBar: React.FC = () => {
         <XStack gap={5} jc="center" bg="$gray9" btc="$red5" btw="$1" h={70}>
             <MenuButton
                 label="Home"
-                Icon={() => <MaterialIcons name="home" size={22} color={theme.gray4.val} />}
+                Icon={() => <Home size={22} color="$gray4" />}
                 onPress={() => navigate(ERouteName.HomeScreen)}
             />
             <MenuButton
                 label="Planilhas"
-                Icon={() => <MaterialIcons name="featured-play-list" size={22} color={theme.gray4.val} />}
+                Icon={() => <FileSpreadsheet size={22} color="$gray4" />}
                 onPress={() => navigate(ERouteName.WorksheetList)}
             />
             <MenuButton
                 label="Timers"
-                Icon={() => <MaterialIcons name="timer" size={22} color={theme.gray4.val} />}
+                Icon={() => <Timer size={22} color="$gray4" />}
                 onPress={() => navigate(ERouteName.TimersScreen)}
             />
         </XStack>

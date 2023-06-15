@@ -1,5 +1,5 @@
-import { MaterialIcons } from '@expo/vector-icons'
 import { IEventMovement } from '@models/block'
+import { Youtube } from '@tamagui/lucide-icons'
 import { movementTransformer } from '@utils/transformer/movement'
 
 import * as Linking from 'expo-linking'
@@ -28,7 +28,7 @@ const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideR
                         {displayMovement}
                     </Text>
                     <Button size="$1.5" br="$6" w="$1.5" bg="$gray9" onPress={handleOnClickUrl}>
-                        <MaterialIcons name="videocam" size={10} color={theme.gray3.val} />
+                        <Youtube size={14} color={theme.gray3.val} />
                     </Button>
                 </XStack>
             ) : (

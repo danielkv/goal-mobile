@@ -1,10 +1,10 @@
 import Button from '@components/Button'
-import { MaterialIcons } from '@expo/vector-icons'
 import { IDayModel } from '@models/day'
+import { Calendar } from '@tamagui/lucide-icons'
 import { pluralize } from '@utils/strings'
 
 import dayjs from 'dayjs'
-import { Circle, H3, Stack, Text, YStack, useTheme } from 'tamagui'
+import { Circle, H3, Stack, Text, YStack } from 'tamagui'
 
 export interface WorksheetDayItemProps {
     item: IDayModel
@@ -13,8 +13,6 @@ export interface WorksheetDayItemProps {
 }
 
 const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) => {
-    const theme = useTheme()
-
     const date = dayjs(item.date)
 
     const periodsDisplay = `${item.periods.length} ${pluralize(item.periods.length, 'período')}`
@@ -32,7 +30,7 @@ const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) =>
             >
                 <YStack py="$4" f={1} ai="center" jc="center">
                     <Stack mb="$2">
-                        <MaterialIcons name="calendar-today" size={24} color={theme.gray4.val} />
+                        <Calendar size={24} color="$gray4" />
                     </Stack>
 
                     <H3 color="$gray1" fontWeight="700" fontSize="$3">

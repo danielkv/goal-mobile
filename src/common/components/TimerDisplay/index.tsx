@@ -4,8 +4,8 @@ import { SvgProps } from 'react-native-svg'
 
 import { useOrientation } from '@common/hooks/useOrientation'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
-import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { Edit3, PauseCircle, PlayCircle, RotateCcw } from '@tamagui/lucide-icons'
 
 import { useKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
@@ -69,15 +69,6 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
         navigation.setOptions({ headerStyle: { backgroundColor: isPortrait ? theme.gray9.val : theme.gray7.val } })
     }, [isPortrait])
 
-    if (watchProgressStatus === 'initial')
-        return (
-            <Stack flex={1} alignItems="center" justifyContent="center">
-                <TouchableOpacity onPress={() => onPressPlayButton()}>
-                    <MaterialIcons name="play-circle-filled" color={theme.red5.val} size={100} />
-                </TouchableOpacity>
-            </Stack>
-        )
-
     return (
         <YStack flex={1} alignItems="center" justifyContent="center" gap="$3">
             <Stack gap="$6" flexDirection="row" alignItems="center" mb="$2">
@@ -136,40 +127,50 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     {watchProgressStatus === 'running' ? (
                         <>
                             <TouchableOpacity onPress={onPressPauseButton}>
-                                <MaterialIcons
-                                    name="pause-circle-filled"
-                                    color={theme.gray5.val}
-                                    size={isPortrait ? 75 : 65}
-                                />
+                                <PauseCircle color="$gray5" size={isPortrait ? 75 : 65} />
                             </TouchableOpacity>
                         </>
                     ) : (
                         <>
                             {watchProgressStatus !== 'finished' && (
                                 <TouchableOpacity onPress={() => onPressPlayButton()}>
-                                    <MaterialIcons
-                                        name="play-circle-filled"
-                                        color={theme.red5.val}
-                                        size={isPortrait ? 75 : 65}
-                                    />
+                                    <PlayCircle color="$red5" size={isPortrait ? 75 : 65} />
                                 </TouchableOpacity>
                             )}
                             <TouchableOpacity onPress={() => onPressResetButton()}>
-                                <MaterialIcons
-                                    name="replay-circle-filled"
-                                    color={theme.gray5.val}
-                                    size={isPortrait ? 75 : 65}
-                                />
+                                <RotateCcw color="$gray5" size={isPortrait ? 75 : 65} />
                             </TouchableOpacity>
                             {onPressEditButton && (
                                 <TouchableOpacity onPress={onPressEditButton}>
-                                    <MaterialIcons name="edit" color={theme.gray5.val} size={isPortrait ? 50 : 40} />
+                                    <Edit3 color="$gray5" size={isPortrait ? 50 : 40} />
                                 </TouchableOpacity>
                             )}
                         </>
                     )}
                 </XStack>
             )}
+            <AnimatePresence>
+                {watchProgressStatus === 'initial' && (
+                    <Stack
+                        position="absolute"
+                        bg="#000000bb"
+                        key="play"
+                        top={0}
+                        bottom={0}
+                        right={0}
+                        left={0}
+                        alignItems="center"
+                        justifyContent="center"
+                        opacity={1}
+                        animation="quick"
+                        exitStyle={{ opacity: 0 }}
+                    >
+                        <TouchableOpacity onPress={() => onPressPlayButton()}>
+                            <PlayCircle fill="#333" color="$red5" strokeWidth={2} size={100} />
+                        </TouchableOpacity>
+                    </Stack>
+                )}
+            </AnimatePresence>
         </YStack>
     )
 }
