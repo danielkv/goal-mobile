@@ -1,21 +1,21 @@
-import EventBlock from '../EventBlock'
 import RestBlock from '@components/RestBlock'
 import TextBlock from '@components/TextBlock'
 import { IBlock } from '@models/block'
 
+import EventBlock from '../EventBlock'
+
 export interface BlockProps {
     block: IBlock
-    textAlign?: 'center' | 'left'
 }
 
-const BlockItem: React.FC<BlockProps> = ({ block, textAlign = 'center' }) => {
+const BlockItem: React.FC<BlockProps> = ({ block }) => {
     switch (block.type) {
         case 'event':
-            return <EventBlock block={block} textAlign={textAlign} />
+            return <EventBlock block={block} />
         case 'rest':
-            return <RestBlock block={block} textAlign={textAlign} />
+            return <RestBlock block={block} />
         case 'text':
-            return <TextBlock block={block} textAlign={textAlign} />
+            return <TextBlock block={block} />
     }
 
     return null

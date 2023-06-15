@@ -7,11 +7,10 @@ import { Button, Stack, Text, XStack, useTheme } from 'tamagui'
 
 export interface EventBlockMovementProps {
     movement: IEventMovement
-    textAlign?: 'center' | 'left'
     hideReps: boolean
 }
 
-const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideReps, textAlign = 'center' }) => {
+const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideReps }) => {
     const theme = useTheme()
 
     const displayMovement = movementTransformer.display(movement, hideReps)
@@ -24,8 +23,8 @@ const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideR
     return (
         <Stack>
             {movement.videoUrl ? (
-                <XStack ai="center" jc={textAlign === 'center' ? 'center' : 'flex-start'} gap="$2">
-                    <Text color="$gray3" fontSize="$5" textAlign={textAlign}>
+                <XStack ai="center" gap="$2">
+                    <Text color="$gray3" fontSize="$5">
                         {displayMovement}
                     </Text>
                     <Button size="$1.5" br="$6" w="$1.5" bg="$gray9" onPress={handleOnClickUrl}>
@@ -33,7 +32,7 @@ const EventBlockMovement: React.FC<EventBlockMovementProps> = ({ movement, hideR
                     </Button>
                 </XStack>
             ) : (
-                <Text textBreakStrategy="balanced" fontSize="$5" color="$gray3" textAlign={textAlign}>
+                <Text textBreakStrategy="balanced" fontSize="$5" color="$gray3">
                     {displayMovement}
                 </Text>
             )}

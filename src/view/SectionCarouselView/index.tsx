@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { Dimensions } from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, {
     useAnimatedStyle,
@@ -10,18 +9,14 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { IFlatSection } from '@common/interfaces/worksheet'
+import BlockItem from '@components/BlockItem'
+import WodCard from '@components/WodCard'
 import { useLoggedUser } from '@contexts/user/userContext'
 import { IDayModel } from '@models/day'
 import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { ERouteName } from '@router/types'
 
-import { ScrollView, Stack, XStack } from 'tamagui'
-
-import SectionItem from './components/SectionItem'
-
-const SCREEN_WIDTH = Dimensions.get('window').width
-const SECTION_CARD_WIDTH = SCREEN_WIDTH * 0.9
-const SECTION_CARD_MARGIN = 17
+import { ScrollView, Stack, Text, XStack, getTokens } from 'tamagui'
 
 export interface SectionCarouselView {
     day: IDayModel
@@ -52,6 +47,7 @@ const DOT_DIFF = DOT_MAX - DOT_MIN
 
 const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
     const { dispatch } = useNavigation()
+    const { size } = getTokens()
     const user = useLoggedUser()
 
     const offset = useSharedValue(0)
@@ -115,15 +111,42 @@ const SectionCarouselView: React.FC<SectionCarouselView> = ({ day }) => {
                 })}
             </XStack>
             <AnimatedPagerView style={{ flex: 1 }} onPageScroll={scrollHandler}>
-                {sections.map((item, index) => (
-                    <Stack key={`${item.name}.${index}`}>
-                        <ScrollView
-                            contentContainerStyle={{ alignItems: 'center', paddingHorizontal: SECTION_CARD_MARGIN }}
-                        >
-                            <SectionItem width={SECTION_CARD_WIDTH} item={item} />
-                        </ScrollView>
-                    </Stack>
-                ))}
+                {sections.map((item, index) => {
+                    const sectionNumber = `${item.period}.${item.sectionNumber}`
+                    return (
+                        <Stack key={`${item.name}.${index}`}>
+                            <ScrollView
+                                contentContainerStyle={{
+                                    paddingHorizontal: size['1'].val,
+                                }}
+                            >
+                                <WodCard title={item.name} number={sectionNumber}>
+                                    <Stack gap="$2">
+                                        {item.blocks.map((block, index) => (
+                                            <Stack key={`${block.type}.${index}`}>
+                                                <Stack mb="$2">
+                                                    <BlockItem block={block} />
+                                                </Stack>
+                                                <Stack
+                                                    px="$2"
+                                                    py="$1"
+                                                    btlr="$2"
+                                                    btrr="$2"
+                                                    bg="$gray5"
+                                                    position="absolute"
+                                                    bottom={0}
+                                                    right="$3"
+                                                >
+                                                    <Text fontSize="$3">{`${sectionNumber}.${index + 1}`}</Text>
+                                                </Stack>
+                                            </Stack>
+                                        ))}
+                                    </Stack>
+                                </WodCard>
+                            </ScrollView>
+                        </Stack>
+                    )
+                })}
             </AnimatedPagerView>
         </Stack>
     )

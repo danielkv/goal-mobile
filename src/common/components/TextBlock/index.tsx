@@ -1,17 +1,17 @@
+import InternalCard from '@components/InternalCard'
 import { ITextBlock } from '@models/block'
 
 import { Text } from 'tamagui'
 
 export interface TextBlockProps {
     block: ITextBlock
-    textAlign?: 'center' | 'left'
 }
 
-const TextBlock: React.FC<TextBlockProps> = ({ block, textAlign = 'center' }) => {
+const TextBlock: React.FC<TextBlockProps> = ({ block }) => {
     return (
-        <>
-            <Text textAlign={textAlign}>{block.text}</Text>
-        </>
+        <InternalCard>
+            <Text color="$gray1">{block.text}</Text>
+        </InternalCard>
     )
 }
 

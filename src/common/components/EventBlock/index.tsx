@@ -2,85 +2,29 @@ import { useMemo, useState } from 'react'
 
 import Button from '@components/Button'
 import EventBlockRound from '@components/EventBlockRound'
-import OpenTimerButton, { OpenTimerButtonProps } from '@components/OpenTimerButton'
-import { MaterialIcons } from '@expo/vector-icons'
+import InternalCard from '@components/InternalCard'
+import OpenTimerButton from '@components/OpenTimerButton'
+import TimerIcon from '@components/TimerIcon'
 import { IEventBlock } from '@models/block'
-import { TTimerTypes } from '@models/time'
 import { useNavigation } from '@react-navigation/native'
-import { ERouteName } from '@router/types'
+import { blockTimerType, checkIsTimedWorkout } from '@utils/timer-display'
 import { eventBlockTransformer } from '@utils/transformer/eventblock'
 
-import { AlertDialog, Text, YStack, useTheme } from 'tamagui'
+import { AlertDialog, Text, YStack } from 'tamagui'
 import { XStack } from 'tamagui'
 
 export interface PeriodEventBlock {
     block: IEventBlock
-    textAlign?: 'center' | 'left'
 }
 
-const getTimerSettings = (block: IEventBlock): OpenTimerButtonProps['settings'] => {
-    switch (block.event_type) {
-        case 'amrap':
-        case 'max_weight':
-        case 'for_time':
-            return {
-                numberOfRounds: block.numberOfRounds,
-                timecap: block.timecap,
-            }
-        case 'emom':
-            return {
-                numberOfRounds: block.numberOfRounds,
-                each: block.each,
-            }
-        case 'tabata':
-            return {
-                numberOfRounds: block.numberOfRounds,
-                work: block.work,
-                rest: block.rest,
-            }
-    }
-
-    return {}
-}
-
-const getTimerType = (block: IEventBlock): Exclude<TTimerTypes, 'not_timed'> | null => {
-    switch (block.event_type) {
-        case 'emom':
-            if (block.each && block.each > 0 && block.numberOfRounds && block.numberOfRounds > 0) return 'emom'
-            break
-        case 'tabata':
-            if (
-                block.work &&
-                block.work > 0 &&
-                block.rest &&
-                block.rest > 0 &&
-                block.numberOfRounds &&
-                block.numberOfRounds > 0
-            )
-                return 'tabata'
-            break
-        case 'for_time':
-        case 'max_weight':
-        case 'amrap':
-            if (block.timecap && block.timecap > 0) return 'for_time'
-            break
-    }
-    return null
-}
-
-const checkIsTimedWorkout = (block: IEventBlock): boolean => {
-    return block.rounds.every((round) => ['for_time', 'emom', 'amrap', 'tabata', 'rest'].includes(round.type))
-}
-
-const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' }) => {
+const EventBlock: React.FC<PeriodEventBlock> = ({ block }) => {
     const { navigate } = useNavigation()
 
-    const theme = useTheme()
     const blockTitle = eventBlockTransformer.displayTitle(block)
     const [infoOpen, setInfoOpen] = useState(false)
 
     const isTimedWorkout = useMemo(() => checkIsTimedWorkout(block), [])
-    const blockTimerType = getTimerType(block)
+    const timerType = blockTimerType(block)
 
     const handleCloseInfo = () => {
         setInfoOpen(false)
@@ -90,63 +34,23 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
     }
 
     return (
-        <>
-            {(!!block.name || !!blockTitle) && (
-                <XStack bg="$gray9" jc="space-between" ai="flex-start">
-                    <YStack mt="$1">
-                        {!!block.name && (
-                            <Text fontSize="$3" textAlign={textAlign}>
-                                {block.name}
-                            </Text>
-                        )}
-                        {!!blockTitle &&
-                            (textAlign === 'center' ? (
-                                <Text px={5} py={1} mb={1} fontSize="$4" textAlign={textAlign}>
-                                    {blockTitle}
-                                </Text>
-                            ) : (
-                                <Text fontWeight="900" fontSize="$4" ml={1} mb={1} textAlign={textAlign}>
-                                    {blockTitle}
-                                </Text>
-                            ))}
-                    </YStack>
-                </XStack>
-            )}
-
-            {(!!isTimedWorkout || blockTimerType || !!block.info) && (
-                <XStack space="$2" my="$2">
-                    {isTimedWorkout ? (
-                        <Button
-                            onPress={() => navigate(ERouteName.WodTimer, { block })}
-                            icon={<MaterialIcons name="timer" size={18} />}
-                        >
-                            Abrir Timer
-                        </Button>
-                    ) : (
-                        !!blockTimerType && <OpenTimerButton type={blockTimerType} settings={getTimerSettings(block)} />
-                    )}
-                    {!!block.info && (
-                        <Button
-                            flex={1}
-                            icon={<MaterialIcons name="info-outline" size={26} color={theme.gray3.val} />}
-                            onPress={handleOpenInfo}
-                        >
-                            Informações
-                        </Button>
+        <OpenTimerButton block={block}>
+            {(!!block.name || !!blockTitle || !!isTimedWorkout || !!timerType) && (
+                <XStack ai="center" mt="$1" mb="$1.5" gap="$1">
+                    <Text fontWeight="bold" fontSize="$4">
+                        {blockTitle || block.name || 'Clique para abrir o Timer'}
+                    </Text>
+                    {(!!isTimedWorkout || !!timerType) && (
+                        <TimerIcon name={timerType || 'for_time'} size={14} color="white" />
                     )}
                 </XStack>
             )}
 
-            <YStack space="$2">
+            <InternalCard>
                 {block.rounds.map((round, index) => (
-                    <EventBlockRound
-                        key={`${round.type}${index}`}
-                        round={round}
-                        textAlign={textAlign}
-                        showTimerButton={!isTimedWorkout}
-                    />
+                    <EventBlockRound key={`${round.type}${index}`} round={round} showTimerButton={!isTimedWorkout} />
                 ))}
-            </YStack>
+            </InternalCard>
 
             <AlertDialog open={infoOpen}>
                 <AlertDialog.Portal>
@@ -191,7 +95,7 @@ const EventBlock: React.FC<PeriodEventBlock> = ({ block, textAlign = 'center' })
                     </AlertDialog.Content>
                 </AlertDialog.Portal>
             </AlertDialog>
-        </>
+        </OpenTimerButton>
     )
 }
 

@@ -1,35 +1,39 @@
-import React from 'react'
-import { SvgProps } from 'react-native-svg'
+import { TouchableOpacity } from 'react-native'
 
-import EmomSvg from '@assets/svg/emom.svg'
-import StopwatchSvg from '@assets/svg/stopwatch.svg'
-import TabataSvg from '@assets/svg/tabata.svg'
-import Button from '@components/Button'
-import { IEMOMTimer, ITabataTimer, ITimecapTimer, TTimerTypes } from '@models/time'
+import { IEventBlock, IRound } from '@models/block'
 import { useNavigation } from '@react-navigation/native'
-
-import { useTheme } from 'tamagui'
+import { ERouteName } from '@router/types'
+import {
+    blockTimerSettings,
+    blockTimerType,
+    checkIsTimedWorkout,
+    roundTimerSettings,
+    roundTimerType,
+} from '@utils/timer-display'
 
 export interface OpenTimerButtonProps {
-    variant?: 'button' | 'icon'
-    type: Exclude<TTimerTypes, 'not_timed'>
-    settings: Partial<ITabataTimer & IEMOMTimer & ITimecapTimer>
+    disabled?: boolean
+    block?: IEventBlock
+    round?: IRound
+    children: React.ReactNode
 }
 
-const icons: Record<Exclude<TTimerTypes, 'not_timed'>, React.FC<SvgProps>> = {
-    emom: EmomSvg,
-    for_time: StopwatchSvg,
-    amrap: StopwatchSvg,
-    tabata: TabataSvg,
-}
-
-const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ type, settings, variant = 'button' }) => {
-    const theme = useTheme()
+const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ block, round, children, disabled }) => {
     const { navigate } = useNavigation()
 
-    if (!['emom', 'for_time', 'amrap', 'tabata'].includes(type)) return null
+    const isTimedWorkout = block ? checkIsTimedWorkout(block) : false
+    const type = block ? blockTimerType(block) : round ? roundTimerType(round) : null
+    const settings = block ? blockTimerSettings(block) : round ? roundTimerSettings(round) : null
+
+    if (!isTimedWorkout && (!type || !settings)) {
+        return <>{children}</>
+    }
 
     const handleOnPress = () => {
+        if (isTimedWorkout && block) return navigate(ERouteName.WodTimer, { block })
+
+        if (!type || !settings) return
+
         switch (type) {
             case 'for_time':
             case 'amrap':
@@ -48,19 +52,10 @@ const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ type, settings, varia
         }
     }
 
-    const Icon = icons[type]
-
-    if (variant === 'icon')
-        return (
-            <Button size="$4" onPress={handleOnPress} circular>
-                <Icon width={22} height={22} fill={theme.gray3.val} />
-            </Button>
-        )
-
     return (
-        <Button flex={1} icon={<Icon width={24} height={24} fill={theme.gray3.val} />} onPress={handleOnPress}>
-            Abrir Timer
-        </Button>
+        <TouchableOpacity disabled={disabled} onPress={handleOnPress}>
+            {children}
+        </TouchableOpacity>
     )
 }
 

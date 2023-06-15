@@ -1,108 +1,59 @@
 import { useMemo } from 'react'
 
 import EventBlockMovement from '@components/EventBlockMovement'
-import OpenTimerButton, { OpenTimerButtonProps } from '@components/OpenTimerButton'
+import OpenTimerButton from '@components/OpenTimerButton'
+import { MaterialIcons } from '@expo/vector-icons'
 import { IRound } from '@models/block'
-import { TTimerTypes } from '@models/time'
+import { roundTimerType } from '@utils/timer-display'
 import { roundTransformer } from '@utils/transformer/round'
 
-import { Stack, Text, YStack } from 'tamagui'
+import { Stack, Text, XStack, YStack } from 'tamagui'
 
 export interface EventBlockRoundProps {
     round: IRound
-    textAlign?: 'center' | 'left'
     showTimerButton?: boolean
 }
 
-const getTimerSettings = (round: IRound): OpenTimerButtonProps['settings'] => {
-    switch (round.type) {
-        case 'amrap':
-        case 'for_time':
-            return {
-                numberOfRounds: round.numberOfRounds,
-                timecap: round.timecap,
-            }
-        case 'emom':
-            return {
-                numberOfRounds: round.numberOfRounds,
-                each: round.each,
-            }
-        case 'tabata':
-            return {
-                numberOfRounds: round.numberOfRounds,
-                work: round.work,
-                rest: round.rest,
-            }
-    }
-
-    return {}
-}
-
-const getTimerType = (round: IRound): Exclude<TTimerTypes, 'not_timed'> | null => {
-    switch (round.type) {
-        case 'emom':
-            if (round.each && round.each > 0 && round.numberOfRounds && round.numberOfRounds > 0) return 'emom'
-            break
-        case 'tabata':
-            if (
-                round.work &&
-                round.work > 0 &&
-                round.rest &&
-                round.rest > 0 &&
-                round.numberOfRounds &&
-                round.numberOfRounds > 0
-            )
-                return 'tabata'
-            break
-        case 'for_time':
-        case 'amrap':
-            if (round.timecap && round.timecap > 0) return 'for_time'
-            break
-    }
-    return null
-}
-
-const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, textAlign = 'center', showTimerButton = false }) => {
+const EventBlockRound: React.FC<EventBlockRoundProps> = ({ round, showTimerButton = false }) => {
     const sequenceReps = useMemo(() => roundTransformer.findSequenceReps(round.movements), [])
 
     const roundTitle = roundTransformer.displayTitle(round, sequenceReps?.join('-'))
 
-    const timerType = getTimerType(round)
+    const timerType = roundTimerType(round)
 
     return (
-        <Stack bg="$gray8" br="$2" p="$2">
-            {!!roundTitle && (
-                <Text textAlign={textAlign} fontWeight="bold" fontSize="$4">
-                    {roundTitle}
-                </Text>
-            )}
+        <OpenTimerButton round={round} disabled={!showTimerButton}>
+            <Stack>
+                {!!roundTitle && (
+                    <XStack gap="$1" ai="center" mb="$1.5">
+                        <Text fontWeight="bold" fontSize="$4">
+                            {roundTitle}
+                        </Text>
+                        {showTimerButton && timerType && <MaterialIcons name="timer" size={14} color="white" />}
+                    </XStack>
+                )}
 
-            {showTimerButton && !!timerType && (
-                <Stack position="absolute" top={1} right={1}>
-                    <OpenTimerButton variant="icon" type={timerType} settings={getTimerSettings(round)} />
-                </Stack>
-            )}
-            {!['complex', 'rest'].includes(round.type) ? (
-                <YStack ai={textAlign === 'center' ? 'center' : 'flex-start'}>
-                    {round.movements.map((movement, index) => (
-                        <EventBlockMovement
-                            key={`${movement.name}.${index}`}
-                            hideReps={!!sequenceReps}
-                            movement={movement}
-                            textAlign={textAlign}
-                        />
-                    ))}
-                </YStack>
-            ) : round.type === 'complex' ? (
-                <Text textBreakStrategy="balanced" fontSize="$4" color="$gray3" ta={textAlign}>
-                    {roundTransformer.displayComplex(round)}
-                </Text>
-            ) : (
-                <Text textBreakStrategy="balanced" fontSize="$4" color="$gray3" ta={textAlign}>
-                    {roundTransformer.displayRestRound(round)}
-                </Text>
-            )}
-        </Stack>
+                {!['complex', 'rest'].includes(round.type) ? (
+                    <YStack ai="flex-start">
+                        {round.movements.map((movement, index) => (
+                            <EventBlockMovement
+                                key={`${movement.name}.${index}`}
+                                hideReps={!!sequenceReps}
+                                movement={movement}
+                            />
+                        ))}
+                    </YStack>
+                ) : round.type === 'complex' ? (
+                    <Text textBreakStrategy="balanced" fontSize="$4" color="$gray3">
+                        {roundTransformer.displayComplex(round)}
+                    </Text>
+                ) : (
+                    <Text textBreakStrategy="balanced" fontWeight="bold" fontSize="$4">
+                        {roundTransformer.displayRestRound(round)}
+                    </Text>
+                )}
+            </Stack>
+        </OpenTimerButton>
     )
 }
 
