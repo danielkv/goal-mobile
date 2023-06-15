@@ -4,9 +4,9 @@ import { useStorage } from '@common/hooks/useStorage'
 import ActivityIndicator from '@components/ActivityIndicator'
 import AlertBox from '@components/AlertBox'
 import Button from '@components/Button'
-import { MaterialIcons } from '@expo/vector-icons'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
+import { AlignJustify, Lightbulb, LightbulbOff, PanelRightClose } from '@tamagui/lucide-icons'
 import { getWorksheetDayByIdFnUseCase } from '@useCases/worksheet/getWorksheetDayById'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import { capitalize } from '@utils/strings'
@@ -17,6 +17,8 @@ import dayjs from 'dayjs'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import useSWR from 'swr'
 import { Stack, XStack } from 'tamagui'
+
+import WorksheetOnboarding from './components/WorksheetOnboarding'
 
 const DayViewScreen: React.FC = () => {
     const {
@@ -75,13 +77,8 @@ const DayViewScreen: React.FC = () => {
                         variant="icon"
                         bg="transparent"
                         onPress={() => setKeepAwake(keepAwake === 'enabled' ? 'disabled' : 'enabled')}
-                    >
-                        <MaterialIcons
-                            name={keepAwake === 'disabled' ? 'lightbulb-outline' : 'lightbulb'}
-                            size={16}
-                            color="white"
-                        />
-                    </Button>
+                        icon={keepAwake === 'disabled' ? <Lightbulb size="$1" /> : <LightbulbOff size="$1" />}
+                    />
                 </XStack>
             ),
         })
@@ -103,19 +100,19 @@ const DayViewScreen: React.FC = () => {
             {viewType === 'carousel' ? <SectionCarouselView day={data} /> : <PeriodsListView day={data} />}
 
             <Button
-                size="$5"
+                size="$6"
                 variant="icon"
                 bg="$gray6"
                 elevate
                 elevation="$4"
                 onPress={() => setViewType(viewType === 'list' ? 'carousel' : 'list')}
-                icon={
-                    <MaterialIcons name={viewType === 'list' ? 'view-carousel' : 'view-list'} size={18} color="white" />
-                }
+                icon={viewType === 'carousel' ? <AlignJustify size="$2" /> : <PanelRightClose size="$2" />}
                 position="absolute"
                 bottom="$4"
                 right="$3"
             />
+
+            <WorksheetOnboarding />
         </Stack>
     )
 }

@@ -24,6 +24,7 @@
 		"@tamagui/babel-plugin": "^1.30.21",
 		"@tamagui/config": "^1.30.21",
 		"@tamagui/font-inter": "^1.30.21",
+		"@tamagui/lucide-icons": "^1.33.4",
 		"@tamagui/theme-base": "^1.30.21",
 		"babel-plugin-transform-inline-environment-variables": "^0.4.4",
 		"chroma-js": "^2.4.2",
