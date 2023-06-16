@@ -39,11 +39,11 @@ const WorksheetOnboarding: React.FC = () => {
                     Modos
                 </H1>
                 <Text ta="center" fontSize="$5">
-                    Você pode vizualizar as planilhas de 2 manieras: em períodos ou em seções
+                    Você pode vizualizar as planilhas de 2 maneiras: em períodos ou em seções
                 </Text>
                 <Image source={ModesImage} maxWidth="100%" maxHeight={275} resizeMode="contain" />
                 <Text ta="center" fontSize="$5">
-                    Você pode alternar entre esses modos clicando que é exibido no canto inferior direito.
+                    Você pode alternar entre esses modos clicando no icone que é exibido no canto inferior direito.
                 </Text>
             </Stack>
             <Stack ai="center" jc="center" gap="$3" my="$3" mx="$3">
