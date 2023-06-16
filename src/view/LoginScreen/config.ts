@@ -17,5 +17,5 @@ export const initialValues = (): TLoginForm => {
 
 export const validationSchema = yup.object().shape({
     email: yup.string().required('Email é obrigatório'),
-    password: yup.string().required('Email é obrigatório'),
+    password: yup.string().required('Senha é obrigatória'),
 })

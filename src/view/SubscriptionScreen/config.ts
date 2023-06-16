@@ -23,5 +23,5 @@ export const validationSchema = yup.object().shape({
     name: yup.string().required('Nome é obrigatório'),
     email: yup.string().required('Email é obrigatório'),
     phoneNumber: yup.string().required('Telefone é obrigatório'),
-    password: yup.string().required('Email é obrigatório'),
+    password: yup.string().required('Senha é obrigatória'),
 })

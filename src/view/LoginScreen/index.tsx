@@ -100,11 +100,14 @@ const LoginScreen: React.FC = () => {
                             autoFocus
                             componentLeft={<User size={22} color="$gray5" />}
                             keyboardType="email-address"
+                            textContentType="username"
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
+                            autoCapitalize="none"
                             returnKeyType="next"
                             ref={(ref: any) => (inputRefs.current['email'] = ref)}
+                            autoCorrect
                             onSubmitEditing={() => {
                                 inputRefs.current['password']?.focus()
                             }}
@@ -118,6 +121,7 @@ const LoginScreen: React.FC = () => {
                             value={values.password}
                             error={errors.password}
                             returnKeyType="join"
+                            textContentType="password"
                             secureTextEntry={showPassword}
                             componentRight={
                                 <Button

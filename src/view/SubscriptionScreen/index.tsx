@@ -77,6 +77,7 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('name')}
                             value={values.name}
                             error={errors.name}
+                            textContentType="name"
                             returnKeyType="next"
                             ref={(ref) => (inputRefs.current['name'] = ref)}
                             onSubmitEditing={() => {
@@ -90,6 +91,8 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('email')}
                             value={values.email}
                             error={errors.email}
+                            autoCapitalize="none"
+                            textContentType="username"
                             returnKeyType="next"
                             ref={(ref) => (inputRefs.current['email'] = ref)}
                             onSubmitEditing={() => {
@@ -114,6 +117,7 @@ const SubscriptionScreen: React.FC = () => {
                             onChangeText={handleChange('password')}
                             value={values.password}
                             error={errors.password}
+                            textContentType="newPassword"
                             secureTextEntry={!showPassword}
                             componentRight={
                                 <Button
