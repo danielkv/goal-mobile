@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import StopwatchSvg from '@assets/svg/stopwatch.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
+import { IEventBlock, IRound } from '@models/block'
 import { StopwatchTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
@@ -11,12 +12,16 @@ export interface StopwatchDisplayProps {
     finalTime: number
     initialCountdown: number
     onPressReset(): void
+    round?: IRound
+    block?: IEventBlock
 }
 
 const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
     finalTime,
     initialCountdown: _initialCountdown,
     onPressReset,
+    round,
+    block,
 }) => {
     const clockRef = useRef<StopwatchTimer>()
 
@@ -50,6 +55,8 @@ const StopwatchDisplay: React.FC<StopwatchDisplayProps> = ({
             onPressPauseButton={() => {
                 clockRef.current?.stop()
             }}
+            block={block}
+            round={round}
         />
     )
 }

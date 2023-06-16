@@ -48,6 +48,8 @@ const StopwatchTimerScreen: React.FC = () => {
                     initialCountdown={countdown}
                     finalTime={timecap}
                     onPressReset={() => setState('form')}
+                    block={params?.block}
+                    round={params?.round}
                 />
             )}
         </SafeAreaView>

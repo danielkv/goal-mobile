@@ -4,6 +4,7 @@ import TabataSvg from '@assets/svg/tabata.svg'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
+import { IEventBlock, IRound } from '@models/block'
 import { TabataTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
@@ -14,6 +15,8 @@ export interface TabataDisplayProps {
     rounds: number
     initialCountdown: number
     onPressReset(): void
+    round?: IRound
+    block?: IEventBlock
 }
 
 const TabataDisplay: React.FC<TabataDisplayProps> = ({
@@ -22,6 +25,8 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
     rounds,
     initialCountdown: _initialCountdown,
     onPressReset,
+    block,
+    round,
 }) => {
     const [currentRound, setCurrentRound] = useState(1)
     const [currentActivityStatus, setCurrentActivityStatus] = useState<TActivityStatus>('work')
@@ -59,7 +64,7 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
             Icon={TabataSvg}
             activityStatus={initialCountdown ? 'countdown' : currentActivityStatus}
-            round={currentRound}
+            roundNumber={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}
             watchProgressStatus={currentStatus}
@@ -68,6 +73,8 @@ const TabataDisplay: React.FC<TabataDisplayProps> = ({
             onPressPauseButton={() => {
                 clockRef.current?.stop()
             }}
+            block={block}
+            round={round}
         />
     )
 }

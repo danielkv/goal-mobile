@@ -11,12 +11,10 @@ import {
     roundTimerType,
 } from '@utils/timer-display'
 
-export interface OpenTimerButtonProps {
+export type OpenTimerButtonProps = {
     disabled?: boolean
-    block?: IEventBlock
-    round?: IRound
     children: React.ReactNode
-}
+} & ({ round: IRound; block?: never } | { block: IEventBlock; round?: never })
 
 const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ block, round, children, disabled }) => {
     const { navigate } = useNavigation()
@@ -37,17 +35,33 @@ const OpenTimerButton: React.FC<OpenTimerButtonProps> = ({ block, round, childre
         switch (type) {
             case 'for_time':
             case 'amrap':
-                return navigate('StopwatchTimerScreen', {
-                    numberOfRounds: settings.numberOfRounds,
-                    timecap: settings.timecap,
-                })
+                if (settings.timecap)
+                    return navigate(ERouteName.RegressiveTimerScreen, {
+                        numberOfRounds: settings.numberOfRounds,
+                        timecap: settings.timecap,
+                        block,
+                        round,
+                    })
+                else
+                    return navigate(ERouteName.StopwatchTimerScreen, {
+                        numberOfRounds: settings.numberOfRounds,
+                        block,
+                        round,
+                    })
             case 'emom':
-                return navigate('EmomTimerScreen', { numberOfRounds: settings.numberOfRounds, each: settings.each })
+                return navigate(ERouteName.EmomTimerScreen, {
+                    numberOfRounds: settings.numberOfRounds,
+                    each: settings.each,
+                    block,
+                    round,
+                })
             case 'tabata':
-                return navigate('TabataTimerScreen', {
+                return navigate(ERouteName.TabataTimerScreen, {
                     numberOfRounds: settings.numberOfRounds,
                     work: settings.work,
                     rest: settings.rest,
+                    block,
+                    round,
                 })
         }
     }

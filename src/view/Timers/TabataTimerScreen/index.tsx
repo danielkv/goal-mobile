@@ -56,6 +56,8 @@ const TabataTimerScreen: React.FC = () => {
                     rest={rest}
                     rounds={rounds}
                     onPressReset={() => setState('form')}
+                    block={params?.block}
+                    round={params?.round}
                 />
             )}
         </SafeAreaView>

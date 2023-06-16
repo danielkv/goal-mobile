@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import RegressiveSvg from '@assets/svg/regressive.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
+import { IEventBlock, IRound } from '@models/block'
 import { RegressiveTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
@@ -11,12 +12,16 @@ export interface RegressiveDisplayProps {
     initialTime: number
     initialCountdown: number
     onPressReset(): void
+    round?: IRound
+    block?: IEventBlock
 }
 
 const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
     initialTime,
     initialCountdown: _initialCountdown,
     onPressReset,
+    block,
+    round,
 }) => {
     const clockRef = useRef<RegressiveTimer>()
 
@@ -49,6 +54,8 @@ const RegressiveDisplay: React.FC<RegressiveDisplayProps> = ({
             onPressPauseButton={() => {
                 clockRef.current?.stop()
             }}
+            block={block}
+            round={round}
         />
     )
 }

@@ -4,6 +4,8 @@ import { SvgProps } from 'react-native-svg'
 
 import { useOrientation } from '@common/hooks/useOrientation'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
+import WodDialog from '@components/WodDialog'
+import { IEventBlock, IRound } from '@models/block'
 import { useNavigation } from '@react-navigation/native'
 import { Edit3, PauseCircle, PlayCircle, RotateCcw } from '@tamagui/lucide-icons'
 
@@ -14,7 +16,7 @@ import { AnimatePresence, ColorTokens, Stack, Text, XStack, YStack, useTheme } f
 export interface TimerDisplayProps {
     time: string
     Icon?: React.FC<SvgProps>
-    round?: number | null
+    roundNumber?: number | null
     totalRounds?: number | null
     activityStatus?: TActivityStatus | 'countdown' | null
     watchProgressStatus: TTimerStatus
@@ -23,6 +25,8 @@ export interface TimerDisplayProps {
     onPressEditButton?: () => void
     onPressPauseButton: () => void
     onPressResetButton: () => void
+    round?: IRound
+    block?: IEventBlock
 }
 
 function getActivityColor(type: TActivityStatus | 'countdown'): ColorTokens {
@@ -39,7 +43,9 @@ function getActivityColor(type: TActivityStatus | 'countdown'): ColorTokens {
 const TimerDisplay: React.FC<TimerDisplayProps> = ({
     time,
     Icon,
+    roundNumber,
     round,
+    block,
     totalRounds,
     activityStatus,
     watchProgressStatus,
@@ -80,7 +86,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     </Stack>
                 )}
                 <AnimatePresence>
-                    {(initialCountdown === undefined || initialCountdown === null) && round && (
+                    {(initialCountdown === undefined || initialCountdown === null) && roundNumber && (
                         <Stack
                             animation="quick"
                             key="round"
@@ -96,7 +102,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                             </Text>
 
                             <Text fontSize="$10" fontWeight="700" color="$gray2">
-                                {round}
+                                {roundNumber}
                                 {totalRounds ? ` / ${totalRounds}` : ''}
                             </Text>
                         </Stack>
@@ -171,6 +177,8 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     </Stack>
                 )}
             </AnimatePresence>
+
+            {block ? <WodDialog block={block} /> : !!round && <WodDialog round={round} />}
         </YStack>
     )
 }

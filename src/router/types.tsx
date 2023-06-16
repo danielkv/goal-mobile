@@ -1,4 +1,4 @@
-import { IEventBlock } from '@models/block'
+import { IEventBlock, IRound } from '@models/block'
 import { IEMOMTimer, ITabataTimer, ITimecapTimer } from '@models/time'
 
 export type TReactNavigationStackParamList = {
@@ -12,13 +12,13 @@ export type TReactNavigationStackParamList = {
 
     TimersScreen: undefined
 
-    EmomTimerScreen?: Partial<IEMOMTimer>
+    EmomTimerScreen?: Partial<IEMOMTimer> & { round?: IRound; block?: IEventBlock }
 
-    RegressiveTimerScreen?: Partial<ITimecapTimer>
+    RegressiveTimerScreen?: Partial<ITimecapTimer> & { round?: IRound; block?: IEventBlock }
 
-    TabataTimerScreen?: Partial<ITabataTimer>
+    TabataTimerScreen?: Partial<ITabataTimer> & { round?: IRound; block?: IEventBlock }
 
-    StopwatchTimerScreen?: Partial<ITimecapTimer>
+    StopwatchTimerScreen?: Partial<ITimecapTimer> & { round?: IRound; block?: IEventBlock }
 
     WorksheetList: undefined
 

@@ -48,6 +48,8 @@ const EmomTimerScreen: React.FC = () => {
                     initialCountdown={countdown}
                     each={each}
                     onPressReset={() => setState('form')}
+                    block={params?.block}
+                    round={params?.round}
                 />
             )}
         </SafeAreaView>

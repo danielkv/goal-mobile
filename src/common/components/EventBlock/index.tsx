@@ -18,8 +18,6 @@ export interface PeriodEventBlock {
 }
 
 const EventBlock: React.FC<PeriodEventBlock> = ({ block }) => {
-    const { navigate } = useNavigation()
-
     const blockTitle = eventBlockTransformer.displayTitle(block)
     const [infoOpen, setInfoOpen] = useState(false)
 

@@ -48,6 +48,8 @@ const RegressiveTimerScreen: React.FC = () => {
                     initialCountdown={countdown}
                     initialTime={time1}
                     onPressReset={() => setState('form')}
+                    block={params?.block}
+                    round={params?.round}
                 />
             )}
         </SafeAreaView>

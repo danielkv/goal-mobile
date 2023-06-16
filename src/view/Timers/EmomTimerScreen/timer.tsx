@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import EmomSvg from '@assets/svg/emom.svg'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimer } from '@contexts/timers/useTimer'
+import { IEventBlock, IRound } from '@models/block'
 import { EmomTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
@@ -12,11 +13,15 @@ export interface EmomDisplayProps {
     rounds: number
     initialCountdown: number
     onPressReset(): void
+    round?: IRound
+    block?: IEventBlock
 }
 
 const EmomDisplay: React.FC<EmomDisplayProps> = ({
     each,
     rounds,
+    block,
+    round,
     initialCountdown: _initialCountdown,
     onPressReset,
 }) => {
@@ -51,7 +56,7 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
         <TimerDisplay
             time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
             Icon={EmomSvg}
-            round={currentRound}
+            roundNumber={currentRound}
             onPressEditButton={onPressReset}
             initialCountdown={initialCountdown ? dayjs.duration(initialCountdown, 'seconds').format('s') : undefined}
             watchProgressStatus={currentStatus}
@@ -60,6 +65,8 @@ const EmomDisplay: React.FC<EmomDisplayProps> = ({
             onPressPauseButton={() => {
                 clockRef.current?.stop()
             }}
+            block={block}
+            round={round}
         />
     )
 }

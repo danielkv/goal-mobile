@@ -3,17 +3,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useOrientation } from '@common/hooks/useOrientation'
 import { TActivityStatus, TTimerStatus } from '@common/interfaces/timers'
 import Button from '@components/Button'
-import EventBlockRound from '@components/EventBlockRound'
 import TimerDisplay from '@components/TimerDisplay'
 import { useTimerSounds } from '@contexts/timers/useTimerSounds'
 import { IEventBlock, IRound } from '@models/block'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { TReactNavigationStackParamList } from '@router/types'
-import { ChevronLeft, Eye } from '@tamagui/lucide-icons'
+import { ChevronLeft } from '@tamagui/lucide-icons'
 import { EmomTimer, RegressiveTimer, StopwatchTimer, TabataTimer } from '@utils/timer'
 
 import dayjs from 'dayjs'
-import { Dialog, Stack, YStack } from 'tamagui'
+import { Stack, YStack } from 'tamagui'
 
 import RoundDisplay from './RoundDisplay'
 
@@ -43,7 +42,6 @@ const WodTimerScreen: React.FC = () => {
     const navigation = useNavigation()
 
     const sounds = useTimerSounds()
-    const [roundOpen, setRoundOpen] = useState(false)
 
     const [currentRoundDisplay, setCurrentRoundDisplay] = useState<number | null>(null)
     const [totalRounds, setTotalRounds] = useState<number | null>(null)
@@ -247,7 +245,7 @@ const WodTimerScreen: React.FC = () => {
             <Stack bg="$gray9" f={1} btlr="$6" bblr={!isPortrait ? '$6' : 0} btrr={isPortrait ? '$6' : 0}>
                 <TimerDisplay
                     time={dayjs.duration(currentTime, 'seconds').format('mm:ss')}
-                    round={currentRoundDisplay}
+                    roundNumber={currentRoundDisplay}
                     totalRounds={totalRounds}
                     activityStatus={activityStatus}
                     initialCountdown={currentCountdown ? String(currentCountdown) : null}
@@ -257,50 +255,7 @@ const WodTimerScreen: React.FC = () => {
                     onPressPauseButton={() => {
                         clockRef.current?.stop()
                     }}
-                />
-            </Stack>
-
-            <Dialog open={roundOpen} onOpenChange={setRoundOpen}>
-                <Dialog.Portal>
-                    <Dialog.Overlay
-                        onPressOut={() => setRoundOpen(false)}
-                        key="overlay"
-                        animation="quick"
-                        opacity={0.5}
-                        enterStyle={{ opacity: 0 }}
-                        exitStyle={{ opacity: 0 }}
-                    />
-                    <Dialog.Content
-                        key="content"
-                        animation={[
-                            'quick',
-                            {
-                                opacity: {
-                                    overshootClamping: true,
-                                },
-                            },
-                        ]}
-                        enterStyle={{ opacity: 0, scale: 0.9 }}
-                        exitStyle={{ opacity: 0, scale: 0.95 }}
-                        w="100%"
-                        maxWidth={380}
-                    >
-                        <EventBlockRound round={rounds[selectedRound]} />
-                    </Dialog.Content>
-                </Dialog.Portal>
-            </Dialog>
-
-            <Stack>
-                <Button
-                    position="absolute"
-                    b="$3"
-                    right="$3"
-                    size="$6"
-                    onPressIn={() => setRoundOpen(true)}
-                    onPressOut={() => setRoundOpen(false)}
-                    variant="icon"
-                    bg="$gray5"
-                    icon={<Eye size={28} />}
+                    round={rounds[selectedRound]}
                 />
             </Stack>
         </Stack>
