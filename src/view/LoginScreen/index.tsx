@@ -21,7 +21,7 @@ import { H3, ScrollView, Stack, Text, YStack } from 'tamagui'
 import { TLoginForm, initialValues, validationSchema } from './config'
 
 const LoginScreen: React.FC = () => {
-    const [showPassword, setShowPassword] = useState(false)
+    const [hidePassword, setHidePassword] = useState(true)
     const navigation = useNavigation()
     const [loadingResetPassword, setLoadingResetPassword] = useState(false)
 
@@ -122,15 +122,15 @@ const LoginScreen: React.FC = () => {
                             error={errors.password}
                             returnKeyType="join"
                             textContentType="password"
-                            secureTextEntry={showPassword}
+                            secureTextEntry={hidePassword}
                             componentRight={
                                 <Button
                                     variant="transparent"
                                     size="$3"
                                     circular
-                                    onPress={() => setShowPassword(!showPassword)}
+                                    onPress={() => setHidePassword(!hidePassword)}
                                     icon={
-                                        showPassword ? (
+                                        hidePassword ? (
                                             <Eye size={22} color="$gray5" />
                                         ) : (
                                             <EyeOff size={22} color="$gray5" />

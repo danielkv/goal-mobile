@@ -20,7 +20,7 @@ import { H3, ScrollView, Stack } from 'tamagui'
 import { TLoginForm, initialValues, validationSchema } from './config'
 
 const SubscriptionScreen: React.FC = () => {
-    const [showPassword, setShowPassword] = useState(false)
+    const [hidePassowrd, setHidePassword] = useState(true)
     const navigation = useNavigation()
 
     const inputRefs = useRef<Record<string, any>>({})
@@ -118,15 +118,15 @@ const SubscriptionScreen: React.FC = () => {
                             value={values.password}
                             error={errors.password}
                             textContentType="newPassword"
-                            secureTextEntry={!showPassword}
+                            secureTextEntry={hidePassowrd}
                             componentRight={
                                 <Button
                                     variant="transparent"
                                     size="$3"
                                     circular
-                                    onPress={() => setShowPassword(!showPassword)}
+                                    onPress={() => setHidePassword(!hidePassowrd)}
                                     icon={
-                                        showPassword ? (
+                                        hidePassowrd ? (
                                             <Eye size={22} color="$gray5" />
                                         ) : (
                                             <EyeOff size={22} color="$gray5" />
