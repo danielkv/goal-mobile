@@ -11,7 +11,8 @@ import { removeUserUseCase } from '@useCases/auth/removeUser'
 import { getErrorMessage } from '@utils/getErrorMessage'
 import { getContrastColor, stringToColor, userInitials } from '@utils/strings'
 
-import { Avatar, Text, YStack } from 'tamagui'
+import Constants from 'expo-constants'
+import { Avatar, Stack, Text, YStack } from 'tamagui'
 
 const ProfileScreen: React.FC = () => {
     const { dispatch } = useNavigation()
@@ -66,29 +67,36 @@ const ProfileScreen: React.FC = () => {
     const textAvatarColor = getContrastColor(avatarColor)
 
     return (
-        <YStack alignItems="stretch" p="$6" gap="$4">
-            <YStack alignItems="center" gap="$4">
-                <Avatar bg={avatarColor} circular size="$10">
-                    {user.photoURL && <Avatar.Image source={{ uri: user.photoURL }} />}
-                    <Avatar.Fallback bg={avatarColor} ai="center" jc="center">
-                        <Text fontSize="$10" fontWeight="800" color={textAvatarColor}>
-                            {userInitials(user.displayName)}
-                        </Text>
-                    </Avatar.Fallback>
-                </Avatar>
-                <Text fontWeight="bold" fontSize={18}>
-                    {user.displayName}
-                </Text>
-                <Text fontSize={16}>{user.email}</Text>
-                {user.phoneNumber && <Text fontSize={14}>{user.phoneNumber}</Text>}
+        <Stack f={1}>
+            <YStack f={1} alignItems="stretch" p="$6" gap="$4">
+                <YStack alignItems="center" gap="$4">
+                    <Avatar bg={avatarColor} circular size="$10">
+                        {user.photoURL && <Avatar.Image source={{ uri: user.photoURL }} />}
+                        <Avatar.Fallback bg={avatarColor} ai="center" jc="center">
+                            <Text fontSize="$10" fontWeight="800" color={textAvatarColor}>
+                                {userInitials(user.displayName)}
+                            </Text>
+                        </Avatar.Fallback>
+                    </Avatar>
+                    <Text fontWeight="bold" fontSize={18}>
+                        {user.displayName}
+                    </Text>
+                    <Text fontSize={16}>{user.email}</Text>
+                    {user.phoneNumber && <Text fontSize={14}>{user.phoneNumber}</Text>}
+                </YStack>
+                <Button icon={<LogOut size={20} color="white" />} onPress={handlePressLogout}>
+                    Logout
+                </Button>
+                <Button loading={loading} variant="link" onPress={handlePressRemoveAccount}>
+                    <Text color="white">Excluir conta</Text>
+                </Button>
             </YStack>
-            <Button icon={<LogOut size={20} color="white" />} onPress={handlePressLogout}>
-                Logout
-            </Button>
-            <Button loading={loading} variant="link" onPress={handlePressRemoveAccount}>
-                <Text color="white">Excluir conta</Text>
-            </Button>
-        </YStack>
+            {!!Constants.expoConfig?.version && (
+                <Text ta="center" mb="$3" fontSize="$3" color="$gray5">
+                    v{Constants.expoConfig?.version}
+                </Text>
+            )}
+        </Stack>
     )
 }
 

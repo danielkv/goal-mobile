@@ -11,7 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     return {
         ...config,
         owner: 'goal',
-        name: IS_PROD ? 'My Goal' : 'My Goal (Dev)',
+        name: IS_PROD ? 'My Goal' : `My Goal (${ID_PREFIX})`,
         slug: 'goal-mobile',
         version: '1.2.0',
         icon: './src/assets/icon.png',
