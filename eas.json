@@ -5,18 +5,27 @@
 	"build": {
 		"production": {
 			"node": "18.12.1",
-			"channel": "production"
+			"channel": "production",
+			"env": {
+				"APP_VARIANT": "production"
+			}
 		},
 		"preview": {
 			"extends": "production",
 			"distribution": "internal",
-			"channel": "staging"
+			"channel": "staging",
+			"env": {
+				"APP_VARIANT": "preview"
+			}
 		},
 		"development": {
 			"extends": "production",
 			"distribution": "internal",
 			"developmentClient": true,
-			"channel": "development"
+			"channel": "development",
+			"env": {
+				"APP_VARIANT": "development"
+			}
 		}
 	},
 	"submit": {
