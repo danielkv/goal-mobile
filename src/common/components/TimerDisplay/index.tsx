@@ -172,7 +172,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                         exitStyle={{ opacity: 0 }}
                     >
                         <TouchableOpacity onPress={() => onPressPlayButton()}>
-                            <PlayCircle fill="#333" color="$red5" strokeWidth={2} size={100} />
+                            <PlayCircle color="white" strokeWidth={2} size={100} />
                         </TouchableOpacity>
                     </Stack>
                 )}

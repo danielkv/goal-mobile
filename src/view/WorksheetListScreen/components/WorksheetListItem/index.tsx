@@ -24,7 +24,15 @@ const WorksheetListItem: React.FC<WorksheetListItemProps> = ({ item, onPress }) 
 
     return (
         <Stack>
-            <Button br="$4" w="auto" h="auto" bg="$gray6" pressStyle={{ bg: '$gray8' }} onPress={() => onPress?.(item)}>
+            <Button
+                br="$4"
+                w="auto"
+                h="auto"
+                bg="$gray9"
+                elevation={3}
+                pressStyle={{ bg: '$gray8' }}
+                onPress={() => onPress?.(item)}
+            >
                 <XStack f={1} py="$4" ai="center" gap="$3">
                     <FileSpreadsheet size={24} color="$gray4" />
                     <YStack>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Alert } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { firebaseProvider } from '@common/providers/firebase'
 import ErrorBoundary from '@components/ErrorBoundary'
@@ -68,10 +69,12 @@ export default function App() {
         <NavigationContainer>
             <TamaguiProvider config={config}>
                 <Theme name={'dark'}>
-                    <StatusBar style="light" />
-                    <ErrorBoundary>
-                        <AppLayout />
-                    </ErrorBoundary>
+                    <SafeAreaProvider>
+                        <StatusBar style="light" />
+                        <ErrorBoundary>
+                            <AppLayout />
+                        </ErrorBoundary>
+                    </SafeAreaProvider>
                 </Theme>
             </TamaguiProvider>
         </NavigationContainer>

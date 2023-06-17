@@ -20,11 +20,12 @@ const WorksheetDayItem: React.FC<WorksheetDayItemProps> = ({ item, onPress }) =>
     return (
         <Stack>
             <Button
+                elevation={3}
                 br="$4"
                 p={0}
                 w="auto"
                 h="auto"
-                bg="$gray6"
+                bg="$gray9"
                 pressStyle={{ bg: '$gray8' }}
                 onPress={() => onPress?.(item)}
             >

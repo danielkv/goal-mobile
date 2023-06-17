@@ -1,3 +1,5 @@
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { useOrientation } from '@common/hooks/useOrientation'
 import MenuButton from '@components/MenuButton'
 import { useNavigation } from '@react-navigation/native'
@@ -10,10 +12,12 @@ const AppBottomBar: React.FC = () => {
     const { navigate } = useNavigation()
     const orientation = useOrientation()
 
+    const { bottom } = useSafeAreaInsets()
+
     if (orientation === 'landscape') return null
 
     return (
-        <XStack gap={5} jc="center" bg="$gray9" btc="$red5" btw="$1" h={70}>
+        <XStack gap={5} jc="center" bg="$gray9" h={60 + bottom} pb={bottom}>
             <MenuButton
                 label="Home"
                 Icon={() => <Home size={22} color="$gray4" />}
